@@ -4,5 +4,5 @@ xrdb -merge .Xresources
 hsetroot -solid "#002730"
 xsetroot -cursor_name left_ptr
 setxkbmap -option caps:swapescape
-/home/matt/.scripts/mattbar.sh &
+~/bin/mattbar.sh &
 exec i3
