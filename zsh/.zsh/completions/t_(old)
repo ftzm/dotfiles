@@ -1,0 +1,48 @@
+#compdef tdp
+
+_single_cmds() {
+    local commands; commands=(
+    'ls:Print out all lines in the list'
+    'vc:Pretty-print tasks with sub-task ordering'
+    'v:Print all tasks containing an argument string'
+    )
+    _describe -t commands 'tdp command' commands "$@"
+}
+
+_transitive_cmds() {
+    local commands; commands=(
+    'do:Mark a task as completed'
+    'sc:Assign task as a subtask to another task'
+    's:Schedule task (DD, MM-DD, YYYY-MM-DD, m/t/w/r/f/s/u)'
+    )
+    _describe -t commands 'tdp command' commands "$@"
+}
+
+_get_projects() {
+    local completions
+    completions="$(python /home/matt/projects/tdp/tdp.py pp)"
+    completions=( "${(ps:\n:)completions}" )
+    _describe -t completions 'projects' completions "$@"
+}
+
+
+case "$words[-2]" in
+    tdp)
+        _arguments '*: :_single_cmds'
+        ret=0
+        ;;
+    pr)
+        _arguments '*: :_get_projects'
+        ret=0
+        ;;
+    vc)
+        compadd hey ho oi
+        ret=0
+        ;;
+    [{1-999}])
+        _arguments '*: :_transitive_cmds'
+        ret=0 # no && makes single choice
+        ;;
+
+    esac
+
