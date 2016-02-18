@@ -2,6 +2,9 @@
 urxvt*smoothResize: true
 URxvt.boldFont:xft:lemon:medium:pixelsize=10
 URxvt.font:xft:lemon:medium:pixelsize=10
+!URxvt.font: -*-lemon-medium-r-normal-*-10-*-*-*-m-*-*-1
+
+
 
 URxvt.scrollBar: false
 URxvt.internalBorder: 10
