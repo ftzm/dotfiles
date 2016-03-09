@@ -1,4 +1,4 @@
-vim
+docvim
 
 install vim plugged
 compile ycm
@@ -14,3 +14,8 @@ download syntax color
 install wifi stuff for bar
 install clock command for bar
 install mpd and everything for bar
+
+set up cron job for battery script
+
+install stack
+install ghc mod and hlint

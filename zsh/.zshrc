@@ -6,6 +6,7 @@ fpath=(~/.zsh/completions $fpath)
 
 export PANEL_FIFO="/tmp/panel-fifo"
 export PANEL_FIFO
+export EDITOR="nvim"
 
 #make mpc use mpd on debserv
 export MPD_HOST=192.168.1.5
@@ -67,6 +68,7 @@ plugins=(git zsh-syntax-highlighting)
 
   export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/matt/bin/lemonbar"
   export PATH="$PATH:/home/matt/.local/bin"
+  export PATH="$PATH:/home/matt/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
