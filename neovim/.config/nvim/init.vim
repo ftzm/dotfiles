@@ -20,9 +20,14 @@ Plug 'wikitopian/hardmode'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'christoomey/vim-tmux-navigator'
+
 call plug#end()
 
 " ##### General Settings #####
+
+" yank and paste uses system clipboard
+set clipboard+=unnamedplus
 
 " enable syntax highlighting
 syntax on
@@ -71,10 +76,10 @@ let mapleader = " "
 "nmap ; :
 
 " easier split navigation
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+" nnoremap <C-J> <C-W><C-J>
+" nnoremap <C-K> <C-W><C-K>
+" nnoremap <C-L> <C-W><C-L>
+" nnoremap <C-H> <C-W><C-H>
 
 " resize current buffer by +/- 5
 nnoremap <D-left> :vertical resize -5<cr>
@@ -94,6 +99,8 @@ function! <SID>LocationPrevious()
     echo "Location list empty"
   catch /^Vim\%((\a\+)\)\=:E776/
     echo "Write first to check for errors"
+  catch /^Vim\%((\a\+)\)\=:E37/
+    echo "Write your changes first"
   endtry
 endfunction
 
@@ -107,6 +114,8 @@ function! <SID>LocationNext()
     echo "Location list empty"
   catch /^Vim\%((\a\+)\)\=:E776/
     echo "Write first to check for errors"
+  catch /^Vim\%((\a\+)\)\=:E37/
+    echo "Write your changes first"
   endtry
 endfunction
 
@@ -241,3 +250,7 @@ function ExpandSnippetOrCarriageReturn()
 endfunction
 inoremap <expr> <CR> pumvisible() ? "<C-R>=ExpandSnippetOrCarriageReturn()<CR>" : "\<CR>"
 
+" ##### tmuxsplitnavigator #####
+
+" <c-h> is interpreted as <bs> in neovim
+ nnoremap <silent> <bs> :TmuxNavigateLeft<cr>

@@ -1,3 +1,5 @@
+. /etc/profile.d/fzf.zsh
+
 # Aliases
 alias t=tdp
 alias vim=nvim
