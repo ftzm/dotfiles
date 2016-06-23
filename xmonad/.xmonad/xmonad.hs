@@ -4,11 +4,14 @@ import qualified Data.Map as M
 import System.Exit
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Spacing
+import XMonad.Layout.BinarySpacePartition
+import XMonad.Layout.Tabbed
+import XMonad.Layout.Named
 import XMonad.Actions.GroupNavigation
 import XMonad.Layout.NoBorders
 import XMonad.Hooks.DynamicLog
-import XMonad.Layout.BinarySpacePartition
-import XMonad.Layout.Tabbed
+import XMonad.Hooks.FloatNext
+import XMonad.Hooks.ManageDocks
 
 bg="#002B36"
 fg="#93A1A1"
@@ -23,13 +26,15 @@ green="#859900"
 
 main = xmonad =<< statusBar myBar myPP toggleStrutsKey myConfig
 
-myBar = "~/bin/lemonbar_xmonad.sh"
+myBar = "~/bin/xmobar_outputfeed.sh"
 
 myPP = xmobarPP { ppCurrent = wrap ("%{B" ++ blue ++ "}%{F" ++ bg ++ "} ") (" %{F-}%{B-}")
                 , ppHidden = wrap ("%{B" ++ bg ++ "}%{F" ++ fg ++ "} ") (" %{F-}%{B-}")
                 , ppWsSep = ""
+                , ppSep = " / "
                 --, ppOrder = (:[]) . head
                 , ppOrder = take 2
+                , ppLayout = layoutRenamer
                 }
 
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
@@ -44,7 +49,7 @@ myConfig = defaultConfig
     --, logHook = myLogHook xmobars >> historyHook
     , logHook = dynamicLog >> historyHook
     , layoutHook = myLayouts
-    , manageHook = myManageHook
+    , manageHook = myManageHook <+> manageDocks
     , workspaces = myWorkspaces
     }
 
@@ -54,7 +59,7 @@ myTabsTheme = defaultTheme
   , inactiveColor = "#002b36"
   , activeBorderColor = "#268bd2"
   , inactiveBorderColor = "#002b36"
-  , decoHeight = 14
+  , decoHeight = 0
   }
 
 myWorkspaces = ["main","web","dev","term","mus","6","7","8","9"]
@@ -64,7 +69,7 @@ myModMask     = mod4Mask -- Win key or Super_L
 myBorderWidth = 5
 
 --spacing 2 adds 2px spacing around all windows in all layouts
-myLayouts = (smartBorders $ smartSpacing 2 $ rT ||| Mirror rT ||| Full ||| emptyBSP) ||| tabbed shrinkText myTabsTheme
+myLayouts = avoidStruts $ (smartBorders $ smartSpacing 2 $ rT ||| Mirror rT ||| Full ||| emptyBSP) ||| tabbed shrinkText myTabsTheme
 --myLayouts = rT ||| Mirror rT ||| Full ||| emptyBSP ||| tabbed shrinkText myTabsTheme
   where
      rT = ResizableTall 1 (6/100) (1/2) []
@@ -77,12 +82,23 @@ myLayouts = (smartBorders $ smartSpacing 2 $ rT ||| Mirror rT ||| Full ||| empty
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
 
+layoutRenamer :: String -> String
+layoutRenamer x = case x of
+  "SmartSpacing 2 ResizableTall" -> "Side"
+  "SmartSpacing 2 Mirror ResizableTall" -> "Top"
+  "SmartSpacing 2 Full" -> "Full"
+  "SmartSpacing 2 BSP" -> "BSP"
+  "Tabbed Simplest" -> "Tabbed"
+  x -> x
+
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
     -- launching and killing programs
     [ ((modMask,               xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
-    , ((modMask,               xK_space     ), spawn "my_dmenu.sh") -- %! Launch dmenu
-    , ((modMask,               xK_c     ), kill) -- %! Close the focused window
+    , ((modMask,               xK_space     ), spawn "myrofi") -- %! Launch dmenu
+    , ((modMask,               xK_f     ), spawn "rofiles") -- %! Launch dmenu
+    , ((modMask,               xK_c     ),
+    kill) -- %! Close the focused window
 
     , ((modMask,               xK_Tab ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms
     , ((modMask .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf) -- %!  Reset the layouts on the current workspace to default
@@ -90,7 +106,7 @@ myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
     , ((modMask,               xK_n     ), refresh) -- %! Resize viewed windows to the correct size
 
     -- move focus up or down the window stack
-    , ((modMask,               xK_j     ), windows W.focusDown) -- %! Move focus to the next window
+    , ((modMask,               xK_j     ), do { windows W.focusDown } ) -- %! Move focus to the next window
     , ((modMask,               xK_k     ), windows W.focusUp  ) -- %! Move focus to the previous window
     , ((modMask,               xK_m     ), windows W.focusMaster  ) -- %! Move focus to the master window
 
@@ -124,6 +140,7 @@ myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
     , ((modMask,               xK_Down     ), spawn "panel_volume -") -- %! Launch dmenu
     , ((modMask,               xK_Up     ), spawn "panel_volume +") -- %! Launch dmenu
     , ((modMask .|. mod1Mask,  xK_b     ), spawn "kbds") -- %! Launch dmenu
+    , ((modMask .|. mod1Mask,  xK_h     ), spawn "systemctl hibernate") -- %! Launch dmenu
     , ((modMask,               xK_F7     ), spawn "mpc toggle") -- %! Launch dmenu
     , ((modMask .|. mod1Mask,  xK_t     ), spawn "toggle_mouse.sh") -- %! Launch dmenu
     , ((modMask .|. mod1Mask,  xK_r     ), spawn "urxvt -e ranger") -- %! Launch dmenu
@@ -141,7 +158,8 @@ myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
     , ((modMask .|. shiftMask,               xK_r     ), sendMessage Rotate)
     , ((modMask .|. shiftMask,               xK_n     ), sendMessage SelectNode)
 
-
+    --experimental
+    , ((modMask, xK_F6     ), spawn "urxvt -e ncmpcpp")
     ]
     ++
     -- mod-[1..9] %! Switch to workspace N

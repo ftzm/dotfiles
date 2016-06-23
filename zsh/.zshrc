@@ -1,7 +1,7 @@
-. /etc/profile.d/fzf.zsh
 
 # Aliases
-alias t=tdp
+alias t="/home/matt/dev/taskland/taskland.py"
+
 alias vim=nvim
 
 fpath=(~/.zsh/completions $fpath)
@@ -9,6 +9,9 @@ fpath=(~/.zsh/completions $fpath)
 export PANEL_FIFO="/tmp/panel-fifo"
 export PANEL_FIFO
 export EDITOR="nvim"
+export ANDROID_HOME=/opt/android-sdk
+export FZF_DEFAULT_OPTS='
+--color 16,hl:4,fg+:136,hl+:9,bg+:8,info:37'
 
 #make mpc use mpd on debserv
 export MPD_HOST=192.168.1.5
@@ -20,7 +23,7 @@ export ZSH=/home/matt/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="agnoster_me"
+ZSH_THEME="agnoster_block"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -101,3 +104,6 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 #
 DEFAULT_USER="matt"
+compdef _taskland /home/matt/dev/taskland/taskland.py=taskland
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

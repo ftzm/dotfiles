@@ -1,47 +1,83 @@
-" ##### Plugin Initialization #####
+"------------------------------------------------------------
+"   Plugin Initialization
+"------------------------------------------------------------
 
 call plug#begin('~/.vim/plugged')
-"Plug 'easymotion/vim-easymotion'
-Plug 'justinmk/vim-sneak'
-Plug 'altercation/vim-colors-solarized'
-Plug 'bling/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'scrooloose/nerdTree'
-Plug 'tpope/vim-fugitive'
-Plug 'reedes/vim-pencil'
+"---Language & Syntax------------------------------
+Plug 'benekastah/neomake'
+Plug 'Shougo/vimproc.vim'
 Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
 Plug 'bitc/vim-hdevtools'
-Plug 'Shougo/vimproc.vim'
-Plug 'benekastah/neomake'
 Plug 'neovimhaskell/haskell-vim'
-Plug 'Valloric/YouCompleteMe'
-Plug 'wikitopian/hardmode'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+"---File and Version Management--------------------
+Plug 'tpope/vim-fugitive'
+Plug 'scrooloose/nerdTree'
+"Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+"--Appearance--------------------------------------
+Plug 'chriskempson/base16-vim'
+Plug 'altercation/vim-colors-solarized'
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'reedes/vim-pencil'
+"---Tmux-------------------------------------------
 Plug 'christoomey/vim-tmux-navigator'
-
+Plug 'benmills/vimux'
+"---Mewvement--------------------------------------
+Plug 'justinmk/vim-sneak'
+Plug 'chaoren/vim-wordmotion' "CamelCase word objects
+"---Text Manipulation------------------------------
+Plug 'Valloric/YouCompleteMe'
+Plug 'wellle/targets.vim'
+Plug 'tpope/vim-surround'
 call plug#end()
 
-" ##### General Settings #####
+"------------------------------------------------------------
+"   General Settings
+"------------------------------------------------------------
 
-" yank and paste uses system clipboard
-set clipboard+=unnamedplus
+set hidden " allow buffers to be hidden
+set clipboard+=unnamedplus " yank and paste uses system clipboard
+set cursorline " highlight the current line
+set encoding=utf-8
+set fenc=utf-8
+set ignorecase smartcase "c matches C, not vice versa. sneak also.
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+set incsearch
+set nohlsearch " don't leave search matches highlighted
+filetype indent plugin on " filetype appropriate indenting
+syntax on " enable syntax highlighting
 
-" enable syntax highlighting
-syntax on
+autocmd Filetype htmldjango setlocal ts=2 sts=2 sw=2 expandtab
 
-colorscheme solarized
 
-set background=dark
+"------------------------------------------------------------
+"   Colorscheme
+"------------------------------------------------------------
 
-" highlight the current line
-set cursorline
+" vim sneak coloring that needs to be before colorscheme setting
+augroup SneakPluginColors
+   autocmd!
+   autocmd ColorScheme * hi SneakPluginTarget guifg=white guibg=orange ctermfg=white ctermbg=160
+   autocmd ColorScheme * hi SneakStreakTarget  guifg=white guibg=orange ctermfg=white ctermbg=160
+   autocmd ColorScheme * hi SneakStreakMask  guifg=black guibg=orange ctermfg=160 ctermbg=160
+augroup END
+
+colorscheme solarized " set colorscheme
+set background=dark " set background to dark
+
+"------------------------------------------------------------
+"   UI Stuff
+"------------------------------------------------------------
 
 " remove signcolmn bg
 hi! SignColumn ctermbg=None
-
 " make tildes blank
 hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg
 " personal solarized adjustments
@@ -51,29 +87,36 @@ hi! VertSplit ctermbg=bg ctermfg=0 guibg=bg
 hi! StatusLine ctermbg=4 ctermfg=0 guibg=bg guifg=None
 hi! StatusLineNC ctermbg=bg ctermfg=0 guibg=bg guifg=None
 
-set encoding=utf-8
-set fenc=utf-8
+"------------------------------------------------------------
+"   Custom Keybindings
+"------------------------------------------------------------
 
+"navigate tabs if >1 tab, else navigate buffers.
+function! NextTabOrBuffer()
+    if tabpagenr('$') > 1
+        tabnext
+    else
+        bnext
+    endif
+endfunction
+function! PrevTabOrBuffer()
+    if tabpagenr('$') > 1
+        tabprevious
+    else
+        bprevious
+    endif
+endfunction
 
-" make indents spaces rather than tabs in python etc.
-filetype indent plugin on
+" buffer movement keys
+map <silent>K :call PrevTabOrBuffer()<CR>
+map <silent>J :call NextTabOrBuffer()<CR>
 
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set expandtab
-filetype plugin indent on
+" putting in visual mode like ought to be the damn default
+vmap P I<C-R>"<esc>
+vmap p A<C-R>"<esc>
 
-" don't leave search matches highlighted
-set nohlsearch
-
-" ##### Custom Keymappings #####
-
-"leader mapping
+" leader mapping
 let mapleader = " "
-
-"; also functions as :
-"nmap ; :
 
 " easier split navigation
 " nnoremap <C-J> <C-W><C-J>
@@ -87,6 +130,7 @@ nnoremap <D-down> :resize +5<cr>
 nnoremap <D-up> :resize -5<cr>
 nnoremap <D-right> :vertical resize +5<cr>
 
+"toggle nerdtree
 map <Leader>n :NERDTreeToggle<cr>
 
 "function to move to previous error as defined in locations
@@ -122,8 +166,8 @@ endfunction
 "keybindings for error jumping functions
 nnoremap <silent> <Plug>LocationPrevious    :<C-u>exe 'call <SID>LocationPrevious()'<CR>
 nnoremap <silent> <Plug>LocationNext        :<C-u>exe 'call <SID>LocationNext()'<CR>
-map <Leader>k    <Plug>LocationPrevious
-map <Leader>j    <Plug>LocationNext
+map <C-p>    <Plug>LocationPrevious
+map <C-n>    <Plug>LocationNext
 
 "write remap
 map <Leader>w   :w<cr>
@@ -140,28 +184,55 @@ autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 " Hack (or trick) to save a file using sudo after it's been opened
 cmap w!! w ! sudo tee > /dev/null %
 
-" ##### Language Specific Settings #####
 
+"tab movement keys
+nnoremap tk :tabprevious<CR>
+nnoremap tK :tabm -1<CR>
+nnoremap tj :tabnext<CR>
+nnoremap tJ :tabm +1<CR>
+nnoremap th :tabfirst<CR>
+nnoremap tl :tablast<CR>
+nnoremap td :tabclose<CR>
 
+" move to front or end of line
+map H ^
+map L $
+
+"close buffer
+map <Leader>c :bd<CR>
+
+"------------------------------------------------------------
+"   Language Specific Setting
+"------------------------------------------------------------
+
+"---Haskell----------------------------------------
 autocmd Filetype haskell setlocal tabstop=2 shiftwidth=2 softtabstop=2
 
-" ##### Airline #####
+"------------------------------------------------------------
+"   Airline
+"------------------------------------------------------------
 
 " airline stuff
 let g:airline_powerline_fonts = 1
-let g:airline_left_sep = '⮀'
-let g:airline_left_alt_sep = '⮁'
-let g:airline_right_sep = '⮂'
-let g:airline_right_alt_sep = '⮃'
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+"let g:airline_left_sep = '⮀'
+"let g:airline_left_alt_sep = '⮁'
+"let g:airline_right_sep = '⮂'
+"let g:airline_right_alt_sep = '⮃'
 let g:airline_symbols = {}
-let g:airline_symbols.branch = '⭠'
-let g:airline_symbols.readonly = '⭤'
-let g:airline_symbols.linenr = '⭡'
+"let g:airline_symbols.branch = '⭠'
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = 'R'
+let g:airline_symbols.linenr = 'LN'
 let g:airline_theme = 'base16'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#show_buffers = 0
+"let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#tab_min_count = 2
+let g:airline#extensions#tabline#buffer_min_count = 2
 
 "don't know what this is, but disabling gets rid of the yellow chunk right of
 "the status line when a file has been modified
@@ -170,14 +241,17 @@ let g:airline_detect_modified=0
 " always show airline
 set laststatus=2
 
-" ##### YouCompleteMe #####
+"------------------------------------------------------------
+"   YouCompleteMe
+"------------------------------------------------------------
 
 " automatically confirm use of ycm conf
 let g:ycm_confirm_extra_conf = 0
 
 " make ycm use location list for errors
 let g:ycm_always_populate_location_list = 1
-
+"
+" define triggers for semantic completion per-filetype
 let g:ycm_semantic_triggers = {'haskell' : ['.']}
 
 "automatically close the complete buffer split thing
@@ -185,40 +259,27 @@ autocmd CompleteDone * pclose
 
 let g:ycm_python_binary_path = '/usr/bin/python3'
 
-" ##### EasyMotion #####
+nnoremap <leader>d :split <bar> YcmCompleter GoToDefinition<CR>
 
-" press s to move to location by searching for two letters
-"map s <Plug>(easymotion-s2)
-" press super key plus a movement key to activate the easymotion version
-"map <Leader> <Plug>(easymotion-prefix)
-"
-"map <Leader>l <Plug>(easymotion-lineforward)
-"map <Leader>j <Plug>(easymotion-j)
-"map <Leader>k <Plug>(easymotion-k)
-"map <Leader>h <Plug>(easymotion-linebackward)
-"
-"let g:Easymotion_smartcase=1
-
-" ##### neco-ghc #####
+"------------------------------------------------------------
+"   neco-ghc
+"------------------------------------------------------------
 let g:haskellmode_completion_ghc = 0
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
-" ##### deoplete #####
-
-let g:deoplete#enable_at_startup = 1
-
-inoremap <silent><expr> <Tab>
-    \ pumvisible() ? "\<C-n>" :
-    \ deoplete#mappings#manual_complete()
-
-" ##### ghc-mod
+"------------------------------------------------------------
+"   ghc-mod
+"------------------------------------------------------------
 
 map <silent> tw :GhcModTypeInsert<CR>
 map <silent> ts :GhcModSplitFunCase<CR>
 map <silent> tq :GhcModType<CR>
 map <silent> te :GhcModTypeClear<CR>
+map <silent> te :GhcMod<CR>
 
-" ##### neomake #####
+"------------------------------------------------------------
+"   neomake
+"------------------------------------------------------------
 
 " run neomake on every write
 autocmd! BufWritePost * Neomake
@@ -226,31 +287,84 @@ autocmd! BufWritePost * Neomake
 let g:neomake_haskell_hdevtools_exe = '/home/matt/bin/hdevtools-stack'
 let g:neomake_haskell_ghcmod_exe = '/home/matt/bin/ghc-mod-stack'
 let g:neomake_haskell_enabled_makers = ['hdevtools']
-" ##### sneak #####
+
+let g:neomake_warning_sign = {
+  \ 'text': 'W',
+  \ 'texthl': 'WarningMsg',
+  \ }
+let g:neomake_error_sign = {
+  \ 'text': 'E',
+  \ 'texthl': 'ErrorMsg',
+  \ }
+
+let g:neomake_python_enabled_makers = ['pylint']
+
+"------------------------------------------------------------
+"   sneak
+"------------------------------------------------------------
 
 " easymotion style
 let g:sneak#streak = 1
+nmap <Leader>s <Plug>Sneak_S
+let g:sneak#use_ic_scs = 1
 
-" ##### hardmode #####
-autocmd VimEnter,BufNewFile,BufReadPost * silent! call HardMode()
-nnoremap <leader>h <Esc>:call ToggleHardMode()<CR>
-
-" ##### UltiSnips #####
-
-" pressing enter expands a snippet
-let g:UltiSnipsExpandTrigger = "<nop>"
-let g:ulti_expand_or_jump_res = 0
-function ExpandSnippetOrCarriageReturn()
-    let snippet = UltiSnips#ExpandSnippetOrJump()
-    if g:ulti_expand_or_jump_res > 0
-        return snippet
-    else
-        return "\<CR>"
-    endif
-endfunction
-inoremap <expr> <CR> pumvisible() ? "<C-R>=ExpandSnippetOrCarriageReturn()<CR>" : "\<CR>"
-
-" ##### tmuxsplitnavigator #####
+"------------------------------------------------------------
+"   tmuxsplitnavigator
+"------------------------------------------------------------
 
 " <c-h> is interpreted as <bs> in neovim
  nnoremap <silent> <bs> :TmuxNavigateLeft<cr>
+
+"------------------------------------------------------------
+"   Vimux Keys
+"------------------------------------------------------------
+ "
+nnoremap <leader>tt <Esc>:call VimuxRunCommandInDir("/home/matt/bin/vim/testnear", 0)<CR>
+nnoremap <leader>tc <Esc>:call VimuxCloseRunner()<CR>
+
+"------------------------------------------------------------
+"   CtrlP
+"------------------------------------------------------------
+
+" let g:ctrlp_show_hidden = 1
+
+"------------------------------------------------------------
+"   targets
+"------------------------------------------------------------
+
+let g:targets_quotes = '"d ''q `'
+
+"------------------------------------------------------------
+"   fzf
+"------------------------------------------------------------
+"let g:fzf_nvim_statusline = 0 "don't overwrite statusline
+
+nnoremap <leader>b :Buffers<cr>
+nnoremap <leader>f :Files<cr>
+nnoremap <silent> <leader>A :execute 'Ag ' . input('Ag/')<CR>
+nnoremap <silent> <leader>/ :BLines<CR>
+nnoremap <silent> <leader>K :call SearchWordWithAg()<CR>
+vnoremap <silent> <leader>K :call SearchVisualSelectionWithAg()<CR>
+
+function! SearchWordWithAg()
+  execute 'Ag' expand('<cword>')
+endfunction
+
+function! SearchVisualSelectionWithAg() range
+  let old_reg = getreg('"')
+  let old_regtype = getregtype('"')
+  let old_clipboard = &clipboard
+  set clipboard&
+  normal! ""gvy
+  let selection = getreg('"')
+  call setreg('"', old_reg, old_regtype)
+  let &clipboard = old_clipboard
+  execute 'Ag' selection
+endfunction
+
+function! s:fzf_statusline()
+  " Override statusline as you like
+  setlocal statusline=fzf
+endfunction
+
+autocmd! User FzfStatusLine call <SID>fzf_statusline()

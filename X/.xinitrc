@@ -12,5 +12,8 @@ setxkbmap -option caps:swapescape
 #~/bin/mattbar.sh &
 #exec i3
 
-# XMonad
+ XMonad
+mattbar.sh &
+compton &
 exec xmonad
+

@@ -1,16 +1,50 @@
 !#include "/home/matt/.colors/green"
 urxvt*smoothResize: true
-URxvt.boldFont:xft:lemon:medium:pixelsize=10
-URxvt.font:xft:lemon:medium:pixelsize=10
+!URxvt.boldFont:xft:lemon:medium:pixelsize=10
+!URxvt.boldFont:xft:Roboto Mono Medium for Powerline:Medium:pixelsize=13
+!URxvt.boldFont:xft:Roboto Mono for Powerline:Regular:pixelsize=13
+!URxvt.boldFont:xft:Source Code Pro for Powerline:Regular:size=10
+!URxvt.boldFont:xft:Source Code Pro for Powerline:Regular:size=9
+!URxvt.boldFont:xft:Inconsolata-g for Powerline:g:size=10
+!URxvt.boldFont:xft:Fira Mono Medium for Powerline:Medium:size=9
+URxvt.boldFont:xft:Fira Mono:Medium:size=9
+!URxvt.boldFont:xft:Fira Mono for Powerline:Regular:size=9
+!URxvt.boldFont:xft:DejaVu Sans Mono for Powerline:Book:size=9
+!URxvt.boldFont:xft:Meslo LG S for Powerline:RegularForPowerline:size=9
+!URxvt.boldFont:xft:M+ 2m:medium:size=10
+!URxvt.boldFont:xft:Hack:Regular:size=9
+!URxvt.font:xft:lemon:medium:pixelsize=10
+!URxvt.font:xft:Roboto Mono Medium for Powerline:Medium:pixelsize=13
+!URxvt.font:xft:Roboto Mono for Powerline:Regular:pixelsize=13
+!URxvt.font:xft:Source Code Pro for Powerline:Semibold:size=10
+!URxvt.font:xft:Source Code Pro for Powerline:Regular:size=9
+!URxvt.font:xft:Inconsolata-g for Powerline:g:size=10
+!URxvt.font:xft:Fira Mono Medium for Powerline:Medium:size=9
+URxvt.font:xft:Fira Mono:Medium:size=9
+
+
+!URxvt.font:xft:Fira Mono for Powerline:Regular:size=9
+!URxvt.font:xft:DejaVu Sans Mono for Powerline:Book:size=9
+!URxvt.font:xft:Meslo LG S for Powerline:RegularForPowerline:size=9
+!URxvt.font:xft:M+ 2m:medium:size=10
+!URxvt.font:xft:Hack:regular:size=9
 !URxvt.font: -*-lemon-medium-r-normal-*-10-*-*-*-m-*-*-1
-
-
+URxvt.letterSpace: -1.8
 
 URxvt.scrollBar: false
-URxvt.internalBorder: 10
+URxvt.internalBorder: 5
 Xcursor.theme: MATE
 
 URxvt.urgentOnBell: true
+
+!infinality font stuffs
+Xft.antialias: 1
+Xft.autohint: 0
+Xft.dpi: 96
+Xft.hinting: 1
+Xft.hintstyle: hintfull
+Xft.lcdfilter: lcddefault
+Xft.rgba: rgb
 
 #define S_base03        #002b36
 #define S_base02        #073642
@@ -20,6 +54,14 @@ URxvt.urgentOnBell: true
 #define S_base1         #93a1a1
 #define S_base2         #eee8d5
 #define S_base3         #fdf6e3
+
+*background:            S_base03
+*foreground:            S_base0
+*fadeColor:             S_base03
+*cursorColor:           S_base1
+*pointerColorBackground:S_base01
+*pointerColorForeground:S_base1
+
 #define S_yellow        #b58900
 #define S_orange        #cb4b16
 #define S_red           #dc322f
@@ -28,14 +70,6 @@ URxvt.urgentOnBell: true
 #define S_blue          #268bd2
 #define S_cyan          #2aa198
 #define S_green         #859900
-
-*background:            S_base03
-*foreground:            S_base00
-!!*fading:                40
-*fadeColor:             S_base03
-*cursorColor:           S_base1
-*pointerColorBackground:S_base01
-*pointerColorForeground:S_base1
 
 !! black dark/light
 *color0:                S_base02
