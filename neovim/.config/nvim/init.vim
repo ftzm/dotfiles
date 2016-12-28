@@ -3,6 +3,15 @@
 "------------------------------------------------------------
 
 call plug#begin('~/.vim/plugged')
+"--------------------------------------------------
+"Session Managements
+Plug 'tpope/vim-obsession'
+"---File and Version Management--------------------
+Plug 'tpope/vim-fugitive'
+Plug 'scrooloose/nerdTree'
+"Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 "---Language & Syntax------------------------------
 Plug 'benekastah/neomake'
 Plug 'Shougo/vimproc.vim'
@@ -10,12 +19,8 @@ Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
 Plug 'bitc/vim-hdevtools'
 Plug 'neovimhaskell/haskell-vim'
-"---File and Version Management--------------------
-Plug 'tpope/vim-fugitive'
-Plug 'scrooloose/nerdTree'
-"Plug 'ctrlpvim/ctrlp.vim'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
 "--Appearance--------------------------------------
 Plug 'chriskempson/base16-vim'
 Plug 'altercation/vim-colors-solarized'
@@ -23,11 +28,13 @@ Plug 'NLKNguyen/papercolor-theme'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'reedes/vim-pencil'
+Plug 'morhetz/gruvbox'
 "---Tmux-------------------------------------------
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'benmills/vimux'
-"---Mewvement--------------------------------------
+"---Mewvment--------------------------------------
 Plug 'justinmk/vim-sneak'
+"Plug 'easymotion/vim-easymotion'
 Plug 'chaoren/vim-wordmotion' "CamelCase word objects
 "---Text Manipulation------------------------------
 Plug 'Valloric/YouCompleteMe'
@@ -55,7 +62,7 @@ filetype indent plugin on " filetype appropriate indenting
 syntax on " enable syntax highlighting
 
 autocmd Filetype htmldjango setlocal ts=2 sts=2 sw=2 expandtab
-
+autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
 
 "------------------------------------------------------------
 "   Colorscheme
@@ -69,7 +76,7 @@ augroup SneakPluginColors
    autocmd ColorScheme * hi SneakStreakMask  guifg=black guibg=orange ctermfg=160 ctermbg=160
 augroup END
 
-colorscheme solarized " set colorscheme
+colorscheme gruvbox " set colorscheme
 set background=dark " set background to dark
 
 "------------------------------------------------------------
@@ -230,9 +237,11 @@ let g:airline_symbols.linenr = 'LN'
 let g:airline_theme = 'base16'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
-"let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#tab_min_count = 2
-let g:airline#extensions#tabline#buffer_min_count = 2
+"let g:airline#extensions#tabline#buffer_min_count = 2
+
+let g:airline_section_z = airline#section#create(['%{ObsessionStatus(''$'', '''')}', 'windowswap', '%3p%% ', 'linenr', ':%3v '])
 
 "don't know what this is, but disabling gets rid of the yellow chunk right of
 "the status line when a file has been modified
@@ -240,6 +249,12 @@ let g:airline_detect_modified=0
 
 " always show airline
 set laststatus=2
+
+
+"------------------------------------------------------------
+"   Obsession
+"------------------------------------------------------------
+map <Leader>o :Obsession<CR>
 
 "------------------------------------------------------------
 "   YouCompleteMe
@@ -284,9 +299,11 @@ map <silent> te :GhcMod<CR>
 " run neomake on every write
 autocmd! BufWritePost * Neomake
 
-let g:neomake_haskell_hdevtools_exe = '/home/matt/bin/hdevtools-stack'
-let g:neomake_haskell_ghcmod_exe = '/home/matt/bin/ghc-mod-stack'
-let g:neomake_haskell_enabled_makers = ['hdevtools']
+"let g:neomake_haskell_hdevtools_exe = '/home/matt/bin/hdevtools-stack'
+"let g:neomake_haskell_ghcmod_exe = '/home/matt/bin/ghc-mod-stack'
+
+"must be run in the stack project root directory
+let g:neomake_haskell_enabled_makers = ['ghcmod']
 
 let g:neomake_warning_sign = {
   \ 'text': 'W',
@@ -307,6 +324,26 @@ let g:neomake_python_enabled_makers = ['pylint']
 let g:sneak#streak = 1
 nmap <Leader>s <Plug>Sneak_S
 let g:sneak#use_ic_scs = 1
+
+"------------------------------------------------------------
+"   EasyMotion
+"------------------------------------------------------------
+"let g:EasyMotion_do_mapping = 0 " Disable default mappings
+"
+"" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+"" `s{char}{label}`
+"nmap s <Plug>(easymotion-overwin-f)
+"" or
+"" `s{char}{char}{label}`
+"" Need one more keystroke, but on average, it may be more comfortable.
+"nmap s <Plug>(easymotion-overwin-f2)
+"
+"" Turn on case insensitive feature
+"let g:EasyMotion_smartcase = 1
+"
+"" JK motions: Line motions
+"map <Leader>j <Plug>(easymotion-j)
+"map <Leader>k <Plug>(easymotion-k)
 
 "------------------------------------------------------------
 "   tmuxsplitnavigator
@@ -368,3 +405,4 @@ function! s:fzf_statusline()
 endfunction
 
 autocmd! User FzfStatusLine call <SID>fzf_statusline()
+

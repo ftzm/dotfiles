@@ -6,15 +6,18 @@ alias vim=nvim
 
 fpath=(~/.zsh/completions $fpath)
 
+export TERM="xterm-256color"
 export PANEL_FIFO="/tmp/panel-fifo"
 export PANEL_FIFO
 export EDITOR="nvim"
 export ANDROID_HOME=/opt/android-sdk
 export FZF_DEFAULT_OPTS='
 --color 16,hl:4,fg+:136,hl+:9,bg+:8,info:37'
+export FZF_DEFAULT_COMMAND='ag -g ""'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 #make mpc use mpd on debserv
-export MPD_HOST=192.168.1.5
+export MPD_HOST=192.168.0.102
 
 # Path to your oh-my-zsh installation.
 export ZSH=/home/matt/.oh-my-zsh
@@ -107,3 +110,5 @@ DEFAULT_USER="matt"
 compdef _taskland /home/matt/dev/taskland/taskland.py=taskland
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+bindkey -v

@@ -28,10 +28,14 @@ main = xmonad =<< statusBar myBar myPP toggleStrutsKey myConfig
 
 myBar = "~/bin/xmobar_outputfeed.sh"
 
-myPP = xmobarPP { ppCurrent = wrap ("%{B" ++ blue ++ "}%{F" ++ bg ++ "} ") (" %{F-}%{B-}")
-                , ppHidden = wrap ("%{B" ++ bg ++ "}%{F" ++ fg ++ "} ") (" %{F-}%{B-}")
+myPP = xmobarPP { ppCurrent = wrap
+                              ("%{} %{U#458588}%{+o}%{-u}")
+                              ("%{-o}%{U#282828} ")
+                , ppHidden = wrap
+                             ("%{} ")
+                             ("%{} %{}")
                 , ppWsSep = ""
-                , ppSep = " / "
+                , ppSep = " -  "
                 --, ppOrder = (:[]) . head
                 , ppOrder = take 2
                 , ppLayout = layoutRenamer
@@ -39,12 +43,13 @@ myPP = xmobarPP { ppCurrent = wrap ("%{B" ++ blue ++ "}%{F" ++ bg ++ "} ") (" %{
 
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
+
 myConfig = defaultConfig
     { terminal    = myTerminal
     , modMask     = myModMask
     , borderWidth = myBorderWidth
-    , focusedBorderColor = "#268bd2"
-    , normalBorderColor = "#002b36"
+    , focusedBorderColor = "#BCAD92"
+    , normalBorderColor = "#504945"
     , keys = myKeys
     --, logHook = myLogHook xmobars >> historyHook
     , logHook = dynamicLog >> historyHook
@@ -66,10 +71,10 @@ myWorkspaces = ["main","web","dev","term","mus","6","7","8","9"]
 
 myTerminal    = "urxvt"
 myModMask     = mod4Mask -- Win key or Super_L
-myBorderWidth = 5
+myBorderWidth = 1
 
 --spacing 2 adds 2px spacing around all windows in all layouts
-myLayouts = avoidStruts $ (smartBorders $ smartSpacing 2 $ rT ||| Mirror rT ||| Full ||| emptyBSP) ||| tabbed shrinkText myTabsTheme
+myLayouts = avoidStruts $ (smartBorders $ rT ||| Mirror rT ||| Full ||| emptyBSP) ||| tabbed shrinkText myTabsTheme
 --myLayouts = rT ||| Mirror rT ||| Full ||| emptyBSP ||| tabbed shrinkText myTabsTheme
   where
      rT = ResizableTall 1 (6/100) (1/2) []
@@ -84,11 +89,11 @@ myLayouts = avoidStruts $ (smartBorders $ smartSpacing 2 $ rT ||| Mirror rT ||| 
 
 layoutRenamer :: String -> String
 layoutRenamer x = case x of
-  "SmartSpacing 2 ResizableTall" -> "Side"
-  "SmartSpacing 2 Mirror ResizableTall" -> "Top"
-  "SmartSpacing 2 Full" -> "Full"
-  "SmartSpacing 2 BSP" -> "BSP"
-  "Tabbed Simplest" -> "Tabbed"
+  "ResizableTall" -> "side"
+  "Mirror ResizableTall" -> "top"
+  "Full" -> "full"
+  "BSP" -> "bsp"
+  "Tabbed Simplest" -> "tabbed"
   x -> x
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
