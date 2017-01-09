@@ -13,7 +13,7 @@ background-alt = #444
 foreground = #bdae93
 foreground-alt = #55
 primary = #ffb52a
-secondary = #e60053
+secondary = #fb4934
 alert = #bd2c40
 
 [global/wm]
@@ -51,8 +51,8 @@ font-1 = unifont:size=6:heavy:fontformat=truetype;-2
 font-2 = siji:pixelsize=10;0
 
 modules-left = xmonad
-modules-center = mpd backlight volume xkeyboard memory cpu wlan temperature date
-modules-right =
+modules-center = backlight volume xkeyboard memory cpu temperature wlan battery date
+modules-right = powermenu
 
 tray-position = right
 tray-padding = 2
@@ -211,7 +211,7 @@ label = %percentage_used%
 
 [module/wlan]
 type = internal/network
-interface = wls3
+interface = wlp2s0 
 interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>
