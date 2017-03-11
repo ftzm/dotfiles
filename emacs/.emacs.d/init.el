@@ -14,19 +14,21 @@
 (set-default-font "Fira Mono-10")
 
 (blink-cursor-mode 0)
+(setq visible-cursor nil) ;; no blink in term
+
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message ";; Welcome")
 
 (savehist-mode 1)
 
-;; ----------------------------------------------------------------------------
+;; ############################################################################
 ;; Setup the getting of packages from melpa, etc.
-;; ----------------------------------------------------------------------------
+;; ############################################################################
 
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("org"         . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 (package-initialize)
 
 ;; Install use-package if not installed
@@ -48,6 +50,29 @@
 ;; General UI
 ;; ############################################################################
 
+;; ----------------------------------------------------------------------------
+;; Spaceline
+;; ----------------------------------------------------------------------------
+
+  (use-package spaceline-config
+    ;;:ensure spaceline
+    :config
+    (if (display-graphic-p)
+      (progn
+  	(setq powerline-default-separator 'wave)
+      )
+      (progn
+  	(setq powerline-default-separator nil)
+      )
+      )
+    (spaceline-toggle-buffer-size-off)
+    (spaceline-toggle-hud-off)
+    (spaceline-toggle-buffer-position-off)
+    (spaceline-toggle-buffer-encoding-abbrev-off)
+    (spaceline-toggle-version-control-off)
+    (spaceline-toggle-evil-state-off)
+    (spaceline-toggle-persp-name-on)
+    (spaceline-spacemacs-theme))
 
 ;; ----------------------------------------------------------------------------
 ;; Evildoing
@@ -67,11 +92,35 @@
   (evil-mode t)
   :config
 
+  (defun ftzm/add-line-above ()
+    (interactive)
+    (setq last-command-event 109)
+    (evil-set-marker 126)
+    (evil-open-above 1)
+    (setq last-command-event 'escape)
+    (evil-normal-state)
+    (setq last-command-event 96)
+    (evil-goto-mark 126)
+    )
+
+  (defun ftzm/add-line-below ()
+    (interactive)
+    (setq last-command-event 109)
+    (evil-set-marker 126)
+    (evil-open-below 1)
+    (setq last-command-event 'escape)
+    (evil-normal-state)
+    (setq last-command-event 96)
+    (evil-goto-mark 126)
+    (setq last-command-event 'f4))
+
   (define-key evil-normal-state-map "L" 'evil-end-of-line)
   (define-key evil-visual-state-map "L" 'evil-last-non-blank)
-  (define-key evil-normal-state-map "H" 'evil-beginning-of-visual-line)
-  (define-key evil-visual-state-map "H" 'evil-beginning-of-visual-line)
-
+  (define-key evil-normal-state-map "H" 'beginning-of-line-text)
+  (define-key evil-visual-state-map "H" 'beginning-of-line-text)
+  (define-key evil-normal-state-map (kbd "[ SPC") 'ftzm/add-line-above)
+  (define-key evil-normal-state-map (kbd "] SPC") 'ftzm/add-line-below)
+  
   (define-prefix-command 'ftzm/window-map)
   (evil-leader/set-key "w" 'ftzm/window-map)
   (define-key ftzm/window-map "v" 'split-window-right)
@@ -91,6 +140,15 @@
   (evil-leader/set-key "f" 'ftzm/file-map)
   (define-key ftzm/file-map "s" 'save-buffer)
   (define-key ftzm/file-map "f" 'counsel-find-file)
+
+    (defun ftzm/agenda-remove-schedule ()
+      (interactive)
+      (org-agenda-schedule '(4))
+      )
+
+    (add-hook 'org-mode-hook
+	      (lambda ()
+		(define-key evil-normal-state-map (kbd "TAB") 'org-cycle))) 
   )
 
 ;; keeps a list of recently visisted files
@@ -175,6 +233,20 @@
   :config
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
   )
+
+;; ----------------------------------------------------------------------------
+;; Autofill
+;; ----------------------------------------------------------------------------
+
+(add-hook 'haskell-mode-hook
+	'auto-fill-mode)
+
+(add-hook 'python-mode-hook
+	'auto-fill-mode)
+
+(diminish 'auto-fill-function)
+
+(setq-default fill-column 79)
 
 ;; ----------------------------------------------------------------------------
 ;; Fuzzy file navigation
@@ -267,6 +339,11 @@
   :config
   (add-hook 'python-mode-hook 'anaconda-mode)
   )
+
+(add-hook 'python-mode-hook (lambda ()
+                               (flycheck-mode 1)
+                               (setq flycheck-checker 'python-pylint
+                                     flycheck-checker-error-threshold 900)))
 
 ;; ----------------------------------------------------------------------------
 ;; Dockerfile
@@ -381,7 +458,18 @@
   :diminish "S"
   :config
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
+  (setq flycheck-display-errors-delay 0.1)
+
+  (define-prefix-command 'ftzm/flycheck-map)
+  (evil-leader/set-key "e" 'ftzm/flycheck-map)
+  (define-key ftzm/flycheck-map "p" 'flycheck-previous-error)
+  (define-key ftzm/flycheck-map "n" 'flycheck-next-error)
+   
   )
+
+;; ############################################################################
+;; Projects
+;; ############################################################################
 
 (use-package projectile
   :diminish projectile-mode
@@ -395,19 +483,6 @@
   (define-key ftzm/projectile-map "f" 'counsel-projectile)
   (define-key ftzm/projectile-map "p" 'counsel-projectile-switch-project)
   )
-
-(use-package spaceline-config
-  ;;:ensure spaceline
-  :config
-  (setq powerline-default-separator 'wave)
-  (spaceline-toggle-buffer-size-off)
-  (spaceline-toggle-hud-off)
-  (spaceline-toggle-buffer-position-off)
-  (spaceline-toggle-buffer-encoding-abbrev-off)
-  (spaceline-toggle-version-control-off)
-  (spaceline-toggle-evil-state-off)
-  (spaceline-toggle-persp-name-on)
-  (spaceline-spacemacs-theme))
 
 ;; ############################################################################
 ;; Org
@@ -667,7 +742,7 @@
     ("~/dev/hnefatafl/hnefatafl.org" "~/org/refile.org" "~/org/tasks.org")))
  '(package-selected-packages
    (quote
-    (yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
+    (smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
  '(safe-local-variable-values (quote ((eval progn (pp-buffer) (indent-buffer))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

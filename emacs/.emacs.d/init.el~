@@ -1,3 +1,7 @@
+;; ############################################################################
+;; Change Emacs internal settings
+;; ############################################################################
+
 ;; ----------------------------------------------------------------------------
 ;; Set plugin-independent gui settings early to avoid ugliness
 ;; ----------------------------------------------------------------------------
@@ -6,23 +10,21 @@
 (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-
 ;;Set font
 (set-default-font "Fira Mono-10")
 
 (blink-cursor-mode 0)
+(setq visible-cursor nil) ;; no blink in term
+
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message ";; Welcome")
-
-;; ############################################################################
-;; Change Emacs internal settings
-;; ############################################################################
 
 (savehist-mode 1)
 
 ;; ----------------------------------------------------------------------------
 ;; Setup the getting of packages from melpa, etc.
 ;; ----------------------------------------------------------------------------
+
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
@@ -43,28 +45,101 @@
 ;; Configuration of Packages
 ;; ############################################################################
 
-;;(autoload 'ghc-init "ghc" nil t)
-;;(autoload 'ghc-debug "ghc" nil t)
-;;(add-hook 'haskell-mode-hook
-;;          (lambda ()
-;;            (ghc-init)
-;;            ))
 
-(use-package rainbow-delimiters
+;; ############################################################################
+;; General UI
+;; ############################################################################
+
+
+;; ----------------------------------------------------------------------------
+;; Evildoing
+;; ----------------------------------------------------------------------------
+
+(use-package evil-leader
+  :init
+  (setq evil-leader/no-prefix-mode-rx '("org-.*-mode" "magit-.*-mode"))
+  (global-evil-leader-mode)
   :config
-  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+  (evil-leader/set-leader "<SPC>")
+  (evil-leader/set-key "SPC" 'counsel-M-x)
   )
 
-(use-package undo-tree
-  :diminish undo-tree-mode
-  )
-
-(use-package highlight-parentheses
-  :diminish highlight-parentheses-mode
+(use-package evil
+  :init
+  (evil-mode t)
   :config
-  (add-hook 'prog-mode-hook 'highlight-parentheses-mode)
-  (set-face-attribute 'hl-paren-face nil :bold t)
+
+  (defun ftzm/add-line-above ()
+    (interactive)
+    (setq last-command-event 109)
+    (evil-set-marker 126)
+    (evil-open-above 1)
+    (setq last-command-event 'escape)
+    (evil-normal-state)
+    (setq last-command-event 96)
+    (evil-goto-mark 126)
+    )
+
+  (defun ftzm/add-line-below ()
+    (interactive)
+    (setq last-command-event 109)
+    (evil-set-marker 126)
+    (evil-open-below 1)
+    (setq last-command-event 'escape)
+    (evil-normal-state)
+    (setq last-command-event 96)
+    (evil-goto-mark 126)
+    (setq last-command-event 'f4))
+
+  (define-key evil-normal-state-map "L" 'evil-end-of-line)
+  (define-key evil-visual-state-map "L" 'evil-last-non-blank)
+  (define-key evil-normal-state-map "H" 'beginning-of-line-text)
+  (define-key evil-visual-state-map "H" 'beginning-of-line-text)
+  (define-key evil-normal-state-map (kbd "[ SPC") 'ftzm/add-line-above)
+  (define-key evil-normal-state-map (kbd "] SPC") 'ftzm/add-line-below)
+
+
+  
+  (define-prefix-command 'ftzm/window-map)
+  (evil-leader/set-key "w" 'ftzm/window-map)
+  (define-key ftzm/window-map "v" 'split-window-right)
+  (define-key ftzm/window-map "s" 'split-window-below)
+  (define-key ftzm/window-map "h" 'evil-window-left)
+  (define-key ftzm/window-map "j" 'evil-window-down)
+  (define-key ftzm/window-map "k" 'evil-window-up)
+  (define-key ftzm/window-map "l" 'evil-window-right)
+  (define-key ftzm/window-map "d" 'delete-window)
+
+  (define-prefix-command 'ftzm/buffer-map)
+  (evil-leader/set-key "b" 'ftzm/buffer-map)
+  (define-key ftzm/buffer-map "d" 'evil-delete-buffer)
+  (define-key ftzm/buffer-map "e" 'eval-buffer)
+
+  (define-prefix-command 'ftzm/file-map)
+  (evil-leader/set-key "f" 'ftzm/file-map)
+  (define-key ftzm/file-map "s" 'save-buffer)
+  (define-key ftzm/file-map "f" 'counsel-find-file)
+
+    (defun ftzm/agenda-remove-schedule ()
+      (interactive)
+      (org-agenda-schedule '(4))
+      )
+
+    (add-hook 'org-mode-hook                                                                      (lambda ()                                                                          (define-key evil-normal-state-map (kbd "TAB") 'org-cycle))) 
+    
   )
+
+;; keeps a list of recently visisted files
+(use-package recentf
+  :init
+  (recentf-mode 1)
+  :config
+  (setq recentf-max-menu-items 25)
+  )
+
+;; ----------------------------------------------------------------------------
+;; Perspectives
+;; ----------------------------------------------------------------------------
 
 (use-package persp-mode
   :diminish persp-mode
@@ -103,6 +178,112 @@
   )
   )
 
+;; ----------------------------------------------------------------------------
+;; Motion Enhancement
+;; ----------------------------------------------------------------------------
+
+(use-package avy
+  :config
+  (define-key evil-normal-state-map "s" 'avy-goto-char-timer)
+  (setq avy-timeout-seconds 0.2)
+  )
+
+;; ----------------------------------------------------------------------------
+;; Undoing and redoing
+;; ----------------------------------------------------------------------------
+
+(use-package undo-tree
+  :diminish undo-tree-mode
+  )
+
+;; ----------------------------------------------------------------------------
+;; Parentheses improvement
+;; ----------------------------------------------------------------------------
+
+(use-package highlight-parentheses
+  :diminish highlight-parentheses-mode
+  :config
+  (add-hook 'prog-mode-hook 'highlight-parentheses-mode)
+  (set-face-attribute 'hl-paren-face nil :bold t)
+  )
+
+(use-package rainbow-delimiters
+  :config
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+  )
+
+;; ----------------------------------------------------------------------------
+;; Fuzzy file navigation
+;; ----------------------------------------------------------------------------
+
+(use-package smex) ;; makes ivy-M-x better, reorders function candidates
+
+(use-package ivy
+  :diminish ivy-mode
+  :init
+  (ivy-mode 1)
+  :config
+  (setq ivy-count-format "%d/%d - ")
+  (evil-leader/set-key "bb" 'ivy-switch-buffer)
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  (setq counsel-find-file-ignore-regexp
+        (concat
+         ;; File names beginning with # or .
+         "\\(?:\\`[#.]\\)"
+         ;; File names ending with # or ~
+         "\\|\\(?:\\`.+?[#~]\\'\\)"))
+
+  ;;function to collect most recent 7 files, relies on recentf
+  (defun recent-seven-files ()
+    (cl-loop for item in recentf-list
+             for i from 1 to 7
+             collect item))
+
+  (ivy-set-sources
+   'counsel-find-file
+   '((recent-seven-files)
+     (original-source)))
+
+
+    (with-eval-after-load 'org
+      (define-key org-mode-map (kbd "C-c C-q") #'counsel-org-tag))
+    (with-eval-after-load 'org-agenda
+      (define-key org-agenda-mode-map (kbd "C-c C-q") #'counsel-org-tag-agenda))
+
+  )
+
+(use-package ivy-rich ;; This may eventually be merged into Ivy Master
+  :config
+  (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich-switch-buffer-transformer)
+  (setq ivy-virtual-abbreviate 'full
+      ivy-rich-switch-buffer-align-virtual-buffer t)
+  (setq ivy-rich-abbreviate-paths t)
+  )
+
+
+
+;; ############################################################################
+;; Language Specific Configuration
+;; ############################################################################
+
+;; ----------------------------------------------------------------------------
+;; yaml
+;; ----------------------------------------------------------------------------
+
+(use-package yaml-mode)
+
+;; ----------------------------------------------------------------------------
+;; json
+;; ----------------------------------------------------------------------------
+
+(add-hook 'json-mode-hook #'flycheck-mode)
+
+
+;; ----------------------------------------------------------------------------
+;; haskell
+;; ----------------------------------------------------------------------------
+
 (use-package haskell-mode
   :mode "\\.hs\\'"
   )
@@ -113,43 +294,49 @@
   (add-hook 'haskell-mode-hook 'intero-mode)
   )
 
-(use-package evil-leader
-  :init
-  (setq evil-leader/no-prefix-mode-rx '("org-.*-mode" "magit-.*-mode"))
-  (global-evil-leader-mode)
+;; ----------------------------------------------------------------------------
+;; python
+;; ----------------------------------------------------------------------------
+
+(use-package anaconda-mode
+  :diminish "A"
   :config
-  (evil-leader/set-leader "<SPC>")
-  (evil-leader/set-key "SPC" 'counsel-M-x)
+  (add-hook 'python-mode-hook 'anaconda-mode)
   )
 
-(use-package evil
-  :init
-  (evil-mode t)
-  :config
-  (define-prefix-command 'ftzm/window-map)
-  (evil-leader/set-key "w" 'ftzm/window-map)
-  (define-key ftzm/window-map "v" 'split-window-right)
-  (define-key ftzm/window-map "s" 'split-window-below)
-  (define-key ftzm/window-map "h" 'evil-window-left)
-  (define-key ftzm/window-map "j" 'evil-window-down)
-  (define-key ftzm/window-map "k" 'evil-window-up)
-  (define-key ftzm/window-map "l" 'evil-window-right)
-  (define-key ftzm/window-map "d" 'delete-window)
+(add-hook 'python-mode-hook (lambda ()
+                               (flycheck-mode 1)
+                               (setq flycheck-checker 'python-pylint
+                                     flycheck-checker-error-threshold 900)))
 
-  (define-prefix-command 'ftzm/buffer-map)
-  (evil-leader/set-key "b" 'ftzm/buffer-map)
-  (define-key ftzm/buffer-map "d" 'evil-delete-buffer)
-  (define-key ftzm/buffer-map "e" 'eval-buffer)
+;; ----------------------------------------------------------------------------
+;; Dockerfile
+;; ----------------------------------------------------------------------------
 
-  (define-prefix-command 'ftzm/file-map)
-  (evil-leader/set-key "f" 'ftzm/file-map)
-  (define-key ftzm/file-map "s" 'save-buffer)
-  (define-key ftzm/file-map "f" 'counsel-find-file)
-  )
 
 (use-package dockerfile-mode
   :config
   (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+  )
+
+;; ----------------------------------------------------------------------------
+;; Prose
+;; ----------------------------------------------------------------------------
+
+;; just to make visual line mode available and diminished
+(use-package simple
+  :diminish visual-line-mode
+  )
+
+;; Camel Case recognition, works with evil mode movement
+(use-package subword
+  :diminish subword-mode
+  :config
+  (add-hook 'prog-mode-hook 'subword-mode)
+  )
+
+(use-package olivetti
+  :diminish "O"
   )
 
 ;; ----------------------------------------------------------------------------
@@ -227,72 +414,21 @@
 
   )
 
-(use-package avy
-  :config
-  (define-key evil-normal-state-map "s" 'avy-goto-char-timer)
-  (define-key evil-normal-state-map "L" 'evil-end-of-line)
-  (define-key evil-normal-state-map "H" 'evil-beginning-of-visual-line)
-  (setq avy-timeout-seconds 0.2)
-  )
-
-(use-package recentf
-  :init
-  (recentf-mode 1)
-  :config
-  (setq recentf-max-menu-items 25)
-  )
-
-(use-package smex) ;; makes ivy-M-x better
-
-(use-package ivy
-  :diminish ivy-mode
-  :init
-  (ivy-mode 1)
-  :config
-  (setq ivy-count-format "%d/%d - ")
-  (evil-leader/set-key "bb" 'ivy-switch-buffer)
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
-  (setq counsel-find-file-ignore-regexp
-        (concat
-         ;; File names beginning with # or .
-         "\\(?:\\`[#.]\\)"
-         ;; File names ending with # or ~
-         "\\|\\(?:\\`.+?[#~]\\'\\)"))
-
-  ;;function to collect most recent 7 files, relies on recentf
-  (defun recent-seven-files ()
-    (cl-loop for item in recentf-list
-             for i from 1 to 7
-             collect item))
-
-  (ivy-set-sources
-   'counsel-find-file
-   '((recent-seven-files)
-     (original-source)))
-
-
-    (with-eval-after-load 'org
-      (define-key org-mode-map (kbd "C-c C-q") #'counsel-org-tag))
-    (with-eval-after-load 'org-agenda
-      (define-key org-agenda-mode-map (kbd "C-c C-q") #'counsel-org-tag-agenda))
-
-  )
-
-
-
-(use-package ivy-rich ;; This may eventually be merged into Ivy Master
-  :config
-  (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich-switch-buffer-transformer)
-  (setq ivy-virtual-abbreviate 'full
-      ivy-rich-switch-buffer-align-virtual-buffer t)
-  (setq ivy-rich-abbreviate-paths t)
-  )
+;; ############################################################################
+;; Syntax
+;; ############################################################################
 
 (use-package flycheck
   :diminish "S"
   :config
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
+  (setq flycheck-display-errors-delay 0.1)
+
+  (define-prefix-command 'ftzm/projectile-map)
+  (evil-leader/set-key "p" 'ftzm/projectile-map)
+  (define-key ftzm/projectile-map "f" 'counsel-projectile)
+  (define-key ftzm/projectile-map "p" 'counsel-projectile-switch-project)
+   
   )
 
 (use-package projectile
@@ -311,7 +447,14 @@
 (use-package spaceline-config
   ;;:ensure spaceline
   :config
-  (setq powerline-default-separator 'wave)
+  (if (display-graphic-p)
+    (progn
+	(setq powerline-default-separator 'wave)
+    )
+    (progn
+	(setq powerline-default-separator nil)
+    )
+    )
   (spaceline-toggle-buffer-size-off)
   (spaceline-toggle-hud-off)
   (spaceline-toggle-buffer-position-off)
@@ -321,30 +464,14 @@
   (spaceline-toggle-persp-name-on)
   (spaceline-spacemacs-theme))
 
-(use-package anaconda-mode
-  :diminish "A"
-  :config
-  (add-hook 'python-mode-hook 'anaconda-mode)
-  )
+;; ############################################################################
+;; Org
+;; ############################################################################
 
 (use-package org-indent
   :diminish org-indent-mode
   )
 
-(use-package simple
-  :diminish visual-line-mode
-  )
-
-(use-package olivetti
-  :diminish "O"
-  )
-
-;; Camel Case recognition, works with evil mode movement
-(use-package subword
-  :diminish subword-mode
-  :config
-  (add-hook 'prog-mode-hook 'subword-mode)
-  )
 
 (use-package org
   :mode (("\\.org$" . org-mode))
@@ -560,15 +687,15 @@
   :config
   )
 
-;; ----------------------------------------------------------------------------
+;; ############################################################################
 ;; Global Key Binds
-;; ----------------------------------------------------------------------------
+;; ############################################################################
 (global-set-key (kbd "<escape>")      'keyboard-escape-quit)
 
 
-;; ----------------------------------------------------------------------------
+;; ############################################################################
 ;; Configure gui that may rely on plugins being intialized
-;; ----------------------------------------------------------------------------
+;; ############################################################################
 
 ;; load syntax coloring theme. Applied also to some other gui.
 (load-theme 'gruvbox t)
@@ -576,9 +703,9 @@
 ;; disable fringe
 (set-fringe-mode 0)
 
-;; ----------------------------------------------------------------------------
+;; ############################################################################
 ;; Beware: here be custom-set-variables. Best don't touch.
-;; ----------------------------------------------------------------------------
+;; ############################################################################
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -595,7 +722,7 @@
     ("~/dev/hnefatafl/hnefatafl.org" "~/org/refile.org" "~/org/tasks.org")))
  '(package-selected-packages
    (quote
-    (yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
+    (smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
  '(safe-local-variable-values (quote ((eval progn (pp-buffer) (indent-buffer))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

@@ -1,18 +1,18 @@
 
 ;; ----- smex-history -----
 (
- eval-buffer
- check-parens
- evil-end-of-visual-line
- yaml-mode
  package-install
- persp-mode
- eyebrowse-switch-to-window-config
+ smart-mode-line-enable
+ powerline-vim-theme
+ eval-buffer
+ persp-add-buffer
+ persp-prev
+ avy-goto-char-timer
 )
 
 ;; ----- smex-data -----
 (
- (package-install . 30)
+ (package-install . 37)
  (avy-goto-char . 1)
  (avy-goto-word-1 . 5)
  (avy-goto-char-2 . 6)
@@ -32,12 +32,12 @@
  (list-faces-display . 6)
  (evil-join . 1)
  (company-select-previous . 1)
- (spaceline-toggle-evil-state . 1)
+ (spaceline-toggle-evil-state . 3)
  (evil-delete-buffer . 1)
  (org-capture . 6)
  (org-refile . 6)
  (org-indent-mode . 2)
- (olivetti-mode . 1)
+ (olivetti-mode . 2)
  (olivetti-shrink . 5)
  (org-agenda . 5)
  (evil-org-mode . 4)
@@ -69,18 +69,18 @@
  (org-projectile:prompt . 1)
  (company-mode . 2)
  (org-projectile/goto-todos . 1)
- (flycheck-mode . 1)
+ (flycheck-mode . 3)
  (flycheck-describe-checker . 1)
- (flycheck-select-checker . 1)
+ (flycheck-select-checker . 2)
  (describe-variable . 6)
  (org-projectile:project-todo-completing-read . 4)
- (eval-buffer . 55)
+ (eval-buffer . 65)
  (eyebrowse-mode . 9)
  (persp-mode . 7)
  (persp-switch . 24)
  (persp-rename . 1)
  (persp-copy . 1)
- (persp-add-buffer . 14)
+ (persp-add-buffer . 15)
  (persp-switch-to-buffer . 16)
  (persp-kill-buffer . 4)
  (spaceline-toggle-persp-name . 2)
@@ -107,9 +107,38 @@
  (wg-switch-to-workgroup . 3)
  (wg-switch-to-buffer . 3)
  (wg-switch-to-previous-workgroup . 6)
- (spaceline-toggle-workspace-number . 1)
+ (spaceline-toggle-workspace-number . 2)
  (persp-remove-buffer . 1)
  (yaml-mode . 1)
  (evil-end-of-visual-line . 2)
  (check-parens . 1)
+ (anaconda-mode . 1)
+ (elpy-mode . 2)
+ (name-last-kbd-macro . 1)
+ (insert-kbd-macro . 1)
+ (evil-set-marker . 2)
+ (evil-window-up . 1)
+ (evil-lookup . 1)
+ (evil-scroll-up . 1)
+ (evil-scroll-line-up . 3)
+ (scroll-up-line . 1)
+ (next-line . 3)
+ (previous-line . 3)
+ (add-line-above . 28)
+ (evil-open-above . 2)
+ (evil-ex-normal . 1)
+ (end-of-line . 1)
+ (newline . 5)
+ (newline-and-indent . 1)
+ (end-of-visual-line . 1)
+ (electric-newline-and-maybe-indent . 1)
+ (whitespace-newline-mode . 2)
+ (beginning-of-line . 1)
+ (add-line-below . 3)
+ (beginning-of-line-text . 1)
+ (elmacro-show-last-macro . 3)
+ (elmacro-mode . 1)
+ (spaceline-toggle-global-off . 1)
+ (smart-mode-line-enable . 3)
+ (powerline-vim-theme . 1)
 )
