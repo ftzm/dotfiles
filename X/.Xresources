@@ -48,6 +48,7 @@ Xft.rgba: rgb
 
 ! hard contrast: *background: #1d2021
 *background: #282828
+!*background: #2f343f
 ! soft contrast: *background: #32302f
 *foreground: #ebdbb2
 ! Black + DarkGrey

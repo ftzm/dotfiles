@@ -100,7 +100,7 @@ myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
     -- launching and killing programs
     [ ((modMask,               xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
-    , ((modMask,               xK_space     ), spawn "myrofi") -- %! Launch dmenu
+    , ((modMask,               xK_space     ), spawn "my_dmenu.sh") -- %! Launch dmenu
     , ((modMask,               xK_f     ), spawn "rofiles") -- %! Launch dmenu
     , ((modMask,               xK_c     ),
     kill) -- %! Close the focused window

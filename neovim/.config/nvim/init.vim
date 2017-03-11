@@ -18,7 +18,6 @@ Plug 'Shougo/vimproc.vim'
 Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
 Plug 'bitc/vim-hdevtools'
-Plug 'neovimhaskell/haskell-vim'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 "--Appearance--------------------------------------

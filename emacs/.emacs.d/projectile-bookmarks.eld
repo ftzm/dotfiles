@@ -1,0 +1,1 @@
+("~/dot/" "~/bin/" "~/dev/ftzm-blog-docker/ftzm-blog/" "~/org/" "~/dev/hnefatafl/" "~/dev/muscleup/" "~/dev/haskell/cis194/")

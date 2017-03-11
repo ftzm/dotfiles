@@ -13,7 +13,7 @@ background-alt = #444
 foreground = #bdae93
 foreground-alt = #55
 primary = #ffb52a
-secondary = #fb4934
+secondary = #98971a
 alert = #bd2c40
 
 [global/wm]
@@ -48,7 +48,7 @@ module-margin-right = 2
 ; font-0 = fixed:pixelsize=10;0
 font-0 = Fira Mono:Medium:size=8
 font-1 = unifont:size=6:heavy:fontformat=truetype;-2
-font-2 = siji:pixelsize=10;0
+font-2 = Wuncon siji:pixelsize=10;0
 
 modules-left = xmonad
 modules-center = backlight volume xkeyboard memory cpu temperature wlan battery date
@@ -188,7 +188,7 @@ bar-indicator-foreground = #ff
 bar-indicator-font = 2
 bar-fill = ─
 bar-fill-font = 2
-bar-fill-foreground = #9f78e1
+bar-fill-foreground = #8ec07c
 bar-empty = ─
 bar-empty-font = 2
 bar-empty-foreground = ${colors.foreground-alt}
@@ -211,7 +211,7 @@ label = %percentage_used%
 
 [module/wlan]
 type = internal/network
-interface = wlp2s0 
+interface = wlp2s0
 interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>
@@ -271,11 +271,11 @@ format-muted-foreground = ${colors.foreground-alt}
 label-muted = sound muted
 
 bar-volume-width = 10
-bar-volume-foreground-0 = #55aa55
-bar-volume-foreground-1 = #55aa55
-bar-volume-foreground-2 = #55aa55
-bar-volume-foreground-3 = #55aa55
-bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-0 = #d3869b
+bar-volume-foreground-1 = #d3869b
+bar-volume-foreground-2 = #d3869b
+bar-volume-foreground-3 = #d3869b
+bar-volume-foreground-4 = #d3869b
 bar-volume-foreground-5 = #f5a70a
 bar-volume-foreground-6 = #ff5555
 bar-volume-gradient = false
@@ -325,7 +325,7 @@ format-underline = #cc241d
 format-warn = <ramp> <label-warn>
 format-warn-underline = ${self.format-underline}
 
-label = %temperature%
+label = " %temperature%"
 label-warn = %temperature%
 label-warn-foreground = ${colors.secondary}
 
