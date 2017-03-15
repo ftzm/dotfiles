@@ -28,18 +28,19 @@ main = xmonad =<< statusBar myBar myPP toggleStrutsKey myConfig
 
 myBar = "~/bin/xmobar_outputfeed.sh"
 
-myPP = xmobarPP { ppCurrent = wrap
-                              ("%{} %{U#458588}%{+o}%{-u}")
-                              ("%{-o}%{U#282828} ")
-                , ppHidden = wrap
-                             ("%{} ")
-                             ("%{} %{}")
-                , ppWsSep = ""
-                , ppSep = " -  "
-                --, ppOrder = (:[]) . head
-                , ppOrder = take 2
-                , ppLayout = layoutRenamer
-                }
+myPP = xmobarPP
+  { ppCurrent = wrap
+                "%{} %{U#458588}%{+o}%{-u}"
+                "%{-o}%{U#282828} "
+  , ppHidden = wrap
+               "%{} "
+               "%{} %{}"
+  , ppWsSep = ""
+  , ppSep = " "
+  --, ppOrder = (:[]) . head
+  , ppOrder = take 2
+  , ppLayout = layoutRenamer
+  }
 
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
@@ -48,7 +49,7 @@ myConfig = defaultConfig
     { terminal    = myTerminal
     , modMask     = myModMask
     , borderWidth = myBorderWidth
-    , focusedBorderColor = "#BCAD92"
+    , focusedBorderColor = "#bdae93"
     , normalBorderColor = "#504945"
     , keys = myKeys
     --, logHook = myLogHook xmobars >> historyHook
@@ -89,11 +90,11 @@ myLayouts = avoidStruts $ (smartBorders $ rT ||| Mirror rT ||| Full ||| emptyBSP
 
 layoutRenamer :: String -> String
 layoutRenamer x = case x of
-  "ResizableTall" -> "side"
-  "Mirror ResizableTall" -> "top"
-  "Full" -> "full"
-  "BSP" -> "bsp"
-  "Tabbed Simplest" -> "tabbed"
+  "ResizableTall" -> "\xe002"
+  "Mirror ResizableTall" -> "\xe003"
+  "Full" -> "\xe000"
+  "BSP" -> "\xe007"
+  "Tabbed Simplest" -> "\xe004"
   x -> x
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
@@ -111,7 +112,7 @@ myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
     , ((modMask,               xK_n     ), refresh) -- %! Resize viewed windows to the correct size
 
     -- move focus up or down the window stack
-    , ((modMask,               xK_j     ), do { windows W.focusDown } ) -- %! Move focus to the next window
+    , ((modMask,               xK_j     ), windows W.focusDown ) -- %! Move focus to the next window
     , ((modMask,               xK_k     ), windows W.focusUp  ) -- %! Move focus to the previous window
     , ((modMask,               xK_m     ), windows W.focusMaster  ) -- %! Move focus to the master window
 

@@ -1,18 +1,18 @@
 
 ;; ----- smex-history -----
 (
- package-install
+ list-faces-display
+ spaceline-compile
  smart-mode-line-enable
- powerline-vim-theme
+ org-archive-done-tasks
+ indent-region
+ quail-show-keyboard-layout
  eval-buffer
- persp-add-buffer
- persp-prev
- avy-goto-char-timer
 )
 
 ;; ----- smex-data -----
 (
- (package-install . 37)
+ (package-install . 39)
  (avy-goto-char . 1)
  (avy-goto-word-1 . 5)
  (avy-goto-char-2 . 6)
@@ -29,7 +29,7 @@
  (rainbow-delimiters-mode . 1)
  (highlight-parentheses-mode . 7)
  (customize-face . 2)
- (list-faces-display . 6)
+ (list-faces-display . 12)
  (evil-join . 1)
  (company-select-previous . 1)
  (spaceline-toggle-evil-state . 3)
@@ -71,12 +71,12 @@
  (org-projectile/goto-todos . 1)
  (flycheck-mode . 3)
  (flycheck-describe-checker . 1)
- (flycheck-select-checker . 2)
+ (flycheck-select-checker . 6)
  (describe-variable . 6)
  (org-projectile:project-todo-completing-read . 4)
  (eval-buffer . 65)
- (eyebrowse-mode . 9)
- (persp-mode . 7)
+ (eyebrowse-mode . 12)
+ (persp-mode . 11)
  (persp-switch . 24)
  (persp-rename . 1)
  (persp-copy . 1)
@@ -85,11 +85,11 @@
  (persp-kill-buffer . 4)
  (spaceline-toggle-persp-name . 2)
  (spaceline-toggle-persp-name-on . 2)
- (customize-themes . 2)
- (spaceline-compile . 1)
+ (customize-themes . 4)
+ (spaceline-compile . 10)
  (vc-mode-line . 1)
  (calendar . 1)
- (persp-kill . 5)
+ (persp-kill . 6)
  (org-agenda-todo . 1)
  (org-todo-list . 1)
  (org-agenda-deadline . 1)
@@ -97,8 +97,8 @@
  (persp-prev . 38)
  (persp-frame-switch . 1)
  (persp-next . 9)
- (eyebrowse-rename-window-config . 2)
- (eyebrowse-switch-to-window-config . 7)
+ (eyebrowse-rename-window-config . 4)
+ (eyebrowse-switch-to-window-config . 8)
  (eyebrowse-last-window-config . 5)
  (eyebrowse-switch-to-window-config-2 . 2)
  (eyebrowse-switch-to-window-config-3 . 1)
@@ -136,9 +136,30 @@
  (beginning-of-line . 1)
  (add-line-below . 3)
  (beginning-of-line-text . 1)
- (elmacro-show-last-macro . 3)
- (elmacro-mode . 1)
- (spaceline-toggle-global-off . 1)
- (smart-mode-line-enable . 3)
+ (elmacro-show-last-macro . 6)
+ (elmacro-mode . 2)
+ (spaceline-toggle-global-off . 2)
+ (smart-mode-line-enable . 10)
  (powerline-vim-theme . 1)
+ (flycheck-next-error . 1)
+ (auto-fill-mode . 2)
+ (eyebrowse-create-window-config . 3)
+ (eyebrowse-prev-window-config . 3)
+ (eyebrowse-next-window-config . 1)
+ (which-key-mode . 1)
+ (set-face-font . 1)
+ (spaceline-toggle-workspace-number-off . 1)
+ (spaceline-toggle-workspace-number-on . 1)
+ (eyebrowse-switch-to-window-config-0 . 1)
+ (evil-switch-to-windows-last-buffer . 2)
+ (eyebrowse-close-window-config . 1)
+ (describe-char . 1)
+ (eval-defun . 1)
+ (eval-expression . 1)
+ (quail-set-keyboard-layout . 1)
+ (set-keyboard-coding-system . 1)
+ (quail-show-keyboard-layout . 1)
+ (org-archive-done-tasks . 22)
+ (indent-region . 1)
+ (spaceline-toggle-global-on . 1)
 )

@@ -37,7 +37,7 @@
   (package-install 'use-package))
 
 (eval-when-compile
-(require 'use-package))
+  (require 'use-package))
 (require 'diminish)
 (require 'bind-key)
 
@@ -54,25 +54,28 @@
 ;; Spaceline
 ;; ----------------------------------------------------------------------------
 
-  (use-package spaceline-config
-    ;;:ensure spaceline
-    :config
-    (if (display-graphic-p)
+(use-package spaceline-config
+  ;;:ensure spaceline
+  :config
+  (if (display-graphic-p)
       (progn
   	(setq powerline-default-separator 'wave)
+  	)
+    (progn
+      (setq powerline-default-separator nil)
       )
-      (progn
-  	(setq powerline-default-separator nil)
-      )
-      )
-    (spaceline-toggle-buffer-size-off)
-    (spaceline-toggle-hud-off)
-    (spaceline-toggle-buffer-position-off)
-    (spaceline-toggle-buffer-encoding-abbrev-off)
-    (spaceline-toggle-version-control-off)
-    (spaceline-toggle-evil-state-off)
-    (spaceline-toggle-persp-name-on)
-    (spaceline-spacemacs-theme))
+    )
+  (spaceline-toggle-buffer-size-off)
+  (spaceline-toggle-hud-off)
+  (spaceline-toggle-buffer-position-off)
+  (spaceline-toggle-buffer-encoding-abbrev-off)
+  (spaceline-toggle-version-control-off)
+  (spaceline-toggle-evil-state-off)
+  ;(spaceline-toggle-persp-name-on)
+  ;(spaceline-toggle-workspace-number-on)
+  (spaceline-spacemacs-theme)
+  )
+
 
 ;; ----------------------------------------------------------------------------
 ;; Evildoing
@@ -92,7 +95,7 @@
   (evil-mode t)
   :config
 
-  (defun ftzm/add-line-above ()
+  (defun add-line-above ()
     (interactive)
     (setq last-command-event 109)
     (evil-set-marker 126)
@@ -103,7 +106,7 @@
     (evil-goto-mark 126)
     )
 
-  (defun ftzm/add-line-below ()
+  (defun add-line-below ()
     (interactive)
     (setq last-command-event 109)
     (evil-set-marker 126)
@@ -118,38 +121,43 @@
   (define-key evil-visual-state-map "L" 'evil-last-non-blank)
   (define-key evil-normal-state-map "H" 'beginning-of-line-text)
   (define-key evil-visual-state-map "H" 'beginning-of-line-text)
-  (define-key evil-normal-state-map (kbd "[ SPC") 'ftzm/add-line-above)
-  (define-key evil-normal-state-map (kbd "] SPC") 'ftzm/add-line-below)
-  
-  (define-prefix-command 'ftzm/window-map)
-  (evil-leader/set-key "w" 'ftzm/window-map)
-  (define-key ftzm/window-map "v" 'split-window-right)
-  (define-key ftzm/window-map "s" 'split-window-below)
-  (define-key ftzm/window-map "h" 'evil-window-left)
-  (define-key ftzm/window-map "j" 'evil-window-down)
-  (define-key ftzm/window-map "k" 'evil-window-up)
-  (define-key ftzm/window-map "l" 'evil-window-right)
-  (define-key ftzm/window-map "d" 'delete-window)
+  (define-key evil-normal-state-map (kbd "[ SPC") 'add-line-above)
+  (define-key evil-normal-state-map (kbd "] SPC") 'add-line-below)
 
-  (define-prefix-command 'ftzm/buffer-map)
-  (evil-leader/set-key "b" 'ftzm/buffer-map)
-  (define-key ftzm/buffer-map "d" 'evil-delete-buffer)
-  (define-key ftzm/buffer-map "e" 'eval-buffer)
+  (define-prefix-command 'window-keys)
+  (evil-leader/set-key "w" 'window-keys)
+  (define-key window-keys "v" 'split-window-right)
+  (define-key window-keys "s" 'split-window-below)
+  (define-key window-keys "h" 'evil-window-left)
+  (define-key window-keys "j" 'evil-window-down)
+  (define-key window-keys "k" 'evil-window-up)
+  (define-key window-keys "l" 'evil-window-right)
+  (define-key window-keys "d" 'delete-window)
 
-  (define-prefix-command 'ftzm/file-map)
-  (evil-leader/set-key "f" 'ftzm/file-map)
-  (define-key ftzm/file-map "s" 'save-buffer)
-  (define-key ftzm/file-map "f" 'counsel-find-file)
+  (define-prefix-command 'buffer-keys)
+  (evil-leader/set-key "b" 'buffer-keys)
+  (define-key buffer-keys "d" 'evil-delete-buffer)
+  (define-key buffer-keys "e" 'eval-buffer)
 
-    (defun ftzm/agenda-remove-schedule ()
-      (interactive)
-      (org-agenda-schedule '(4))
-      )
+  (define-prefix-command 'file-keys)
+  (evil-leader/set-key "f" 'file-keys)
+  (define-key file-keys "s" 'save-buffer)
+  (define-key file-keys "f" 'counsel-find-file)
 
-    (add-hook 'org-mode-hook
-	      (lambda ()
-		(define-key evil-normal-state-map (kbd "TAB") 'org-cycle))) 
+  (defun agenda-remove-schedule ()
+    (interactive)
+    (org-agenda-schedule '(4))
+    )
+
+  (add-hook 'org-mode-hook
+	    (lambda ()
+	      (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)))
   )
+
+
+
+
+
 
 ;; keeps a list of recently visisted files
 (use-package recentf
@@ -160,45 +168,88 @@
   )
 
 ;; ----------------------------------------------------------------------------
-;; Perspectives
+;; Which-Key - Shows potential followup keys after pressing a key
 ;; ----------------------------------------------------------------------------
 
-(use-package persp-mode
-  :diminish persp-mode
+(use-package which-key
+  :diminish which-key-mode
+  :init
+  (which-key-mode)
   :config
-  (setq persp-nil-name "Default")
-  ;;(setq persp-autokill-buffer-on-remove 'kill-weak)
-  (setq persp-autokill-buffer-on-remove nil) ;; kill-weak was causing problems
-  (setq persp-autokill-persp-when-removed-last-buffer nil)
-  (add-hook 'after-init-hook #'(lambda () (persp-mode 1)))
-
-  (define-prefix-command 'ftzm/persp-mode-map)
-  (evil-leader/set-key "s" 'ftzm/persp-mode-map)
-  (define-key ftzm/persp-mode-map "s" 'persp-switch)
-  (define-key ftzm/persp-mode-map "a" 'persp-add-buffer)
-  (define-key ftzm/persp-mode-map "k" 'persp-prev)
-  (define-key ftzm/persp-mode-map "j" 'persp-next)
-
-  (with-eval-after-load "ivy"
-    (add-hook 'ivy-ignore-buffers
-              #'(lambda (b)
-                  (when persp-mode
-                    (let ((persp (get-current-persp)))
-                      (if persp
-                          (not (persp-contain-buffer-p b persp))
-                        nil)))))
-
-    (setq ivy-sort-functions-alist
-          (append ivy-sort-functions-alist
-                  '((persp-kill-buffer   . nil)
-                    (persp-remove-buffer . nil)
-                    (persp-add-buffer    . nil)
-                    (persp-switch        . nil)
-                    (persp-window-switch . nil)
-                    (persp-frame-switch  . nil))))
-
+  (setq which-key-idle-delay 0.3)
   )
+
+
+;; ----------------------------------------------------------------------------
+;; Eyebrowse
+;; ----------------------------------------------------------------------------
+
+(use-package eyebrowse
+  :init
+  (eyebrowse-mode 1)
+  :config
+  (define-prefix-command 'eyebrowse-keys)
+  (evil-leader/set-key "s" 'eyebrowse-keys)
+  (define-key eyebrowse-keys "s" 'eyebrowse-switch-to-window-config)
+  (define-key eyebrowse-keys "l" 'eyebrowse-last-window-config)
+  (define-key eyebrowse-keys "k" 'eyebrowse-prev-window-config)
+  (define-key eyebrowse-keys "j" 'eyebrowse-next-window-config)
+  (define-key eyebrowse-keys "a" 'eyebrowse-create-window-config)
+  (define-key eyebrowse-keys "r" 'eyebrowse-rename-window-config)
+  (define-key eyebrowse-keys "d" 'eyebrowse-close-window-config)
+
+  (define-key evil-normal-state-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
+  (define-key evil-normal-state-map (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
+  (define-key evil-normal-state-map (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
+  (define-key evil-normal-state-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
+  (define-key evil-normal-state-map (kbd "M-5") 'eyebrowse-switch-to-window-config-5)
+  (define-key evil-normal-state-map (kbd "M-6") 'eyebrowse-switch-to-window-config-6)
+  (define-key evil-normal-state-map (kbd "M-7") 'eyebrowse-switch-to-window-config-7)
+  (define-key evil-normal-state-map (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
+  (define-key evil-normal-state-map (kbd "M-9") 'eyebrowse-switch-to-window-config-9) ;
+  (define-key evil-normal-state-map (kbd "M-0") 'eyebrowse-switch-to-window-config-0)
   )
+
+;; ----------------------------------------------------------------------------
+;; PERSPECTIVES
+;; ----------------------------------------------------------------------------
+
+					;(use-package persp-mode
+					;  :diminish persp-mode
+					;  :config
+					;  (setq persp-nil-name "Default")
+					;  ;;(setq persp-autokill-buffer-on-remove 'kill-weak)
+					;  (setq persp-autokill-buffer-on-remove nil) ;; kill-weak was causing problems
+					;  (setq persp-autokill-persp-when-removed-last-buffer nil)
+					;  (add-hook 'after-init-hook #'(lambda () (persp-mode 1)))
+					;
+					;  (define-prefix-command 'persp-mode-map)
+					;  (evil-leader/set-key "s" 'persp-mode-map)
+					;  (define-key persp-mode-map "s" 'persp-switch)
+					;  (define-key persp-mode-map "a" 'persp-add-buffer)
+					;  (define-key persp-mode-map "k" 'persp-prev)
+					;  (define-key persp-mode-map "j" 'persp-next)
+					;
+					;  (with-eval-after-load "ivy"
+					;    (add-hook 'ivy-ignore-buffers
+					;              #'(lambda (b)
+					;                  (when persp-mode
+					;                    (let ((persp (get-current-persp)))
+					;                      (if persp
+					;                          (not (persp-contain-buffer-p b persp))
+					;                        nil)))))
+					;
+					;    (setq ivy-sort-functions-alist
+					;          (append ivy-sort-functions-alist
+					;                  '((persp-kill-buffer   . nil)
+					;                    (persp-remove-buffer . nil)
+					;                    (persp-add-buffer    . nil)
+					;                    (persp-switch        . nil)
+					;                    (persp-window-switch . nil)
+					;                    (persp-frame-switch  . nil))))
+					;
+					;  )
+					;  )
 
 ;; ----------------------------------------------------------------------------
 ;; Motion Enhancement
@@ -239,10 +290,10 @@
 ;; ----------------------------------------------------------------------------
 
 (add-hook 'haskell-mode-hook
-	'auto-fill-mode)
+	  'auto-fill-mode)
 
 (add-hook 'python-mode-hook
-	'auto-fill-mode)
+	  'auto-fill-mode)
 
 (diminish 'auto-fill-function)
 
@@ -282,10 +333,8 @@
      (original-source)))
 
 
-    (with-eval-after-load 'org
-      (define-key org-mode-map (kbd "C-c C-q") #'counsel-org-tag))
-    (with-eval-after-load 'org-agenda
-      (define-key org-agenda-mode-map (kbd "C-c C-q") #'counsel-org-tag-agenda))
+  (with-eval-after-load 'org-agenda
+    (define-key org-agenda-mode-map (kbd "C-c C-q") #'counsel-org-tag-agenda))
 
   )
 
@@ -293,7 +342,7 @@
   :config
   (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich-switch-buffer-transformer)
   (setq ivy-virtual-abbreviate 'full
-      ivy-rich-switch-buffer-align-virtual-buffer t)
+	ivy-rich-switch-buffer-align-virtual-buffer t)
   (setq ivy-rich-abbreviate-paths t)
   )
 
@@ -328,6 +377,8 @@
   :diminish "\\"
   :config
   (add-hook 'haskell-mode-hook 'intero-mode)
+  (with-eval-after-load 'flycheck 
+    (flycheck-add-next-checker 'intero '(warning . haskell-hlint)))
   )
 
 ;; ----------------------------------------------------------------------------
@@ -341,9 +392,9 @@
   )
 
 (add-hook 'python-mode-hook (lambda ()
-                               (flycheck-mode 1)
-                               (setq flycheck-checker 'python-pylint
-                                     flycheck-checker-error-threshold 900)))
+			      (flycheck-mode 1)
+			      (setq flycheck-checker 'python-pylint
+				    flycheck-checker-error-threshold 900)))
 
 ;; ----------------------------------------------------------------------------
 ;; Dockerfile
@@ -394,13 +445,13 @@
 
   ;; set default `company-backends'
   (setq company-backends
-    '((company-files          ; files & directory
-     company-keywords       ; keywords
-     company-capf
-     ;;company-yasnippet ;;not using atm
-     )
-    (company-abbrev company-dabbrev)
-    ))
+	'((company-files          ; files & directory
+	   company-keywords       ; keywords
+	   company-capf
+	   ;;company-yasnippet ;;not using atm
+	   )
+	  (company-abbrev company-dabbrev)
+	  ))
 
   (add-hook 'python-mode-hook
             (lambda ()
@@ -411,41 +462,41 @@
               (add-to-list (make-local-variable 'company-backends)
                            'company-elisp)))
 
-;; Below: more involved specification of backends that I may employ later
+  ;; Below: more involved specification of backends that I may employ later
 
-;;(dolist (hook '(js-mode-hook
-;;                js2-mode-hook
-;;                js3-mode-hook
-;;                inferior-js-mode-hook
-;;                ))
-;;  (add-hook hook
-;;            (lambda ()
-;;              (tern-mode t)
-;;
-;;              (add-to-list (make-local-variable 'company-backends)
-;;                           'company-tern)
-;;              )))
+  ;;(dolist (hook '(js-mode-hook
+  ;;                js2-mode-hook
+  ;;                js3-mode-hook
+  ;;                inferior-js-mode-hook
+  ;;                ))
+  ;;  (add-hook hook
+  ;;            (lambda ()
+  ;;              (tern-mode t)
+  ;;
+  ;;              (add-to-list (make-local-variable 'company-backends)
+  ;;                           'company-tern)
+  ;;              )))
 
 ;;;;;_. company-mode support like auto-complete in web-mode
-;;
+  ;;
 ;;;; Enable CSS completion between <style>...</style>
-;;(defadvice company-css (before web-mode-set-up-ac-sources activate)
-;;  "Set CSS completion based on current language before running `company-css'."
-;;  (if (equal major-mode 'web-mode)
-;;      (let ((web-mode-cur-language (web-mode-language-at-pos)))
-;;        (if (string= web-mode-cur-language "css")
-;;            (unless css-mode (css-mode))))))
-;;
+  ;;(defadvice company-css (before web-mode-set-up-ac-sources activate)
+  ;;  "Set CSS completion based on current language before running `company-css'."
+  ;;  (if (equal major-mode 'web-mode)
+  ;;      (let ((web-mode-cur-language (web-mode-language-at-pos)))
+  ;;        (if (string= web-mode-cur-language "css")
+  ;;            (unless css-mode (css-mode))))))
+  ;;
 ;;;; Enable JavaScript completion between <script>...</script> etc.
-;;(defadvice company-tern (before web-mode-set-up-ac-sources activate)
-;;  "Set `tern-mode' based on current language before running `company-tern'."
-;;  (if (equal major-mode 'web-mode)
-;;      (let ((web-mode-cur-language (web-mode-language-at-pos)))
-;;        (if (or (string= web-mode-cur-language "javascript")
-;;               (string= web-mode-cur-language "jsx"))
-;;            (unless tern-mode (tern-mode))
-;;          ;; (if tern-mode (tern-mode))
-;;          ))))
+  ;;(defadvice company-tern (before web-mode-set-up-ac-sources activate)
+  ;;  "Set `tern-mode' based on current language before running `company-tern'."
+  ;;  (if (equal major-mode 'web-mode)
+  ;;      (let ((web-mode-cur-language (web-mode-language-at-pos)))
+  ;;        (if (or (string= web-mode-cur-language "javascript")
+  ;;               (string= web-mode-cur-language "jsx"))
+  ;;            (unless tern-mode (tern-mode))
+  ;;          ;; (if tern-mode (tern-mode))
+  ;;          ))))
 
 
   )
@@ -460,11 +511,11 @@
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
   (setq flycheck-display-errors-delay 0.1)
 
-  (define-prefix-command 'ftzm/flycheck-map)
-  (evil-leader/set-key "e" 'ftzm/flycheck-map)
-  (define-key ftzm/flycheck-map "p" 'flycheck-previous-error)
-  (define-key ftzm/flycheck-map "n" 'flycheck-next-error)
-   
+  (define-prefix-command 'flycheck-keys)
+  (evil-leader/set-key "e" 'flycheck-keys)
+  (define-key flycheck-keys "p" 'flycheck-previous-error)
+  (define-key flycheck-keys "n" 'flycheck-next-error)
+
   )
 
 ;; ############################################################################
@@ -478,10 +529,10 @@
   :config
   (setq projectile-completion-system 'ivy) ;;requires ivy
 
-  (define-prefix-command 'ftzm/projectile-map)
-  (evil-leader/set-key "p" 'ftzm/projectile-map)
-  (define-key ftzm/projectile-map "f" 'counsel-projectile)
-  (define-key ftzm/projectile-map "p" 'counsel-projectile-switch-project)
+  (define-prefix-command 'projectile-keys)
+  (evil-leader/set-key "p" 'projectile-keys)
+  (define-key projectile-keys "f" 'counsel-projectile)
+  (define-key projectile-keys "p" 'counsel-projectile-switch-project)
   )
 
 ;; ############################################################################
@@ -505,33 +556,33 @@
     ;; apply CLOSED property on done
     (setq org-log-done 'time)
 
-    (define-prefix-command 'ftzm/org-mode-map)
-    (evil-leader/set-key "o" 'ftzm/org-mode-map)
-    (define-key ftzm/org-mode-map "c" 'org-capture)
-    (define-key ftzm/org-mode-map "a" 'org-agenda)
-    (define-key ftzm/org-mode-map "l" 'org-agenda-list)
-    (define-key ftzm/org-mode-map "t" 'org-todo-list)
+    (define-prefix-command 'org-keys)
+    (evil-leader/set-key "o" 'org-keys)
+    (define-key org-keys "c" 'org-capture)
+    (define-key org-keys "a" 'org-agenda)
+    (define-key org-keys "l" 'org-agenda-list)
+    (define-key org-keys "t" 'org-todo-list)
 
     ;;;; org-capture setting
     ;; Start capture mode in evil insert state
 
     ;; Map for my custom ',' prefix in capture mode
-    (define-prefix-command 'ftzm/capture-mode-map)
-    (evil-define-key 'normal org-capture-mode-map "," 'ftzm/capture-mode-map)
-    (define-key ftzm/capture-mode-map "k" 'org-capture-kill)
-    (define-key ftzm/capture-mode-map "r" 'org-capture-refile)
-    (define-key ftzm/capture-mode-map "c" 'org-capture-finalize)
+    (define-prefix-command 'capture-mode-map)
+    (evil-define-key 'normal org-capture-mode-map "," 'capture-mode-map)
+    (define-key capture-mode-map "k" 'org-capture-kill)
+    (define-key capture-mode-map "r" 'org-capture-refile)
+    (define-key capture-mode-map "c" 'org-capture-finalize)
 
 
     (add-hook 'org-capture-mode-hook 'evil-insert-state)
 
     (setq org-capture-templates
-        (quote (("t" "todo" entry (file+headline "~/org/refile.org" "Tasks")
-                "* TODO %?\n  SCHEDULED: %t")
-                ("n" "note" entry (file+headline "~/org/refile.org" "Notes")
-                "* %?")
-                ;;"* TODO %?\n%U\n%a\n")
-    )))
+	  (quote (("t" "todo" entry (file+headline "~/org/refile.org" "Tasks")
+		   "* TODO %?\n  SCHEDULED: %t")
+		  ("n" "note" entry (file+headline "~/org/refile.org" "Notes")
+		   "* %?")
+		  ;;"* TODO %?\n%U\n%a\n")
+		  )))
     (setq org-default-notes-file "~/org/refile.org")
     (evil-leader/set-key "oc" 'org-capture)
 
@@ -539,14 +590,14 @@
 
     ;; Exclude DONE state tasks from refile targets
     (defun bh/verify-refile-target ()
-    "Exclude todo keywords with a done state from refile targets"
-    (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+      "Exclude todo keywords with a done state from refile targets"
+      (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 
     (setq org-refile-target-verify-function 'bh/verify-refile-target)
 
     ;; allow refiling 9 levels deep
     (setq org-refile-targets '((nil :maxlevel . 9)
-                                  (org-agenda-files :maxlevel . 9)))
+			       (org-agenda-files :maxlevel . 9)))
 
     ;; Refile in a single go
     (setq org-outline-path-complete-in-steps nil)
@@ -560,42 +611,42 @@
 
 
     (setq org-agenda-prefix-format '(
-      ;;(agenda  . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
-      (agenda  . " %i %?-12t% s") ;; remove file name (And hopefully just that)
-      (timeline  . "  % s")
-      (todo  . " %i %-12:c")
-      (tags  . " %i %-12:c")
-      (search . " %i %-12:c")))
+				     ;;(agenda  . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
+				     (agenda  . " %i %?-12t% s") ;; remove file name (And hopefully just that)
+				     (timeline  . "  % s")
+				     (todo  . " %i %-12:c")
+				     (tags  . " %i %-12:c")
+				     (search . " %i %-12:c")))
 
     ;; Custom sorting in agenda mode
     (setq org-agenda-sorting-strategy
-      '((agenda time-up todo-state-down scheduled-up priority-down)
-      ;; Original value of above:
-      ;;(agenda habit-down time-up priority-down category-keep)
-        (todo priority-down category-up)
-        (tags priority-down category-keep)
-        (search category-keep)))
+	  '((agenda time-up todo-state-down scheduled-up priority-down)
+	    ;; Original value of above:
+	    ;;(agenda habit-down time-up priority-down category-keep)
+	    (todo priority-down category-up)
+	    (tags priority-down category-keep)
+	    (search category-keep)))
 
     ;; VI keybinds for agenda mode stolen from abandonware "evil-rebellion"
     ;; Now has been customized a fair bit actually
     (evil-set-initial-state 'org-agenda-mode 'normal)
 
 
-    (defun ftzm/agenda-remove-schedule ()
+    (defun agenda-remove-schedule ()
       (interactive)
       (org-agenda-schedule '(4))
       )
 
     ;; Map for my custom ',' prefix.
-    (define-prefix-command 'ftzm/agenda-mode-map)
-    (define-key ftzm/agenda-mode-map "w" 'org-agenda-week-view)
-    (define-key ftzm/agenda-mode-map "D" 'org-agenda-day-view)
-    (define-key ftzm/agenda-mode-map "d" 'org-agenda-deadline)
-    (define-key ftzm/agenda-mode-map "r" 'org-agenda-refile)
-    (define-key ftzm/agenda-mode-map "s" 'org-agenda-schedule)
-    (define-key ftzm/agenda-mode-map "p" 'org-agenda-priority)
-    (define-key ftzm/agenda-mode-map "f" 'org-agenda-filter-by-tag)
-    (define-key ftzm/agenda-mode-map "cs" 'ftzm/agenda-remove-schedule)
+    (define-prefix-command 'agenda-mode-map)
+    (define-key agenda-mode-map "w" 'org-agenda-week-view)
+    (define-key agenda-mode-map "D" 'org-agenda-day-view)
+    (define-key agenda-mode-map "d" 'org-agenda-deadline)
+    (define-key agenda-mode-map "r" 'org-agenda-refile)
+    (define-key agenda-mode-map "s" 'org-agenda-schedule)
+    (define-key agenda-mode-map "p" 'org-agenda-priority)
+    (define-key agenda-mode-map "f" 'org-agenda-filter-by-tag)
+    (define-key agenda-mode-map "cs" 'agenda-remove-schedule)
 
     (evil-define-key 'normal org-agenda-mode-map
       (kbd "<DEL>") 'org-agenda-show-scroll-down
@@ -605,7 +656,7 @@
       "\C-p" 'org-agenda-previous-line
       "\C-r" 'org-agenda-redo
       "a" 'org-agenda-archive-default-with-confirmation
-      ;b
+					;b
       "c" 'org-agenda-goto-calendar
       "d" 'org-agenda-day-view
       "e" 'org-agenda-set-effort
@@ -623,22 +674,22 @@
       "gv" 'org-agenda-view-mode-dispatch
       "gw" 'org-agenda-week-view
       "g/" 'org-agenda-filter-by-tag
-      ;"h"  'org-agenda-earlier
+					;"h"  'org-agenda-earlier
       "b"  'org-agenda-earlier
       "i"  'org-agenda-diary-entry
       "j"  'org-agenda-next-line
       "k"  'org-agenda-previous-line
-      ;"l"  'org-agenda-later
+					;"l"  'org-agenda-later
       "m" 'org-agenda-bulk-mark
-      ;"n" nil                           ; evil-search-next
+					;"n" nil                           ; evil-search-next
       "o" 'delete-other-windows
-      ;p
+					;p
       "q" 'org-agenda-quit
       "r" 'org-agenda-redo
       ;;"s" 'org-agenda-schedule ;;conflicts with avy
       "t" 'org-agenda-todo
       "u" 'org-agenda-bulk-unmark
-      ;v
+					;v
       "W" 'org-agenda-week-view
       "x" 'org-agenda-exit
       "y" 'org-agenda-year-view
@@ -648,7 +699,7 @@
       "$" 'org-agenda-archive
       "%" 'org-agenda-bulk-mark-regexp
       "+" 'org-agenda-priority-up
-      ;"," 'org-agenda-priority
+					;"," 'org-agenda-priority
       "-" 'org-agenda-priority-down
       "." 'org-agenda-goto-today
       "0" 'evil-digit-argument-or-evil-beginning-of-line
@@ -664,39 +715,65 @@
       "D" 'org-agenda-day-view
       "E" 'org-agenda-entry-text-mode
       "F" 'org-agenda-follow-mode
-      ;G
+					;G
       "H" 'org-agenda-holidays
       "I" 'org-agenda-clock-in
       "J" 'org-agenda-next-date-line
       "K" 'org-agenda-previous-date-line
       "L" 'org-agenda-recenter
       "M" 'org-agenda-phases-of-moon
-      ;N
+					;N
       "O" 'org-agenda-clock-out
       "P" 'org-agenda-show-priority
-      ;Q
+					;Q
       "R" 'org-agenda-refile
       ;;"R" 'org-agenda-clockreport-mode ;; Maybe reassign if I learn what do
       ;;"S" 'org-save-all-org-buffers
       "S" 'org-agenda-schedule
       "T" 'org-agenda-show-tags
-      ;U
-      ;V
-      ;W
+					;U
+					;V
+					;W
       "X" 'org-agenda-clock-cancel
-      ;Y
-      ;Z
+					;Y
+					;Z
       "[" 'org-agenda-manipulate-query-add
       "g\\" 'org-agenda-filter-by-tag-refine
       "]" 'org-agenda-manipulate-query-subtract
 
       ;; prefix for my custom map
-      "," 'ftzm/agenda-mode-map
+      "," 'agenda-mode-map
 
 
       ))
 
+;; ----------------------------------------------------------------------------
+;; Custom Archive Function
+
+  (defun days-ago (number)
+    (time-subtract (current-time) (seconds-to-time (* number 86400)))
     )
+
+  (defun archive-if-old ()
+    (let*
+	((props (org-entry-properties (point)))
+         (closed-string (cdr (assoc "CLOSED" props)))
+	 (title (cdr (assoc "ITEM" props)))
+	 (closed (if closed-string (date-to-time closed-string) (days-ago 30)))
+	 (cutoff (days-ago 7)))
+         (when (time-less-p closed cutoff) ((lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (outline-previous-heading))
+     (org-save-all-org-buffers))))
+    ))
+  
+  (defun org-archive-done-tasks ()
+    (interactive)
+    (org-map-entries 'archive-if-old "/DONE" 'agenda))
+    )
+
+;; ----------------------------------------------------------------------------
+
 
 ;;(use-package org-habit) ;; I can never get this to work
 
@@ -723,6 +800,8 @@
 ;; disable fringe
 (set-fringe-mode 0)
 
+;;try out loading here
+  (spaceline-compile)
 ;; ############################################################################
 ;; Beware: here be custom-set-variables. Best don't touch.
 ;; ############################################################################
@@ -736,13 +815,13 @@
    ["#2e3436" "#a40000" "#4e9a06" "#c4a000" "#204a87" "#5c3566" "#729fcf" "#eeeeec"])
  '(custom-safe-themes
    (quote
-    ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+    ("10e231624707d46f7b2059cc9280c332f7c7a530ebc17dba7e506df34c5332c4" "227edf860687e6dfd079dc5c629cbfb5c37d0b42a3441f5c50873ba11ec8dfd2" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(org-agenda-files
    (quote
     ("~/dev/hnefatafl/hnefatafl.org" "~/org/refile.org" "~/org/tasks.org")))
  '(package-selected-packages
    (quote
-    (smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
+    (which-key darktooth-theme smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
  '(safe-local-variable-values (quote ((eval progn (pp-buffer) (indent-buffer))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -750,5 +829,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ivy-current-match ((t (:foreground "#8ec07c" :underline nil :weight normal))))
+ '(powerline-active2 ((t (:inherit mode-line :background "grey22"))))
  '(success ((t (:foreground "#b8bb26" :weight normal))))
  '(warning ((t (:foreground "#fe8019" :weight normal)))))

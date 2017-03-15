@@ -13,3 +13,4 @@ polybar example &
 compton &
 exec xmonad
 
+
