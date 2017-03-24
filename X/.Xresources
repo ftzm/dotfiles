@@ -7,7 +7,7 @@ urxvt*smoothResize: true
 !URxvt.boldFont:xft:Source Code Pro for Powerline:Regular:size=9
 !URxvt.boldFont:xft:Inconsolata-g for Powerline:g:size=10
 !URxvt.boldFont:xft:Fira Mono Medium for Powerline:Medium:size=9
-URxvt.boldFont:xft:Fira Mono:Medium:size=9
+URxvt.boldFont:xft:Fira Code:Medium:size=16
 !URxvt.boldFont:xft:Fira Mono for Powerline:Regular:size=9
 !URxvt.boldFont:xft:DejaVu Sans Mono for Powerline:Book:size=9
 !URxvt.boldFont:xft:Meslo LG S for Powerline:RegularForPowerline:size=9
@@ -20,7 +20,7 @@ URxvt.boldFont:xft:Fira Mono:Medium:size=9
 !URxvt.font:xft:Source Code Pro for Powerline:Regular:size=9
 !URxvt.font:xft:Inconsolata-g for Powerline:g:size=10
 !URxvt.font:xft:Fira Mono Medium for Powerline:Medium:size=9
-URxvt.font:xft:Fira Mono:Medium:size=9
+URxvt.font:xft:Fira Code:Medium:size=16
 
 
 !URxvt.font:xft:Fira Mono for Powerline:Regular:size=9

@@ -3,9 +3,12 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil nil ("spaceline-config.el" "spaceline-pkg.el"
-;;;;;;  "spaceline-segments.el" "spaceline.el") (22719 1285 879793
-;;;;;;  764000))
+;;;### (autoloads nil nil ("../../../../../.emacs.d/elpa/spaceline-20170102.59/spaceline-autoloads.el"
+;;;;;;  "../../../../../.emacs.d/elpa/spaceline-20170102.59/spaceline-config.el"
+;;;;;;  "../../../../../.emacs.d/elpa/spaceline-20170102.59/spaceline-pkg.el"
+;;;;;;  "../../../../../.emacs.d/elpa/spaceline-20170102.59/spaceline-segments.el"
+;;;;;;  "../../../../../.emacs.d/elpa/spaceline-20170102.59/spaceline.el")
+;;;;;;  (22732 17599 471015 182000))
 
 ;;;***
 

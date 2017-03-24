@@ -36,7 +36,7 @@ myPP = xmobarPP
                "%{} "
                "%{} %{}"
   , ppWsSep = ""
-  , ppSep = " "
+  , ppSep = " •  "
   --, ppOrder = (:[]) . head
   , ppOrder = take 2
   , ppLayout = layoutRenamer
@@ -59,13 +59,15 @@ myConfig = defaultConfig
     , workspaces = myWorkspaces
     }
 
-myTabsTheme = defaultTheme
-  { fontName = "xft:lemon:medium:pixelsize=10"
-  , activeColor = "#268bd2"
-  , inactiveColor = "#002b36"
-  , activeBorderColor = "#268bd2"
-  , inactiveBorderColor = "#002b36"
-  , decoHeight = 0
+myTabsTheme = def
+  { fontName = "xft:Fira Code:medium:size=15"
+  , activeColor = "#282828"
+  , activeTextColor = "#ebdbb2"
+  , inactiveColor = "#1d2021"
+  , inactiveTextColor = "#a89984"
+  , activeBorderColor = "#282828"
+  , inactiveBorderColor = "#282828"
+  , decoHeight = 30
   }
 
 myWorkspaces = ["main","web","dev","term","mus","6","7","8","9"]
@@ -75,10 +77,10 @@ myModMask     = mod4Mask -- Win key or Super_L
 myBorderWidth = 1
 
 --spacing 2 adds 2px spacing around all windows in all layouts
-myLayouts = avoidStruts $ (smartBorders $ rT ||| Mirror rT ||| Full ||| emptyBSP) ||| tabbed shrinkText myTabsTheme
+myLayouts = avoidStruts $ (smartBorders $ rT ||| Mirror rT ||| Full ||| emptyBSP ||| (tabbedBottom shrinkText myTabsTheme))
 --myLayouts = rT ||| Mirror rT ||| Full ||| emptyBSP ||| tabbed shrinkText myTabsTheme
   where
-     rT = ResizableTall 1 (6/100) (1/2) []
+     rT = ResizableTall 1 (6/100) (8/13) []
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
      -- The default number of windows in the master pane
@@ -90,101 +92,111 @@ myLayouts = avoidStruts $ (smartBorders $ rT ||| Mirror rT ||| Full ||| emptyBSP
 
 layoutRenamer :: String -> String
 layoutRenamer x = case x of
-  "ResizableTall" -> "\xe002"
-  "Mirror ResizableTall" -> "\xe003"
-  "Full" -> "\xe000"
-  "BSP" -> "\xe007"
-  "Tabbed Simplest" -> "\xe004"
+  "ResizableTall" -> "<side>"
+  "Mirror ResizableTall" -> "<stack>"
+  "Full" -> "<max>"
+  "BSP" -> "<bsp>"
+  "Tabbed Bottom Simplest" -> "<tabbed>"
   x -> x
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
-myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
+myKeys conf@XConfig {XMonad.modMask = modMask} =
+  let mm = modMask
+      sm = shiftMask
+      m1m = mod1Mask
+  in M.fromList $
     -- launching and killing programs
-    [ ((modMask,               xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
-    , ((modMask,               xK_space     ), spawn "my_dmenu.sh") -- %! Launch dmenu
-    , ((modMask,               xK_f     ), spawn "rofiles") -- %! Launch dmenu
-    , ((modMask,               xK_c     ),
-    kill) -- %! Close the focused window
+    [ ((mm, xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
+    , ((mm, xK_space),  spawn "my_dmenu.sh")          -- %! Launch dmenu
+    , ((mm, xK_f),      spawn "rofiles")              -- %! Launch dmenu
+    , ((mm, xK_c),      kill)                         -- %! Close the focused window
 
-    , ((modMask,               xK_Tab ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms
-    , ((modMask .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf) -- %!  Reset the layouts on the current workspace to default
+    , ((mm, xK_Tab ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms
+    , ((mm .|. sm, xK_space ), setLayout $ XMonad.layoutHook conf) -- %!  Reset the layouts on the current workspace to default
 
-    , ((modMask,               xK_n     ), refresh) -- %! Resize viewed windows to the correct size
+    , ((mm, xK_n), refresh) -- %! Resize viewed windows to the correct size
 
     -- move focus up or down the window stack
-    , ((modMask,               xK_j     ), windows W.focusDown ) -- %! Move focus to the next window
-    , ((modMask,               xK_k     ), windows W.focusUp  ) -- %! Move focus to the previous window
-    , ((modMask,               xK_m     ), windows W.focusMaster  ) -- %! Move focus to the master window
+    , ((mm, xK_j), windows W.focusDown)   -- %! Move focus to the next window
+    , ((mm, xK_k), windows W.focusUp)     -- %! Move focus to the previous window
+    , ((mm, xK_m), windows W.focusMaster) -- %! Move focus to the master window
 
     -- modifying the window order
-    , ((modMask .|. mod1Mask, xK_m), windows W.swapMaster) -- %! Swap the focused window and the master window
-    , ((modMask .|. mod1Mask, xK_j     ), windows W.swapDown  ) -- %! Swap the focused window with the next window
-    , ((modMask .|. mod1Mask, xK_k     ), windows W.swapUp    ) -- %! Swap the focused window with the previous window
+    , ((mm .|. m1m, xK_m), windows W.swapMaster) -- %! Swap the focused window and the master window
+    , ((mm .|. m1m, xK_j), windows W.swapDown  ) -- %! Swap the focused window with the next window
+    , ((mm .|. m1m, xK_k), windows W.swapUp    ) -- %! Swap the focused window with the previous window
 
     -- resizing the master/slave ratio
-    , ((modMask,               xK_h     ), sendMessage Shrink) -- %! Shrink the master area
-    , ((modMask,               xK_l     ), sendMessage Expand) -- %! Expand the master area
+    , ((mm, xK_h), sendMessage Shrink) -- %! Shrink the master area
+    , ((mm, xK_l), sendMessage Expand) -- %! Expand the master area
 
     -- floating layer support
-    , ((modMask,               xK_t     ), withFocused $ windows . W.sink) -- %! Push window back into tiling
+    , ((mm, xK_t), withFocused $ windows . W.sink) -- %! Push window back into tiling
 
     -- increase or decrease number of windows in the master area
-    , ((modMask              , xK_comma ), sendMessage (IncMasterN 1)) -- %! Increment the number of windows in the master area
-    , ((modMask              , xK_period), sendMessage (IncMasterN (-1))) -- %! Deincrement the number of windows in the master area
+    , ((mm , xK_comma),  sendMessage (IncMasterN 1)) -- %! Increment the number of windows in the master area
+    , ((mm , xK_period), sendMessage (IncMasterN (-1))) -- %! Deincrement the number of windows in the master area
 
     -- quit, or restart
-    , ((modMask .|. shiftMask, xK_e     ), io exitSuccess) -- %! Quit xmonad
-    , ((modMask              , xK_q     ), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi") -- %! Restart xmonad
+    , ((mm .|. sm, xK_k), io exitSuccess) -- %! Quit xmonad
+    , ((mm , xK_q),       spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi") -- %! Restart xmonad
 
     --ResizableTile keys
-    , ((modMask,               xK_a), sendMessage MirrorShrink)
-    , ((modMask,               xK_z), sendMessage MirrorExpand)
+    , ((mm, xK_a), sendMessage MirrorShrink)
+    , ((mm, xK_z), sendMessage MirrorExpand)
 
-    , ((modMask,               xK_semicolon), nextMatch History (return True))
+    , ((mm, xK_semicolon), nextMatch History (return True))
+
+    --bsp keys
+    , ((mm .|. sm, xK_p),         sendMessage FocusParent)
+    , ((mm .|. sm, xK_s),         sendMessage Swap)
+    , ((mm .|. sm, xK_r),         sendMessage Rotate)
+    , ((mm .|. sm, xK_n),         sendMessage SelectNode)
+    , ((mm .|. sm, xK_m),         sendMessage MoveNode)
+    , ((mm .|. sm, xK_l),         sendMessage $ ExpandTowards R)
+    , ((mm .|. sm, xK_h),         sendMessage $ ExpandTowards L)
+    , ((mm .|. sm, xK_j),         sendMessage $ ExpandTowards D)
+    , ((mm .|. sm, xK_k),         sendMessage $ ExpandTowards U)
+    , ((mm .|. sm .|. m1m, xK_l), sendMessage $ ShrinkFrom R)
+    , ((mm .|. sm .|. m1m, xK_h), sendMessage $ ShrinkFrom L)
+    , ((mm .|. sm .|. m1m, xK_j), sendMessage $ ShrinkFrom D)
+    , ((mm .|. sm .|. m1m, xK_k), sendMessage $ ShrinkFrom U)
 
     --My desktop keys
-    , ((modMask,               xK_Down     ), spawn "panel_volume -") -- %! Launch dmenu
-    , ((modMask,               xK_Up     ), spawn "panel_volume +") -- %! Launch dmenu
-    , ((modMask .|. mod1Mask,  xK_b     ), spawn "kbds") -- %! Launch dmenu
-    , ((modMask .|. mod1Mask,  xK_h     ), spawn "systemctl hibernate") -- %! Launch dmenu
-    , ((modMask,               xK_F7     ), spawn "mpc toggle") -- %! Launch dmenu
-    , ((modMask .|. mod1Mask,  xK_t     ), spawn "toggle_mouse.sh") -- %! Launch dmenu
-    , ((modMask .|. mod1Mask,  xK_r     ), spawn "urxvt -e ranger") -- %! Launch dmenu
-
-    , ((modMask .|. shiftMask,               xK_l     ), sendMessage $ ExpandTowards R)
-    , ((modMask .|. shiftMask,               xK_h     ), sendMessage $ ExpandTowards L)
-    , ((modMask .|. shiftMask,               xK_j     ), sendMessage $ ExpandTowards D)
-    , ((modMask .|. shiftMask,               xK_k     ), sendMessage $ ExpandTowards U)
-    , ((modMask .|. shiftMask .|.  mod1Mask, xK_l     ), sendMessage $ ShrinkFrom R)
-    , ((modMask .|. shiftMask .|.  mod1Mask, xK_h     ), sendMessage $ ShrinkFrom L)
-    , ((modMask .|. shiftMask .|.  mod1Mask, xK_j     ), sendMessage $ ShrinkFrom D)
-    , ((modMask .|. shiftMask .|.  mod1Mask, xK_k     ), sendMessage $ ShrinkFrom U)
-    , ((modMask .|. shiftMask,               xK_p     ), sendMessage FocusParent)
-    , ((modMask .|. shiftMask,               xK_s     ), sendMessage Swap)
-    , ((modMask .|. shiftMask,               xK_r     ), sendMessage Rotate)
-    , ((modMask .|. shiftMask,               xK_n     ), sendMessage SelectNode)
+    , ((mm, xK_Down),      spawn "panel_volume -") -- %! Launch dmenu
+    , ((mm, xK_Up),        spawn "panel_volume +") -- %! Launch dmenu
+    , ((mm .|. m1m, xK_b), spawn "kbds") -- %! Launch dmenu
+    , ((mm .|. m1m, xK_h), spawn "systemctl hibernate") -- %! Launch dmenu
+    , ((mm, xK_F7),        spawn "mpc toggle") -- %! Launch dmenu
+    , ((mm .|. m1m, xK_t), spawn "toggle_mouse.sh") -- %! Launch dmenu
+    , ((mm .|. m1m, xK_r), spawn "urxvt -e ranger") -- %! Launch dmenu
+    , ((mm .|. m1m, xK_c), spawn "clip_key") -- %! Launch dmenu
+    , ((mm .|. m1m, xK_s), spawn "gnome-screensaver-command -l") -- %! Launch dmenu
 
     --experimental
-    , ((modMask, xK_F6     ), spawn "urxvt -e ncmpcpp")
+    , ((mm, xK_F6     ), spawn "urxvt -e ncmpcpp")
     ]
     ++
+    -- @greedyView@ will move the given workspace to the current screen, while
+    -- @view@ will simply move to another screen if the workspace is there.
     -- mod-[1..9] %! Switch to workspace N
     -- mod-shift-[1..9] %! Move client to workspace N
-    [((m .|. modMask, k), windows $ f i)
+    [((m .|. mm, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+        , (f, m) <- [(W.greedyView, 0), (W.shift, sm)]]
     ++
     -- mod-['u','i','o','p','['] %! Switch to workspace N
     -- mod-alt-['u','i','o','p','['] %! move client to workspace N
-    [((m .|. modMask, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_u,xK_i,xK_o,xK_p,xK_bracketleft]
-        , (f, m) <- [(W.greedyView, 0), (W.shift, mod1Mask)]]
-    -- ++
+    [((m .|. mm, k), windows $ f i)
+        | (i, k) <- zip (XMonad.workspaces conf)
+                        [xK_u,xK_i,xK_o,xK_p,xK_bracketleft]
+        , (f, m) <- [(W.greedyView, 0), (W.shift, m1m)]]
+    ++
     -- mod-{w,e,r} %! Switch to physical/Xinerama screens 1, 2, or 3
     -- mod-shift-{w,e,r} %! Move client to screen 1, 2, or 3
-    --[((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
-    --    | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-    --    , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+    [((m .|. m1m, key), screenWorkspace sc >>= flip whenJust (windows . f))
+        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+        , (f, m) <- [(W.view, 0), (W.shift, sm)]]
 
 myManageHook = composeAll
                  [ className =? "URxvt" --> doF W.swapDown]

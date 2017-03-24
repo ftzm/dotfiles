@@ -3,9 +3,9 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "counsel" "counsel.el" (22718 53046 447755
-;;;;;;  19000))
-;;; Generated autoloads from counsel.el
+;;;### (autoloads nil "counsel" "../../../../../.emacs.d/elpa/counsel-20170225.356/counsel.el"
+;;;;;;  "89e30ca155b4986c8eb20ee21ab91c47")
+;;; Generated autoloads from ../../../../../.emacs.d/elpa/counsel-20170225.356/counsel.el
 
 (autoload 'counsel-el "counsel" "\
 Elisp completion at point.
@@ -297,6 +297,12 @@ mode remaps built-in emacs functions that have counsel
 replacements. 
 
 \(fn &optional ARG)" t nil)
+
+;;;***
+
+;;;### (autoloads nil nil ("../../../../../.emacs.d/elpa/counsel-20170225.356/counsel-autoloads.el"
+;;;;;;  "../../../../../.emacs.d/elpa/counsel-20170225.356/counsel.el")
+;;;;;;  (22732 17953 770559 437000))
 
 ;;;***
 

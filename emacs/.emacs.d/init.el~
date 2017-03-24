@@ -10,8 +10,8 @@
 (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-;;Set font
-(set-default-font "Fira Mono-10")
+;Set font
+(add-to-list 'default-frame-alist '(font . "Fira Code-10" ))
 
 (blink-cursor-mode 0)
 (setq visible-cursor nil) ;; no blink in term
@@ -54,26 +54,27 @@
 ;; Spaceline
 ;; ----------------------------------------------------------------------------
 
+(use-package spaceline :demand t)
 (use-package spaceline-config
-  ;;:ensure spaceline
+  :ensure spaceline
   :config
   (if (display-graphic-p)
       (progn
-  	(setq powerline-default-separator 'wave)
+  	(setq powerline-default-separator 'slant)
   	)
     (progn
       (setq powerline-default-separator nil)
       )
     )
+  (spaceline-spacemacs-theme)
   (spaceline-toggle-buffer-size-off)
-  (spaceline-toggle-hud-off)
-  (spaceline-toggle-buffer-position-off)
+  ;(spaceline-toggle-hud-off)
+  ;(spaceline-toggle-buffer-position-off)
   (spaceline-toggle-buffer-encoding-abbrev-off)
   (spaceline-toggle-version-control-off)
   (spaceline-toggle-evil-state-off)
-  ;(spaceline-toggle-persp-name-on)
-  ;(spaceline-toggle-workspace-number-on)
-  (spaceline-spacemacs-theme)
+  (spaceline-toggle-workspace-number-on)
+  (spaceline-toggle-projectile-root-on)
   )
 
 
@@ -154,11 +155,6 @@
 	      (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)))
   )
 
-
-
-
-
-
 ;; keeps a list of recently visisted files
 (use-package recentf
   :init
@@ -214,42 +210,42 @@
 ;; PERSPECTIVES
 ;; ----------------------------------------------------------------------------
 
-					;(use-package persp-mode
-					;  :diminish persp-mode
-					;  :config
-					;  (setq persp-nil-name "Default")
-					;  ;;(setq persp-autokill-buffer-on-remove 'kill-weak)
-					;  (setq persp-autokill-buffer-on-remove nil) ;; kill-weak was causing problems
-					;  (setq persp-autokill-persp-when-removed-last-buffer nil)
-					;  (add-hook 'after-init-hook #'(lambda () (persp-mode 1)))
-					;
-					;  (define-prefix-command 'persp-mode-map)
-					;  (evil-leader/set-key "s" 'persp-mode-map)
-					;  (define-key persp-mode-map "s" 'persp-switch)
-					;  (define-key persp-mode-map "a" 'persp-add-buffer)
-					;  (define-key persp-mode-map "k" 'persp-prev)
-					;  (define-key persp-mode-map "j" 'persp-next)
-					;
-					;  (with-eval-after-load "ivy"
-					;    (add-hook 'ivy-ignore-buffers
-					;              #'(lambda (b)
-					;                  (when persp-mode
-					;                    (let ((persp (get-current-persp)))
-					;                      (if persp
-					;                          (not (persp-contain-buffer-p b persp))
-					;                        nil)))))
-					;
-					;    (setq ivy-sort-functions-alist
-					;          (append ivy-sort-functions-alist
-					;                  '((persp-kill-buffer   . nil)
-					;                    (persp-remove-buffer . nil)
-					;                    (persp-add-buffer    . nil)
-					;                    (persp-switch        . nil)
-					;                    (persp-window-switch . nil)
-					;                    (persp-frame-switch  . nil))))
-					;
-					;  )
-					;  )
+;(use-package persp-mode
+;  :diminish persp-mode
+;  :config
+;  (setq persp-nil-name "Default")
+;  ;;(setq persp-autokill-buffer-on-remove 'kill-weak)
+;  (setq persp-autokill-buffer-on-remove nil) ;; kill-weak was causing problems
+;  (setq persp-autokill-persp-when-removed-last-buffer nil)
+;  (add-hook 'after-init-hook #'(lambda () (persp-mode 1)))
+;
+;  (define-prefix-command 'persp-mode-map)
+;  (evil-leader/set-key "s" 'persp-mode-map)
+;  (define-key persp-mode-map "s" 'persp-switch)
+;  (define-key persp-mode-map "a" 'persp-add-buffer)
+;  (define-key persp-mode-map "k" 'persp-prev)
+;  (define-key persp-mode-map "j" 'persp-next)
+;
+;  (with-eval-after-load "ivy"
+;    (add-hook 'ivy-ignore-buffers
+;              #'(lambda (b)
+;                  (when persp-mode
+;                    (let ((persp (get-current-persp)))
+;                      (if persp
+;                          (not (persp-contain-buffer-p b persp))
+;                        nil)))))
+;
+;    (setq ivy-sort-functions-alist
+;          (append ivy-sort-functions-alist
+;                  '((persp-kill-buffer   . nil)
+;                    (persp-remove-buffer . nil)
+;                    (persp-add-buffer    . nil)
+;                    (persp-switch        . nil)
+;                    (persp-window-switch . nil)
+;                    (persp-frame-switch  . nil))))
+;
+;  )
+;  )
 
 ;; ----------------------------------------------------------------------------
 ;; Motion Enhancement
@@ -288,6 +284,9 @@
 ;; ----------------------------------------------------------------------------
 ;; Autofill
 ;; ----------------------------------------------------------------------------
+
+(add-hook 'emacs-lisp-mode-hook
+	  'auto-fill-mode)
 
 (add-hook 'haskell-mode-hook
 	  'auto-fill-mode)
@@ -332,7 +331,37 @@
    '((recent-seven-files)
      (original-source)))
 
+  (define-prefix-command 'ivy-keys)
+  (evil-leader/set-key "i" 'ivy-keys)
+  (define-key ivy-keys "i" 'counsel-imenu)
 
+  ;alternate cycle keys, more vimy
+  (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
+  (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line)
+
+  ;; below works but slow 
+  (defconst modi/ag-arguments
+  '("--nogroup" ; mandatory argument for ag.el as per https://github.com/Wilfred/ag.el/issues/41
+      ;"--skip-vcs-ignores" ; Ignore files/dirs ONLY from `.agignore'
+      "--numbers" ; line numbers
+      "--smart-case"
+      "--follow") ; follow symlinks
+  "Default ag arguments used in the functions in `ag', `counsel' and `projectile'
+      packages.")
+  
+  ;; Use `ag' all the time if available
+  (defun modi/advice-projectile-use-ag ()
+    "Always use `ag' for getting a list of all files in the project."
+    (mapconcat 'identity
+           (append '("\\ag") ; used unaliased version of `ag': \ag
+               modi/ag-arguments
+               '("-0" ; output null separated results
+             "-g ''")) ; get file names matching the regex '' (all files)
+           " "))
+  (when (executable-find "ag")
+    (advice-add 'projectile-get-ext-command :override
+        #'modi/advice-projectile-use-ag))
+  
   (with-eval-after-load 'org-agenda
     (define-key org-agenda-mode-map (kbd "C-c C-q") #'counsel-org-tag-agenda))
 
@@ -347,6 +376,30 @@
   )
 
 
+;; ----------------------------------------------------------------------------
+;; Icons
+;; ----------------------------------------------------------------------------
+
+(use-package all-the-icons
+  :load-path "plugins/all-the-icons.el/"
+  )
+
+;; ----------------------------------------------------------------------------
+;; File Tree (Neotree)
+;; ----------------------------------------------------------------------------
+
+(use-package neotree
+  :config
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  (global-set-key [f8] 'neotree-toggle)
+  ;(setq projectile-switch-project-action 'neotree-projectile-action)
+  (setq neo-smart-open t)
+  (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+  (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-enter)
+  (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+  (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+  (setq neo-window-width 36)
+  )
 
 ;; ############################################################################
 ;; Language Specific Configuration
@@ -389,12 +442,65 @@
   :diminish "A"
   :config
   (add-hook 'python-mode-hook 'anaconda-mode)
+  
+  (add-hook 'python-mode-hook (lambda ()
+  			      (flycheck-mode 1)
+  			      (setq flycheck-checker 'python-pylint
+  				    flycheck-checker-error-threshold 900)))
+
+  (defun pyvenv-and-fly (directory)
+    "open interactive menu to choose the virtualenv (choose venv root), then
+     restart flycheck."
+    (interactive "DActivate venv: ")
+    (pyvenv-activate directory)
+    (flycheck-mode 0)
+    (flycheck-mode 1)
+    )
+  
+  (define-prefix-command 'python-mode-keys)
+  (evil-define-key 'normal python-mode-map (kbd ",") 'python-mode-keys)
+  (define-key python-mode-keys "v" 'pyvenv-and-fly)
+
+  ;(require 'auto-virtualenv)
+  ;(add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
+  ;
+  ;(declare-function python-shell-calculate-exec-path "python")
+  ;
+  ;(defun flycheck-virtualenv-executable-find (executable)
+  ;  "Find an EXECUTABLE in the current virtualenv if any."
+  ;  (if (bound-and-true-p python-shell-virtualenv-root)
+  ;      (let ((exec-path (python-shell-calculate-exec-path)))
+  ;        (executable-find executable))
+  ;    (executable-find executable)))
+  ;
+  ;(defun flycheck-virtualenv-setup ()
+  ;  "Setup Flycheck for the current virtualenv."
+  ;  (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find))
+  ;
+  ;(add-hook 'python-mode-hook #'flycheck-virtualenv-setup)
+
   )
 
-(add-hook 'python-mode-hook (lambda ()
-			      (flycheck-mode 1)
-			      (setq flycheck-checker 'python-pylint
-				    flycheck-checker-error-threshold 900)))
+(use-package pyvenv)
+
+;; ----------------------------------------------------------------------------
+;; Lua
+;; ----------------------------------------------------------------------------
+
+;; linting appears a bit of a shit show, luacheck seems standard but spits
+;; endless shit about ngx being an undefined variable. Maybe fix down the line.
+
+(use-package lua-mode
+  :config
+  (autoload 'lua-mode "lua-mode" "Lua editing mode." t)
+  (add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
+  (add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
+  )
+
+(use-package company-lua
+  :config
+  (add-to-list 'company-backends 'company-lua)
+  )
 
 ;; ----------------------------------------------------------------------------
 ;; Dockerfile
@@ -425,6 +531,24 @@
 (use-package olivetti
   :diminish "O"
   )
+
+
+;; ----------------------------------------------------------------------------
+;; Markdown
+;; ----------------------------------------------------------------------------
+
+
+
+
+
+;; ----------------------------------------------------------------------------
+;; python
+;; ----------------------------------------------------------------------------
+
+;; ----------------------------------------------------------------------------
+;; python
+;; ----------------------------------------------------------------------------
+
 
 ;; ----------------------------------------------------------------------------
 ;; Autocompletion
@@ -533,6 +657,7 @@
   (evil-leader/set-key "p" 'projectile-keys)
   (define-key projectile-keys "f" 'counsel-projectile)
   (define-key projectile-keys "p" 'counsel-projectile-switch-project)
+  (define-key projectile-keys "a" 'counsel-projectile-ag)
   )
 
 ;; ############################################################################
@@ -561,7 +686,8 @@
     (define-key org-keys "c" 'org-capture)
     (define-key org-keys "a" 'org-agenda)
     (define-key org-keys "l" 'org-agenda-list)
-    (define-key org-keys "t" 'org-todo-list)
+    (define-key org-keys "t" (lambda () (interactive) (org-capture nil "t")))
+    (define-key org-keys "T" 'org-todo-list)
 
     ;;;; org-capture setting
     ;; Start capture mode in evil insert state
@@ -636,6 +762,11 @@
       (interactive)
       (org-agenda-schedule '(4))
       )
+
+    (define-prefix-command 'org-mode-keys)
+    (evil-define-key 'normal org-mode-map (kbd ",") 'org-mode-keys)
+    (define-key org-mode-keys "s" 'org-schedule)
+    (define-key org-mode-keys "r" 'org-refile)
 
     ;; Map for my custom ',' prefix.
     (define-prefix-command 'agenda-mode-map)
@@ -747,18 +878,33 @@
 
       ))
 
+;; ----------------------------------------------------------------------------
+;; Custom Archive Function
+
+  (defun days-ago (number)
+    (time-subtract (current-time) (seconds-to-time (* number 86400)))
+    )
+
+  (defun archive-if-old ()
+    (let*
+	((props (org-entry-properties (point)))
+         (closed-string (cdr (assoc "CLOSED" props)))
+	 (title (cdr (assoc "ITEM" props)))
+	 (closed (if closed-string (date-to-time closed-string) (days-ago 30)))
+	 (cutoff (days-ago 6)))
+         (when (time-less-p closed cutoff) ((lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (outline-previous-heading))
+     (org-save-all-org-buffers))))
+    ))
+  
   (defun org-archive-done-tasks ()
     (interactive)
-    (org-map-entries
-     (lambda ()
-       (let*
-	 ((props (org-entry-properties (point)))
-	 (closed (cdr (assoc "CLOSED" props))))
-	 (write-region (format "%s\n" closed) nil "/home/matt/test" 'append)
-	 ))
-     "/DONE" 'agenda))
-  
-  )
+    (org-map-entries 'archive-if-old "/DONE" 'agenda))
+    )
+
+;; ----------------------------------------------------------------------------
+
 
 ;;(use-package org-habit) ;; I can never get this to work
 
@@ -787,6 +933,145 @@
 
 ;;try out loading here
   (spaceline-compile)
+
+
+;; ----------------------------------------------------------------------------
+;; Fira Symbols
+;; ----------------------------------------------------------------------------
+
+;;;; Fira code
+;;; This works when using emacs --daemon + emacsclient
+;(add-hook 'after-make-frame-functions (lambda (frame) (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")))
+;;; This works when using emacs without server/client
+;(set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")
+;;; I haven't found one statement that makes both of the above situations work, so I use both for now
+;
+;(defconst fira-code-font-lock-keywords-alist
+;  (mapcar (lambda (regex-char-pair)
+;            `(,(car regex-char-pair)
+;              (0 (prog1 ()
+;                   (compose-region (match-beginning 1)
+;                                   (match-end 1)
+;                                   ;; The first argument to concat is a string containing a literal tab
+;                                   ,(concat "	" (list (decode-char 'ucs (cadr regex-char-pair)))))))))
+;          '(("\\(www\\)"                   #Xe100)
+;            ("[^/]\\(\\*\\*\\)[^/]"        #Xe101)
+;            ("\\(\\*\\*\\*\\)"             #Xe102)
+;            ("\\(\\*\\*/\\)"               #Xe103)
+;            ("\\(\\*>\\)"                  #Xe104)
+;            ("[^*]\\(\\*/\\)"              #Xe105)
+;            ("\\(\\\\\\\\\\)"              #Xe106)
+;            ("\\(\\\\\\\\\\\\\\)"          #Xe107)
+;            ("\\({-\\)"                    #Xe108)
+;            ("\\(\\[\\]\\)"                #Xe109)
+;            ("\\(::\\)"                    #Xe10a)
+;            ("\\(:::\\)"                   #Xe10b)
+;            ("[^=]\\(:=\\)"                #Xe10c)
+;            ("\\(!!\\)"                    #Xe10d)
+;            ("\\(!=\\)"                    #Xe10e)
+;            ("\\(!==\\)"                   #Xe10f)
+;            ("\\(-}\\)"                    #Xe110)
+;            ("\\(--\\)"                    #Xe111)
+;            ("\\(---\\)"                   #Xe112)
+;            ("\\(-->\\)"                   #Xe113)
+;            ("[^-]\\(->\\)"                #Xe114)
+;            ("\\(->>\\)"                   #Xe115)
+;            ("\\(-<\\)"                    #Xe116)
+;            ("\\(-<<\\)"                   #Xe117)
+;            ("\\(-~\\)"                    #Xe118)
+;            ("\\(#{\\)"                    #Xe119)
+;            ("\\(#\\[\\)"                  #Xe11a)
+;            ("\\(##\\)"                    #Xe11b)
+;            ("\\(###\\)"                   #Xe11c)
+;            ("\\(####\\)"                  #Xe11d)
+;            ("\\(#(\\)"                    #Xe11e)
+;            ("\\(#\\?\\)"                  #Xe11f)
+;            ("\\(#_\\)"                    #Xe120)
+;            ("\\(#_(\\)"                   #Xe121)
+;            ("\\(\\.-\\)"                  #Xe122)
+;            ("\\(\\.=\\)"                  #Xe123)
+;            ("\\(\\.\\.\\)"                #Xe124)
+;            ("\\(\\.\\.<\\)"               #Xe125)
+;            ("\\(\\.\\.\\.\\)"             #Xe126)
+;            ("\\(\\?=\\)"                  #Xe127)
+;            ("\\(\\?\\?\\)"                #Xe128)
+;            ("\\(;;\\)"                    #Xe129)
+;            ("\\(/\\*\\)"                  #Xe12a)
+;            ("\\(/\\*\\*\\)"               #Xe12b)
+;            ("\\(/=\\)"                    #Xe12c)
+;            ("\\(/==\\)"                   #Xe12d)
+;            ("\\(/>\\)"                    #Xe12e)
+;            ("\\(//\\)"                    #Xe12f)
+;            ("\\(///\\)"                   #Xe130)
+;            ("\\(&&\\)"                    #Xe131)
+;            ("\\(||\\)"                    #Xe132)
+;            ("\\(||=\\)"                   #Xe133)
+;            ("[^|]\\(|=\\)"                #Xe134)
+;            ("\\(|>\\)"                    #Xe135)
+;            ("\\(\\^=\\)"                  #Xe136)
+;            ("\\(\\$>\\)"                  #Xe137)
+;            ("\\(\\+\\+\\)"                #Xe138)
+;            ("\\(\\+\\+\\+\\)"             #Xe139)
+;            ("\\(\\+>\\)"                  #Xe13a)
+;            ("\\(=:=\\)"                   #Xe13b)
+;            ("[^!/]\\(==\\)[^>]"           #Xe13c)
+;            ("\\(===\\)"                   #Xe13d)
+;            ("\\(==>\\)"                   #Xe13e)
+;            ("[^=]\\(=>\\)"                #Xe13f)
+;            ("\\(=>>\\)"                   #Xe140)
+;            ("\\(<=\\)"                    #Xe141)
+;            ("\\(=<<\\)"                   #Xe142)
+;            ("\\(=/=\\)"                   #Xe143)
+;            ("\\(>-\\)"                    #Xe144)
+;            ("\\(>=\\)"                    #Xe145)
+;            ("\\(>=>\\)"                   #Xe146)
+;            ("[^-=]\\(>>\\)"               #Xe147)
+;            ("\\(>>-\\)"                   #Xe148)
+;            ("\\(>>=\\)"                   #Xe149)
+;            ("\\(>>>\\)"                   #Xe14a)
+;            ("\\(<\\*\\)"                  #Xe14b)
+;            ("\\(<\\*>\\)"                 #Xe14c)
+;            ("\\(<|\\)"                    #Xe14d)
+;            ("\\(<|>\\)"                   #Xe14e)
+;            ("\\(<\\$\\)"                  #Xe14f)
+;            ("\\(<\\$>\\)"                 #Xe150)
+;            ("\\(<!--\\)"                  #Xe151)
+;            ("\\(<-\\)"                    #Xe152)
+;            ("\\(<--\\)"                   #Xe153)
+;            ("\\(<->\\)"                   #Xe154)
+;            ("\\(<\\+\\)"                  #Xe155)
+;            ("\\(<\\+>\\)"                 #Xe156)
+;            ("\\(<=\\)"                    #Xe157)
+;            ("\\(<==\\)"                   #Xe158)
+;            ("\\(<=>\\)"                   #Xe159)
+;            ("\\(<=<\\)"                   #Xe15a)
+;            ("\\(<>\\)"                    #Xe15b)
+;            ("[^-=]\\(<<\\)"               #Xe15c)
+;            ("\\(<<-\\)"                   #Xe15d)
+;            ("\\(<<=\\)"                   #Xe15e)
+;            ("\\(<<<\\)"                   #Xe15f)
+;            ("\\(<~\\)"                    #Xe160)
+;            ("\\(<~~\\)"                   #Xe161)
+;            ("\\(</\\)"                    #Xe162)
+;            ("\\(</>\\)"                   #Xe163)
+;            ("\\(~@\\)"                    #Xe164)
+;            ("\\(~-\\)"                    #Xe165)
+;            ("\\(~=\\)"                    #Xe166)
+;            ("\\(~>\\)"                    #Xe167)
+;            ("[^<]\\(~~\\)"                #Xe168)
+;            ("\\(~~>\\)"                   #Xe169)
+;            ("\\(%%\\)"                    #Xe16a)
+;            ;;("\\(x\\)"                     #Xe16b)
+;            ("[^:=]\\(:\\)[^:=]"           #Xe16c)
+;            ("[^\\+<>]\\(\\+\\)[^\\+<>]"   #Xe16d)
+;            ("[^\\*/<>]\\(\\*\\)[^\\*/<>]" #Xe16f))))
+;
+;(defun add-fira-code-symbol-keywords ()
+;  (font-lock-add-keywords nil fira-code-font-lock-keywords-alist))
+;
+;(add-hook 'prog-mode-hook
+;          #'add-fira-code-symbol-keywords)
+
 ;; ############################################################################
 ;; Beware: here be custom-set-variables. Best don't touch.
 ;; ############################################################################
@@ -800,13 +1085,13 @@
    ["#2e3436" "#a40000" "#4e9a06" "#c4a000" "#204a87" "#5c3566" "#729fcf" "#eeeeec"])
  '(custom-safe-themes
    (quote
-    ("10e231624707d46f7b2059cc9280c332f7c7a530ebc17dba7e506df34c5332c4" "227edf860687e6dfd079dc5c629cbfb5c37d0b42a3441f5c50873ba11ec8dfd2" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "10e231624707d46f7b2059cc9280c332f7c7a530ebc17dba7e506df34c5332c4" "227edf860687e6dfd079dc5c629cbfb5c37d0b42a3441f5c50873ba11ec8dfd2" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(org-agenda-files
    (quote
-    ("~/dev/hnefatafl/hnefatafl.org" "~/org/refile.org" "~/org/tasks.org")))
+    ("~/org/work.org" "~/dev/hnefatafl/hnefatafl.org" "~/org/refile.org" "~/org/tasks.org")))
  '(package-selected-packages
    (quote
-    (which-key darktooth-theme smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
+    (markdown-mode company-jedi auto-virtualenv company-lua flymake-lua avy ivy-rich intero olivetti counsel-projectile projectile counsel flycheck-mypy lua-mode magit-popup evil-magit magit ag all-the-icons neotree which-key darktooth-theme smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
  '(safe-local-variable-values (quote ((eval progn (pp-buffer) (indent-buffer))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -814,6 +1099,15 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ivy-current-match ((t (:foreground "#8ec07c" :underline nil :weight normal))))
+ '(neo-banner-face ((t (:inherit default))))
+ '(neo-button-face ((t (:inherit font-lock-comment-face :underline nil))))
+ '(neo-dir-link-face ((t (:inherit font-lock-variable-name-face))))
+ '(neo-file-link-face ((t (:inherit default))))
+ '(neo-header-face ((t (:inherit default))))
+ '(neo-root-dir-face ((t (:inherit font-lock-string-face))))
+ '(neo-vc-default-face ((t (:inherit default))))
  '(powerline-active2 ((t (:inherit mode-line :background "grey22"))))
+ '(spaceline-python-venv ((t (:inherit success))))
  '(success ((t (:foreground "#b8bb26" :weight normal))))
  '(warning ((t (:foreground "#fe8019" :weight normal)))))
+ '(spaceline-python-venv ((t (:inherit success))))

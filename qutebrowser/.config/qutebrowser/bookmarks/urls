@@ -29,3 +29,7 @@ http://allrecipes.com/recipe/228957/authentic-saag-paneer/ Authentic Saag Paneer
 https://www.reddit.com/r/haskell/comments/1y06zd/suitability_of_haskell_for_project/ Suitability of haskell for project : haskell
 https://hackage.haskell.org/package/timeout-with-results timeout-with-results: Runs a time-limited computation alowing it to return intermediate results.
 http://emacs.stackexchange.com/questions/2668/is-there-a-way-to-set-the-global-agenda-sorting org mode - Is there a way to set the global agenda sorting? - Emacs Stack Exchange
+https://git.zx2c4.com/password-store/about/#EXTENDED%20GIT%20EXAMPLE password-store - Simple password manager using gpg and ordinary unix directories.
+https://www.youtube.com/watch?v=qoQRGl_P2aQ Tutorial Presented by Josh Berkus of PGExperts at PGConf Silicon Valley 2015 - YouTube
+https://www.citusdata.com/blog/2016/10/03/designing-your-saas-database-for-high-scalability Designing your SaaS Database for Scale with Postgres | Citus Data
+https://github.com/citusdata/citus citusdata/citus: Scalable PostgreSQL for real-time workloads

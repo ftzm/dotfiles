@@ -3,9 +3,9 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "use-package" "use-package.el" (22718 48767
-;;;;;;  160937 906000))
-;;; Generated autoloads from use-package.el
+;;;### (autoloads nil "use-package" "../../../../../.emacs.d/elpa/use-package-20170218.132/use-package.el"
+;;;;;;  "09c7c34834a293e511b4934c2d3408a0")
+;;; Generated autoloads from ../../../../../.emacs.d/elpa/use-package-20170218.132/use-package.el
 
 (autoload 'use-package-autoload-keymap "use-package" "\
 Loads PACKAGE and then binds the key sequence used to invoke
@@ -75,6 +75,12 @@ this file.  Usage:
 \(fn NAME &rest ARGS)" nil t)
 
 (function-put 'use-package 'lisp-indent-function '1)
+
+;;;***
+
+;;;### (autoloads nil nil ("../../../../../.emacs.d/elpa/use-package-20170218.132/use-package-autoloads.el"
+;;;;;;  "../../../../../.emacs.d/elpa/use-package-20170218.132/use-package.el")
+;;;;;;  (22732 17486 267790 304000))
 
 ;;;***
 

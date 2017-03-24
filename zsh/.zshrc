@@ -5,6 +5,8 @@ alias d=docker
 
 fpath=(~/.zsh/completions $fpath)
 
+/usr/bin/setxkbmap -option "caps:swapescape"
+
 export TERM="xterm-256color"
 export PANEL_FIFO="/tmp/panel-fifo"
 export PANEL_FIFO
@@ -24,7 +26,7 @@ promptinit
 prompt adam1
 
 #highlighting
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 #highlight completion
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
@@ -37,7 +39,6 @@ export MPD_HOST=192.168.0.102
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/matt/bin/lemonbar"
 export PATH="$PATH:/home/matt/.local/bin"
 export PATH="$PATH:/home/matt/bin"
 
@@ -75,6 +76,10 @@ DEFAULT_USER="matt"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+#use vim input method
+export KEYTIMEOUT=1
+bindkey -v
+
 # aws completion
-source /usr/bin/aws_zsh_completer.sh
+source ~/.local/bin/aws_zsh_completer.sh
 
