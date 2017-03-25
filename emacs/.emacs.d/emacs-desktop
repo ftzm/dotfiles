@@ -1,0 +1,223 @@
+;; -*- mode: emacs-lisp; coding: emacs-mule; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Thu Mar 23 15:58:07 2017
+;; Desktop file format version 208
+;; Emacs version 25.1.2
+
+;; Global section:
+(setq desktop-saved-frameset [frameset 1 (22739 61583 69420 403000) (desktop . "208") "mfitzsimmons@tempo-435" nil nil ((((font-backend xft x) (font . "-CTDB-Fira Code-normal-normal-normal-*-13-*-*-*-m-0-iso10646-1") (font-parameter . "Fira Code-10") (border-width . 0) (internal-border-width . 0) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars) (horizontal-scroll-bars) (foreground-color . "#fdf4c1") (background-color . "#282828") (mouse-color . "black") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 0) (right-fringe . 0) (scroll-bar-foreground . "#ebdbb2") (scroll-bar-background . "#ebdbb2") (menu-bar-lines . 0) (tool-bar-lines . 0) (title) (wait-for-wm . t) (tool-bar-position . top) (icon-type . t) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 0) (scroll-bar-height . 0) (alpha) (fullscreen) (display-type . color) (background-mode . dark) (cursor-color . "#fdf4c1") (environment) (powerline-cache) (eyebrowse-last-slot . 9) (eyebrowse-current-slot . 8) (eyebrowse-window-configs (1 (((min-height . 4) (min-width . 10) (min-height-ignore . 2) (min-width-ignore . 2) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 68) (min-pixel-width . 80) (min-pixel-height-ignore . 34) (min-pixel-width-ignore . 16) (min-pixel-height-safe . 17) (min-pixel-width-safe . 16)) leaf (pixel-width . 1918) (pixel-height . 863) (total-width . 240) (total-height . 51) (normal-height . 1.0) (normal-width . 1.0) (buffer "cluster-admin.py" (selected . t) (hscroll . 0) (fringes 0 0 nil) (margins nil) (scroll-bars nil 0 t nil 0 t) (vscroll . 0) (dedicated) (point . 4118) (start . 3395))) "") (8 (((min-height . 4) (min-width . 162) (min-height-ignore . 2) (min-width-ignore . 162) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 68) (min-pixel-width . 1296) (min-pixel-height-ignore . 34) (min-pixel-width-ignore . 1296) (min-pixel-height-safe . 17) (min-pixel-width-safe . 16)) leaf (pixel-width . 1918) (pixel-height . 863) (total-width . 240) (total-height . 51) (normal-height . 1.0) (normal-width . 1.0) (buffer "tasks.org" (selected . t) (hscroll . 0) (fringes 0 0 nil) (margins 80 . 80) (scroll-bars nil 0 t nil 0 t) (vscroll . 0) (dedicated) (point . 20) (start . 1))) "") (9 (((min-height . 4) (min-width . 52) (min-height-ignore . 2) (min-width-ignore . 44) (min-height-safe . 1) (min-width-safe . 4) (min-pixel-height . 68) (min-pixel-width . 416) (min-pixel-height-ignore . 34) (min-pixel-width-ignore . 352) (min-pixel-height-safe . 17) (min-pixel-width-safe . 32)) hc (pixel-width . 1918) (pixel-height . 863) (total-width . 240) (total-height . 51) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 960) (pixel-height . 863) (total-width . 120) (total-height . 51) (normal-height . 1.0) (normal-width . 0.5005213764337852) (buffer "work.org" (selected) (hscroll . 0) (fringes 0 0 nil) (margins 20 . 20) (scroll-bars nil 0 t nil 0 t) (vscroll . 0) (dedicated) (point . 778) (start . 1))) (leaf (last . t) (pixel-width . 958) (pixel-height . 863) (total-width . 120) (total-height . 51) (normal-height . 1.0) (normal-width . 0.4994786235662148) (buffer "*scratch*" (selected . t) (hscroll . 0) (fringes 0 0 nil) (margins nil) (scroll-bars nil 0 t nil 0 t) (vscroll . 0) (dedicated) (point . 10) (start . 1)))) "")) (frameset--id . "613C-FE62-665E-BB56") (frameset--mini t . t) (modeline . t) (minibuffer . t) (unsplittable) (icon-name) (visibility . t) (display . ":0") (explicit-name) (height . 51) (width . 209) (left . 2560) (top . 0)) ((min-height . 4) (min-width . 20) (min-height-ignore . 2) (min-width-ignore . 4) (min-height-safe . 1) (min-width-safe . 4) (min-pixel-height . 68) (min-pixel-width . 160) (min-pixel-height-ignore . 34) (min-pixel-width-ignore . 32) (min-pixel-height-safe . 17) (min-pixel-width-safe . 32)) hc (pixel-width . 1918) (pixel-height . 863) (total-width . 240) (total-height . 50) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 958) (pixel-height . 863) (total-width . 120) (total-height . 50) (normal-height . 1.0) (normal-width . 0.5) (buffer "init.el" (selected . t) (hscroll . 0) (fringes 0 0 nil) (margins nil) (scroll-bars nil 0 t nil 0 t) (vscroll . 0) (dedicated) (point . 7546) (start . 7030))) (leaf (last . t) (pixel-width . 960) (pixel-height . 863) (total-width . 120) (total-height . 50) (normal-height . 1.0) (normal-width . 0.5) (buffer "init.el" (selected) (hscroll . 0) (fringes 0 0 nil) (margins nil) (scroll-bars nil 0 t nil 0 t) (vscroll . 0) (dedicated) (point . 7546) (start . 6426)))))])
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring nil)
+(setq regexp-search-ring '("deskto" "buffer-names" "buffer" "defun counsel-pro" "counsel-projectile" "coun	" "counsel-projectile-find" "find-file" "counsel-projectile" "counsel-pro" "projectile" "logger" "logg" "colorlogger"))
+(setq register-alist '((48 . "  (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)\n")))
+(setq file-name-history '("/home/mfitzsimmons/dotfiles/emacs/.emacs.d/elpa/projectile-20170309.30/projectile.el" "/home/mfitzsimmons/.emacs.d/elpa/counsel-projectile-20170216.1426/counsel-projectile.el" "/home/mfitzsimmons/org/work.org" "/home/mfitzsimmons/dolly/common/utils/logformatter.py" "/home/mfitzsimmons/dolly/tempo-world/build/test-job.yaml" "/home/mfitzsimmons/dolly/cloud-admin/bin/" "/home/mfitzsimmons/org/tasks.org" "/home/mfitzsimmons/dolly/infrastructure-tools/muzzle.py" "/home/mfitzsimmons/jira-service/jira_service/urls.py" "/home/mfitzsimmons/jira-service/venv/" "/home/mfitzsimmons/jira-service/" "/home/mfitzsimmons/dolly/infrastructure-tools/README.md" "/home/mfitzsimmons/dev/muzzle/muzzle.py" "/home/mfitzsimmons/dev/muzzle/" "/home/mfitzsimmons/dev/ddogcli/muzzle" "/home/mfitzsimmons/.emacs.d/init.el" "/home/mfitzsimmons/dev/ddogcli/datadog_mon_cli.py" "/home/mfitzsimmons/dev/ddogcli/" "/home/mfitzsimmons/dotfiles/xmonad/.xmonad/xmonad.hs" "/home/mfitzsimmons/bin/clip_key" "/home/mfitzsimmons/bin/battery_man" "/home/mfitzsimmons/typecheck.py" "/home/mfitzsimmons/.xmonad/xmonad.hs" "/home/mfitzsimmons/.xmonad/" "/home/mfitzsimmons/dolly/venv/" "/home/mfitzsimmons/dolly/cloud-admin/bin/remove-cluster.py" "/home/mfitzsimmons/dolly/venv/bin/activate" "/home/mfitzsimmons/dotfiles/emacs/.emacs.d/init.el" "/home/mfitzsimmons/.emacs.d/" "/home/mfitzsimmons/org/refile.org" "/home/mfitzsimmons/.agignore" "/home/mfitzsimmons/dolly/register/register.py" "/home/mfitzsimmons/dotfiles/emacs/.emacs.d/elpa/counsel-20170225.356/" "/home/mfitzsimmons/typecheck.py" "/home/mfitzsimmons/tpy" "/home/mfitzsimmons/datadog_mon_cli.py" "/home/mfitzsimmons/org/#tasks.org#" "/home/mfitzsimmons/dispatcher/bin/entrypoint.sh" "/home/mfitzsimmons/dolly/tempo-world/generate-compose" "/home/matt/" "/home/matt/dispaster/" "/home/matt/dis" "/home/dis" "/home/mfitzsimmons/.config/polybar/config" "/home/mfitzsimmons/.zshrcBU" "/home/mfitzsimmons/.zshrc" "/home/matt/.zsh" "/home/mfitzsimmons/.config/polybar/" "/home/mfitzsimmons/todo" "/home/mfitzsimmons/dolly/cloud-admin/bin/habitat-admin.py" "/home/mfitzsimmons/dolly/cloud-admin/bin/cluster-admin.py" "/home/mfitzsimmons/dolly/cloud-admin/venv/" "/home/.aw" "/home/mfitzsimmons/dolly/tempoc/venv/bin/activate" "/home/mfitzsimmons/dotfiles/polybar/.config/polybar/config" "/home/mfitzsimmons/dotfiles/qutebrowser/.config/qutebrowser/qutebrowser.conf" "/home/mfitzsimmons/.config/qutebrowser/keys.conf" "/home/mfitzsimmons/.xsessionrc" "/home/mfitzsimmons/.xinitrc" "/home/mfitzsimmons/.Xresources" "/home/matt/dot/emacs/.emacs.d/init.el" "/home/matt/org/tasks.org_archive" "/home/matt/dev/hnefatafl/hnefatafl.org_archive" "/home/matt/org/refile.org_archive" "/home/matt/.config/polybar/" "/home/matt/dev/for_tempo/echo_server.py" "/home/matt/org/tasks.org" "/home/matt/dev/hnefatafl/src/BasicAI.hs" "/home/matt/dot/xmonad/.xmonad/xmonad.hs" "/home/matt/.xmonad/xmonad.hs" "/home/matt/emacs_time_func" "/home/matt/dev/for_tempo/" "/home/matt/dev/hnefatafl/TAGS" "/home/matt/.spacemacs" "/home/matt/emulating_unimpaired" "/home/matt/.config/polybar/config" "/home/matt/bin/my_dmenu.sh" "/home/matt/.emacs.d/init.el" "/home/matt/org/refile.org" "/home/matt/iit" "/home/matt/dev/ftzm-blog-docker/ftzm-blog/Dockerfile" "/home/matt/dev/" "/home/matt/dev/muscleup/django/core/models.py" "/home/matt/dev/ftzm-blog-docker/" "/home/matt/dev/hnefatafl/hnefatafl.org" "/home/matt/org/music.org" "~/org/tasks.org" "~/org/refile.org" "~/dev/hnefatafl/hnefatafl.org" "~/dev/hnefatafl/TAGS" "~/org/TODOs.org" "~/.emacs.d/bookmarks" "~/dev/muscleup/TODOs.org" "~/dev/hnefatafl/LICENSE" "~/dev/muscleup/LICENSE" "~/dev/muscleup/django/core/forms.py" "~/org/projects.org" "~/org/tasks.org_archive" "~/org/refile.org_archive" "~/.emacs.d/elpa/olivetti-20160912.1758/olivetti-autoloads.el"))
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/dotfiles/emacs/.emacs.d/init.el"
+  "init.el"
+  'emacs-lisp-mode
+  '(auto-fill-mode override-global-mode undo-tree-mode which-key-mode highlight-parentheses-mode rainbow-delimiters-mode ivy-mode company-mode subword-mode projectile-mode auto-revert-mode)
+  7546
+  '(7546 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . prefer-utf-8-unix) (overwrite-mode))
+  '((mark-ring (7994 7927 7993 7659 7996 7481 7864 12125 12125 12125 6124 7322 7297 13082 23205 23138))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/dolly/cloud-admin/kubernetes/commands/deployer.py"
+  "deployer.py"
+  'python-mode
+  '(auto-fill-mode override-global-mode undo-tree-mode which-key-mode highlight-parentheses-mode rainbow-delimiters-mode ivy-mode flycheck-mode company-mode anaconda-mode subword-mode projectile-mode auto-revert-mode)
+  3484
+  '(3484 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring (3484 3484 3937 1426 900))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/dev/hnefatafl/hnefatafl.org"
+  "hnefatafl.org"
+  'org-mode
+  '(visual-line-mode override-global-mode undo-tree-mode which-key-mode ivy-mode company-mode olivetti-mode projectile-mode org-indent-mode evil-org-mode auto-revert-mode)
+  1
+  '(1 nil)
+  nil
+  nil
+  '((indent-tabs-mode) (buffer-file-coding-system . undecided-unix) (overwrite-mode) (truncate-lines))
+  '((mark-ring (1))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/org/refile.org"
+  "refile.org"
+  'org-mode
+  '(visual-line-mode override-global-mode undo-tree-mode which-key-mode ivy-mode company-mode olivetti-mode projectile-mode org-indent-mode evil-org-mode auto-revert-mode)
+  20
+  '(20 nil)
+  nil
+  nil
+  '((indent-tabs-mode) (buffer-file-coding-system . utf-8-unix) (overwrite-mode) (truncate-lines))
+  '((mark-ring (20))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/org/tasks.org"
+  "tasks.org"
+  'org-mode
+  '(visual-line-mode override-global-mode undo-tree-mode which-key-mode ivy-mode company-mode olivetti-mode projectile-mode org-indent-mode evil-org-mode auto-revert-mode)
+  116
+  '(116 nil)
+  nil
+  nil
+  '((indent-tabs-mode) (buffer-file-coding-system . utf-8-unix) (overwrite-mode) (truncate-lines))
+  '((mark-ring (1))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/org/work.org"
+  "work.org"
+  'org-mode
+  '(visual-line-mode override-global-mode undo-tree-mode which-key-mode ivy-mode company-mode olivetti-mode projectile-mode org-indent-mode evil-org-mode)
+  778
+  '(778 nil)
+  nil
+  nil
+  '((indent-tabs-mode) (buffer-file-coding-system . utf-8-unix) (overwrite-mode) (truncate-lines))
+  '((mark-ring (725 2223 1 1))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/dolly/cloud-admin/bin/cluster-admin.py"
+  "cluster-admin.py"
+  'python-mode
+  '(auto-fill-mode override-global-mode undo-tree-mode which-key-mode highlight-parentheses-mode rainbow-delimiters-mode ivy-mode flycheck-mode company-mode anaconda-mode subword-mode projectile-mode auto-revert-mode)
+  4118
+  '(4002 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring (4106 4144 4293 4282 4282 4432 4568 4605 5417 5637 5638 1017 1017 210 210 5734))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/dotfiles/emacs/.emacs.d/elpa/counsel-projectile-20170216.1426/counsel-projectile.el"
+  "counsel-projectile.el"
+  'emacs-lisp-mode
+  '(auto-fill-mode override-global-mode undo-tree-mode which-key-mode highlight-parentheses-mode rainbow-delimiters-mode ivy-mode company-mode subword-mode projectile-mode auto-revert-mode)
+  13890
+  '(1662 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . prefer-utf-8-unix) (overwrite-mode))
+  '((mark-ring (1662 2203 2299 2493 2706 2795 1644 1644 1644 2795 2706 2493 2299 2203 1662 1))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/dotfiles/emacs/.emacs.d/elpa/projectile-20170309.30/projectile.el"
+  "projectile.el"
+  'emacs-lisp-mode
+  '(auto-fill-mode override-global-mode undo-tree-mode which-key-mode highlight-parentheses-mode rainbow-delimiters-mode ivy-mode company-mode subword-mode projectile-mode)
+  95
+  '(95 nil)
+  nil
+  nil
+  '((indent-tabs-mode) (buffer-file-coding-system . utf-8-unix) (overwrite-mode))
+  '((mark-ring (14645 52860 53424 54096 14645 52860 53222 53222 53222 14645 54096 53424 52860 14645 95 95))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/dolly/common/k8s_common/job_wrangler.py"
+  "job_wrangler.py"
+  'python-mode
+  '(auto-fill-mode override-global-mode undo-tree-mode which-key-mode highlight-parentheses-mode rainbow-delimiters-mode ivy-mode flycheck-mode company-mode anaconda-mode subword-mode projectile-mode auto-revert-mode)
+  661
+  '(661 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring (661 325))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/jira-service/jira_service/core/models.py"
+  "models.py"
+  'python-mode
+  '(auto-fill-mode override-global-mode undo-tree-mode which-key-mode highlight-parentheses-mode rainbow-delimiters-mode ivy-mode flycheck-mode company-mode anaconda-mode subword-mode projectile-mode auto-revert-mode)
+  1179
+  '(1179 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring (1 1 8682 776 776 5227 540 526 293 274 9558 9054 8198 7807 7418 7038))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/jira-service/jira_service/generic.py"
+  "generic.py"
+  'python-mode
+  '(auto-fill-mode override-global-mode undo-tree-mode which-key-mode highlight-parentheses-mode rainbow-delimiters-mode ivy-mode flycheck-mode company-mode anaconda-mode subword-mode projectile-mode auto-revert-mode)
+  192
+  '(192 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring (52 1 1))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/dolly/common/utils/logformatter.py"
+  "logformatter.py"
+  'python-mode
+  '(auto-fill-mode override-global-mode undo-tree-mode which-key-mode highlight-parentheses-mode rainbow-delimiters-mode ivy-mode flycheck-mode company-mode anaconda-mode subword-mode projectile-mode auto-revert-mode)
+  1096
+  '(1096 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . utf-8-unix) (overwrite-mode))
+  '((mark-ring (939 1007 1006 78 110 1006 1166 1039))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/dolly/common/utils/colors.py"
+  "colors.py"
+  'python-mode
+  '(auto-fill-mode override-global-mode undo-tree-mode which-key-mode highlight-parentheses-mode rainbow-delimiters-mode ivy-mode flycheck-mode company-mode anaconda-mode subword-mode projectile-mode auto-revert-mode)
+  204
+  '(204 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring (204 204 204))))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/dolly/tempoc/python_cli/utils.py"
+  "utils.py"
+  'python-mode
+  '(auto-fill-mode override-global-mode undo-tree-mode which-key-mode highlight-parentheses-mode rainbow-delimiters-mode ivy-mode flycheck-mode company-mode anaconda-mode subword-mode projectile-mode auto-revert-mode)
+  333
+  '(333 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/dolly/tempoc/python_cli/colorizer.py"
+  "colorizer.py"
+  'python-mode
+  '(auto-fill-mode override-global-mode undo-tree-mode which-key-mode highlight-parentheses-mode rainbow-delimiters-mode ivy-mode flycheck-mode company-mode anaconda-mode subword-mode projectile-mode auto-revert-mode)
+  1997
+  '(1997 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  "/home/mfitzsimmons/dolly/cloud-admin/aws/services/zookeeper.py"
+  "zookeeper.py"
+  'python-mode
+  '(auto-fill-mode override-global-mode undo-tree-mode which-key-mode highlight-parentheses-mode rainbow-delimiters-mode ivy-mode flycheck-mode company-mode anaconda-mode subword-mode projectile-mode auto-revert-mode)
+  7
+  '(7 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring nil)))
+
