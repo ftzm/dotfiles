@@ -337,7 +337,7 @@ ramp-foreground = ${colors.foreground}
 [module/powermenu]
 type = custom/menu
 
-label-open =  
+label-open = 
 label-open-foreground = ${colors.foreground}
 label-close =  cancel
 label-close-foreground = ${colors.foreground}

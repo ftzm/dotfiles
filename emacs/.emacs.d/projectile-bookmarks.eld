@@ -1,1 +1,1 @@
-("~/dotfiles/" "~/org/" "~/dev/hnefatafl/" "~/dev/tempo/dashboar/" "~/dev/tempo/dolly/" "~/bin/" "~/" "~/dev/ftzm-blog-docker/ftzm-blog/" "~/dev/muscleup/" "~/dev/haskell/cis194/")
+("~/dotfiles/" "~/dotfiles/emacs/.emacs.d/plugins/evil-org-mode/" "~/org/" "~/dev/hnefatafl/" "~/dev/tempo/dolly/" "~/dev/tempo/jira-service/" "~/dev/tempo/dashboar/" "~/bin/" "~/" "~/dev/ftzm-blog-docker/ftzm-blog/" "~/dev/muscleup/" "~/dev/haskell/cis194/")
