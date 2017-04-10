@@ -38,13 +38,13 @@ Xcursor.theme: MATE
 URxvt.urgentOnBell: true
 
 !infinality font stuffs
-Xft.antialias: 1
-Xft.autohint: 0
-Xft.dpi: 96
-Xft.hinting: 1
-Xft.hintstyle: hintfull
-Xft.lcdfilter: lcddefault
-Xft.rgba: rgb
+!Xft.antialias: 1
+!Xft.autohint: 0
+!Xft.dpi: 96
+!Xft.hinting: 1
+!Xft.hintstyle: hintfull
+!Xft.lcdfilter: lcddefault
+!Xft.rgba: rgb
 
 ! hard contrast: *background: #1d2021
 *background: #282828

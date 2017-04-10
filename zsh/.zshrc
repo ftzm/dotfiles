@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/home/mfitzsimmons/.oh-my-zsh
+export ZSH=/home/matt/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -97,9 +97,10 @@ export PATH="$PATH:/home/matt/.local/bin"
 export PATH="$PATH:/home/matt/bin"
 #
 #put tempo things on path
-export PATH=/home/mfitzsimmons/dev/tempo/dolly/tempoc/bin:$PATH # Tempo CLI
+export PATH=/home/matt/dev/tempo/dolly/tempoc/bin:$PATH # Tempo CLI
 
 #fzf?
+export HISTCONTROL=ignoreboth:erasedups
 export FZF_DEFAULT_COMMAND='ag -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS='
@@ -109,10 +110,14 @@ export FZF_DEFAULT_OPTS='
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 #aws completion
-source ~/.local/bin/aws_zsh_completer.sh
+#source ~/.local/bin/aws_zsh_completer.sh
 
 #better escape
 setxkbmap -option caps:swapescape
 
+#git passes in cli
+unset SSH_ASKPASS
+
 #highlighting
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

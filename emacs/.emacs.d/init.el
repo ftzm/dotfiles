@@ -68,7 +68,7 @@
     )
   (spaceline-spacemacs-theme)
   (spaceline-toggle-buffer-size-off)
-  ;(spaceline-toggle-hud-off)
+  (spaceline-toggle-hud-off)
   ;(spaceline-toggle-buffer-position-off)
   (spaceline-toggle-buffer-encoding-abbrev-off)
   (spaceline-toggle-version-control-off)
@@ -1194,7 +1194,7 @@
     ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "10e231624707d46f7b2059cc9280c332f7c7a530ebc17dba7e506df34c5332c4" "227edf860687e6dfd079dc5c629cbfb5c37d0b42a3441f5c50873ba11ec8dfd2" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(org-agenda-files
    (quote
-    ("~/org/work.org" "~/dev/hnefatafl/hnefatafl.org" "~/org/refile.org" "~/org/tasks.org")))
+    ("~/org/work.org" "~/org/refile.org" "~/org/tasks.org")))
  '(package-selected-packages
    (quote
     (default-text-scale dumb-jump markdown-mode company-jedi auto-virtualenv company-lua flymake-lua avy ivy-rich intero olivetti counsel-projectile projectile counsel flycheck-mypy lua-mode magit-popup evil-magit magit ag all-the-icons neotree which-key darktooth-theme smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
@@ -1204,7 +1204,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#282828" :foreground "#ebdbb2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 158 :width normal :foundry "CTDB" :family "Fira Code"))))
+; '(default ((t (:inherit nil :stipple nil :background "#282828" :foreground "#ebdbb2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 154 :width normal :foundry "CTDB" :family "Fira Code"))))
  '(ivy-current-match ((t (:foreground "#8ec07c" :underline nil :weight normal))))
  '(neo-banner-face ((t (:inherit default))))
  '(neo-button-face ((t (:inherit font-lock-comment-face :underline nil))))

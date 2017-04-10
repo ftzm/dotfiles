@@ -1,13 +1,13 @@
 
 ;; ----- smex-history -----
 (
+ fringe-mode
+ list-faces-display
  evil-forward-sentence-begin
  evil-next-visual-line
  visual-line-mode
  olivetti-mode
  spaceline-compile
- balance-windows
- default-text-scale-decrease
 )
 
 ;; ----- smex-data -----
@@ -29,7 +29,7 @@
  (rainbow-delimiters-mode . 1)
  (highlight-parentheses-mode . 7)
  (customize-face . 5)
- (list-faces-display . 24)
+ (list-faces-display . 25)
  (evil-join . 1)
  (company-select-previous . 1)
  (spaceline-toggle-evil-state . 5)
@@ -266,4 +266,5 @@
  (default-text-scale-decrease . 28)
  (org-toggle-checkbox . 4)
  (evil-forward-sentence-begin . 1)
+ (fringe-mode . 1)
 )

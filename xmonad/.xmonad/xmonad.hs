@@ -13,71 +13,84 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.FloatNext
 import XMonad.Hooks.ManageDocks
 
-bg="#002B36"
-fg="#93A1A1"
-yellow="#B58900"
-orange="#CB4B16"
-red="#DC322F"
-magenta="#D33682"
-violet="#6C71C4"
-blue="#268BD2"
-cyan="#2AA198"
-green="#859900"
+
+
+bg      = "#002B36"
+fg      = "#93A1A1"
+yellow  = "#B58900"
+orange  = "#CB4B16"
+red     = "#DC322F"
+magenta = "#D33682"
+blue    = "#268BD2"
+cyan    = "#2AA198"
+violet  = "#6C71C4"
+green   = "#859900"
+
 
 main = xmonad =<< statusBar myBar myPP toggleStrutsKey myConfig
 
-myBar = "~/bin/xmobar_outputfeed.sh"
+myBar = "pkill xmobar; xmobar"
 
 myPP = xmobarPP
-  { ppCurrent = wrap
-                "%{} %{U#458588}%{+o}%{-u}"
-                "%{-o}%{U#282828} "
-  , ppHidden = wrap
-               "%{} "
-               "%{} %{}"
-  , ppWsSep = ""
-  , ppSep = " •  "
+  { ppCurrent = xmobarColor "#ebdbb2" ""
+  , ppHidden  = wrap "" ""
+  , ppWsSep   = " "
+  , ppSep     = "  •  "
   --, ppOrder = (:[]) . head
-  , ppOrder = take 2
-  , ppLayout = layoutRenamer
+  , ppOrder   = take 2
+  , ppLayout  = layoutRenamer
   }
 
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
 
 myConfig = defaultConfig
-    { terminal    = myTerminal
-    , modMask     = myModMask
-    , borderWidth = myBorderWidth
+    { terminal           = myTerminal
+    , modMask            = myModMask
+    , borderWidth        = myBorderWidth
     , focusedBorderColor = "#bdae93"
-    , normalBorderColor = "#504945"
-    , keys = myKeys
-    --, logHook = myLogHook xmobars >> historyHook
-    , logHook = dynamicLog >> historyHook
-    , layoutHook = myLayouts
-    , manageHook = myManageHook <+> manageDocks
-    , workspaces = myWorkspaces
+    , normalBorderColor  = "#504945"
+    , keys               = myKeys
+    , logHook            = dynamicLog >> historyHook
+    , layoutHook         = myLayouts
+    , manageHook         = myManageHook <+> manageDocks
+    , workspaces         = myWorkspaces
     }
 
 myTabsTheme = def
-  { fontName = "xft:Fira Code:medium:size=15"
-  , activeColor = "#282828"
-  , activeTextColor = "#ebdbb2"
-  , inactiveColor = "#1d2021"
-  , inactiveTextColor = "#a89984"
-  , activeBorderColor = "#282828"
+  { fontName            = "xft:Fira Code:medium:size=14"
+  , activeColor         = "#282828"
+  , activeTextColor     = "#ebdbb2"
+  , inactiveColor       = "#1d2021"
+  , inactiveTextColor   = "#a89984"
+  , activeBorderColor   = "#282828"
   , inactiveBorderColor = "#282828"
-  , decoHeight = 30
+  , decoHeight          = 30
   }
 
-myWorkspaces = ["main","web","dev","term","mus","6","7","8","9"]
+myWorkspaces = [ "main"
+               , "web"
+               , "dev"
+               , "term"
+               , "mus"
+               , "6"
+               , "7"
+               , "8"
+               , "9"
+               ]
 
-myTerminal    = "urxvt"
+myTerminal    = "konsole"
 myModMask     = mod4Mask -- Win key or Super_L
 myBorderWidth = 1
 
 --spacing 2 adds 2px spacing around all windows in all layouts
-myLayouts = avoidStruts $ (smartBorders $ rT ||| Mirror rT ||| Full ||| emptyBSP ||| (tabbedBottom shrinkText myTabsTheme))
+myLayouts = avoidStruts
+          $ (smartBorders
+          $ rT
+          ||| Mirror rT
+          ||| Full
+          ||| emptyBSP
+          ||| (tabbedBottom shrinkText myTabsTheme))
 --myLayouts = rT ||| Mirror rT ||| Full ||| emptyBSP ||| tabbed shrinkText myTabsTheme
   where
      rT = ResizableTall 1 (6/100) (8/13) []
@@ -92,12 +105,12 @@ myLayouts = avoidStruts $ (smartBorders $ rT ||| Mirror rT ||| Full ||| emptyBSP
 
 layoutRenamer :: String -> String
 layoutRenamer x = case x of
-  "ResizableTall" -> "<side>"
-  "Mirror ResizableTall" -> "<stack>"
-  "Full" -> "<max>"
-  "BSP" -> "<bsp>"
-  "Tabbed Bottom Simplest" -> "<tabbed>"
-  x -> x
+  "ResizableTall"          -> "side"
+  "Mirror ResizableTall"   -> "stack"
+  "Full"                   -> "max"
+  "BSP"                    -> "bsp"
+  "Tabbed Bottom Simplest" -> "tabbed"
+  x                        -> x
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@XConfig {XMonad.modMask = modMask} =
@@ -138,8 +151,9 @@ myKeys conf@XConfig {XMonad.modMask = modMask} =
     , ((mm , xK_period), sendMessage (IncMasterN (-1))) -- %! Deincrement the number of windows in the master area
 
     -- quit, or restart
-    , ((mm .|. sm, xK_k), io exitSuccess) -- %! Quit xmonad
-    , ((mm , xK_q),       spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi") -- %! Restart xmonad
+    , ((mm .|. sm .|. m1m, xK_q), io exitSuccess) -- %! Quit xmonad
+    --, ((mm .|. sm .|. m1m, xK_r), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi") -- %! Restart xmonad
+    , ((mm .|. sm .|. m1m, xK_r), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi") -- %! Restart xmonad
 
     --ResizableTile keys
     , ((mm, xK_a), sendMessage MirrorShrink)
@@ -165,16 +179,19 @@ myKeys conf@XConfig {XMonad.modMask = modMask} =
     --My desktop keys
     , ((mm, xK_Down),      spawn "panel_volume -") -- %! Launch dmenu
     , ((mm, xK_Up),        spawn "panel_volume +") -- %! Launch dmenu
+    , ((mm, xK_F3),        spawn "amixer set Master toggle") -- %! Launch dmenu
+    , ((mm, xK_F5),        spawn "xbacklight -dec 10") -- %! Launch dmenu
+    , ((mm, xK_F6),        spawn "xbacklight -inc 10") -- %! Launch dmenu
     , ((mm .|. m1m, xK_b), spawn "kbds") -- %! Launch dmenu
     , ((mm .|. m1m, xK_h), spawn "systemctl hibernate") -- %! Launch dmenu
     , ((mm, xK_F7),        spawn "mpc toggle") -- %! Launch dmenu
     , ((mm .|. m1m, xK_t), spawn "toggle_mouse.sh") -- %! Launch dmenu
-    , ((mm .|. m1m, xK_r), spawn "urxvt -e ranger") -- %! Launch dmenu
+    , ((mm .|. m1m, xK_r), spawn "konsole -e ranger") -- %! Launch dmenu
     , ((mm .|. m1m, xK_c), spawn "clip_key") -- %! Launch dmenu
     , ((mm .|. m1m, xK_s), spawn "gnome-screensaver-command -l") -- %! Launch dmenu
 
     --experimental
-    , ((mm, xK_F6     ), spawn "urxvt -e ncmpcpp")
+    , ((mm, xK_F4     ), spawn "konsole -e ncmpcpp")
     ]
     ++
     -- @greedyView@ will move the given workspace to the current screen, while
@@ -199,5 +216,8 @@ myKeys conf@XConfig {XMonad.modMask = modMask} =
         , (f, m) <- [(W.view, 0), (W.shift, sm)]]
 
 myManageHook = composeAll
-                 [ className =? "URxvt" --> doF W.swapDown]
+                 [ className =? "URxvt" --> doF W.swapDown
+                 , className =? "konsole" --> doF W.swapDown
+                 ]
+                 
 
