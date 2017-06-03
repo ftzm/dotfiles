@@ -21,7 +21,7 @@ map <Space> <Leader>
 set gui=noaddons,nomenu,nonavigation,notabs
 set noscrollbars
 set complete=
-set hintchars=hjklasdfgyuiopqwertnmzxcvb
+" set hintchars=hjklasdfgyuiopqwertnmzxcvb
 
 map <Leader>l :downloads<CR>
 map <Leader>r :restart<CR>
@@ -30,3 +30,6 @@ map <Leader>b :bmarks<SPACE>
 nnoremap K :tabprev<CR>
 nnoremap J :tabnext<CR>
 
+set! browser.tabs.closeWindowWithLastTab=false
+
+set complete=l

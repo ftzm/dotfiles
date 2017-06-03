@@ -34,3 +34,5 @@ https://www.youtube.com/watch?v=qoQRGl_P2aQ Tutorial Presented by Josh Berkus of
 https://www.citusdata.com/blog/2016/10/03/designing-your-saas-database-for-high-scalability Designing your SaaS Database for Scale with Postgres | Citus Data
 https://github.com/citusdata/citus citusdata/citus: Scalable PostgreSQL for real-time workloads
 https://stash.temposoftware.com/projects/TMC Cloud Project Overview - Tempo Software Stash - LIVE
+http://blog.ezyang.com/2012/10/duality-for-haskellers/ Duality for Haskellers : Inside 214-1E
+https://samtay.github.io/posts/comonadic-game-of-life.html Who needs HashLife when you have comonads?

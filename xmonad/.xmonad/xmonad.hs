@@ -14,7 +14,6 @@ import XMonad.Hooks.FloatNext
 import XMonad.Hooks.ManageDocks
 
 
-
 bg      = "#002B36"
 fg      = "#93A1A1"
 yellow  = "#B58900"
@@ -79,7 +78,7 @@ myWorkspaces = [ "main"
                , "9"
                ]
 
-myTerminal    = "konsole"
+myTerminal    = "urxvt"
 myModMask     = mod4Mask -- Win key or Super_L
 myBorderWidth = 1
 
@@ -181,14 +180,15 @@ myKeys conf@XConfig {XMonad.modMask = modMask} =
     , ((mm, xK_Up),        spawn "panel_volume +") -- %! Launch dmenu
     , ((mm, xK_F3),        spawn "amixer set Master toggle") -- %! Launch dmenu
     , ((mm, xK_F5),        spawn "xbacklight -dec 10") -- %! Launch dmenu
+    , ((mm, xK_F10),       spawn "escrotum -s") -- %! Launch dmenu
     , ((mm, xK_F6),        spawn "xbacklight -inc 10") -- %! Launch dmenu
     , ((mm .|. m1m, xK_b), spawn "kbds") -- %! Launch dmenu
     , ((mm .|. m1m, xK_h), spawn "systemctl hibernate") -- %! Launch dmenu
-    , ((mm, xK_F7),        spawn "mpc toggle") -- %! Launch dmenu
+    , ((mm, xK_F7),        spawn "playerctl play-pause") -- %! Launch dmenu
     , ((mm .|. m1m, xK_t), spawn "toggle_mouse.sh") -- %! Launch dmenu
     , ((mm .|. m1m, xK_r), spawn "konsole -e ranger") -- %! Launch dmenu
     , ((mm .|. m1m, xK_c), spawn "clip_key") -- %! Launch dmenu
-    , ((mm .|. m1m, xK_s), spawn "gnome-screensaver-command -l") -- %! Launch dmenu
+    , ((mm .|. m1m, xK_s), spawn "slock") -- %! Launch dmenu
 
     --experimental
     , ((mm, xK_F4     ), spawn "konsole -e ncmpcpp")
@@ -219,5 +219,3 @@ myManageHook = composeAll
                  [ className =? "URxvt" --> doF W.swapDown
                  , className =? "konsole" --> doF W.swapDown
                  ]
-                 
-

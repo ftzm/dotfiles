@@ -1,4 +1,4 @@
-Config { 
+Config {
 
    -- appearance
      font =         "xft:Fira Code:size=14:medium:antialias=true, FontAwesome:pixelsize=18"
@@ -12,7 +12,7 @@ Config {
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
    --, template = "%StdinReader% }{ %battery% | %multicpu% | %coretemp% | %memory% | %dynnetwork% | %RJTT% | %kbd% | %date%"
-   , template = " %StdinReader% }{ %coretemp%  %cpu%  %memory%   %volume%   %brightness%  %kbd%  %battery%  %date% "
+   , template = " %StdinReader% }{ %spotify%%mpd%  %wireless% %coretemp%  %cpu%  %memory%   %volume%   %brightness%  %kbd%  %battery%  %date% "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -36,7 +36,7 @@ Config {
    --   The --template option controls how the plugin is displayed. Text
    --   color can be set by enclosing in <fc></fc> tags. For more details
    --   see http://projects.haskell.org/xmobar/#system-monitor-plugins.
-   , commands = 
+   , commands =
 
         -- weather monitor
         [  Run StdinReader
@@ -61,13 +61,22 @@ Config {
                              --, "--normal"   , "darkorange"
                              , "--high"     , "#cc241d"
                              ] 50
-                          
+
 
         -- brightness monitor
         , Run Com "sh" ["/home/matt/bin/backlight.sh"] "brightness" 10
 
         -- volume monitor
         , Run Com "sh" ["/home/matt/bin/volume.sh"] "volume" 10
+
+        -- MPD
+        , Run Com "sh" ["/home/matt/bin/mpd_stats.sh"] "mpd" 10
+
+        -- Spotify
+        , Run Com "sh" ["/home/matt/bin/spotify_status.sh"] "spotify" 10
+
+        -- Wifi
+        , Run Com "sh" ["/home/matt/bin/wireless.sh"] "wireless" 600
 
         -- memory usage monitor
         , Run Memory         [ "--template" ," <usedratio>"
@@ -96,7 +105,7 @@ Config {
                                        , "-i"	, " 100"
                              ] 500
 
-        -- time and date indicator 
+        -- time and date indicator
         --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
         , Run Date           " %H:%M" "date" 10
 
@@ -108,4 +117,3 @@ Config {
                              ]
         ]
    }
-

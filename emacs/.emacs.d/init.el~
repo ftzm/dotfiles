@@ -11,7 +11,10 @@
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 ;Set font
-(add-to-list 'default-frame-alist '(font . "Fira Code-10" ))
+(add-to-list 'default-frame-alist '(font . "Fira Code-16" ))
+
+(set-fontset-font t 'japanese-jisx0208
+                  (font-spec :family "IPAGothic" :size 24))
 
 (blink-cursor-mode 0)
 (setq visible-cursor nil) ;; no blink in term
@@ -20,6 +23,8 @@
 (setq initial-scratch-message ";; Welcome")
 
 (savehist-mode 1)
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; ############################################################################
 ;; Setup the getting of packages from melpa, etc.
@@ -68,7 +73,7 @@
     )
   (spaceline-spacemacs-theme)
   (spaceline-toggle-buffer-size-off)
-  ;(spaceline-toggle-hud-off)
+  (spaceline-toggle-hud-off)
   ;(spaceline-toggle-buffer-position-off)
   (spaceline-toggle-buffer-encoding-abbrev-off)
   (spaceline-toggle-version-control-off)
@@ -89,6 +94,8 @@
   :config
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key "SPC" 'counsel-M-x)
+  (define-prefix-command 'app-keys)
+  (evil-leader/set-key "a" 'app-keys)
   )
 
 (use-package evil
@@ -118,6 +125,7 @@
     (evil-goto-mark 126)
     (setq last-command-event 'f4))
 
+  (define-key evil-normal-state-map (kbd "C-i") 'evil-jump-forward)
   (define-key evil-normal-state-map "L" 'evil-end-of-line)
   (define-key evil-visual-state-map "L" 'evil-last-non-blank)
   (define-key evil-normal-state-map "H" 'beginning-of-line-text)
@@ -133,17 +141,26 @@
   (define-key window-keys "j" 'evil-window-down)
   (define-key window-keys "k" 'evil-window-up)
   (define-key window-keys "l" 'evil-window-right)
+  (define-key window-keys "H" 'evil-window-move-far-left)
+  (define-key window-keys "J" 'evil-window-move-very-bottom)
+  (define-key window-keys "K" 'evil-window-move-very-top)
+  (define-key window-keys "L" 'evil-window-move-far-right)
+  (define-key window-keys "r" 'evil-window-rotate-downwards)
+  (define-key window-keys "R" 'evil-window-rotate-upwards)
   (define-key window-keys "d" 'delete-window)
 
   (define-prefix-command 'buffer-keys)
   (evil-leader/set-key "b" 'buffer-keys)
   (define-key buffer-keys "d" 'evil-delete-buffer)
   (define-key buffer-keys "e" 'eval-buffer)
+  (define-key buffer-keys "k" 'evil-prev-buffer)
+  (define-key buffer-keys "j" 'evil-next-buffer)
 
   (define-prefix-command 'file-keys)
   (evil-leader/set-key "f" 'file-keys)
   (define-key file-keys "s" 'save-buffer)
   (define-key file-keys "f" 'counsel-find-file)
+  (define-key file-keys "w" 'write-file)
 
   (defun agenda-remove-schedule ()
     (interactive)
@@ -177,6 +194,22 @@
 
 
 ;; ----------------------------------------------------------------------------
+;; Dired keys
+;; ----------------------------------------------------------------------------
+
+(define-key app-keys "d" 'dired)
+(eval-after-load 'dired
+  '(progn
+     (evil-define-key 'normal dired-mode-map
+       "G" 'evil-goto-line
+       "gg" 'evil-goto-first-line
+       "K" 'dired-kill-subdir
+       "S" 'dired-sort-toggle-or-edit
+       "s" 'avy-goto-char-timer
+       ")" 'dired-next-subdir
+       "(" 'dired-prev-subdir)))
+
+;; ----------------------------------------------------------------------------
 ;; Eyebrowse
 ;; ----------------------------------------------------------------------------
 
@@ -205,6 +238,31 @@
   (define-key evil-normal-state-map (kbd "M-9") 'eyebrowse-switch-to-window-config-9) ;
   (define-key evil-normal-state-map (kbd "M-0") 'eyebrowse-switch-to-window-config-0)
   )
+
+
+;; ----------------------------------------------------------------------------
+;; Desktop Save
+;; ----------------------------------------------------------------------------
+
+;;(use-package desktop
+;;  :config
+;;  (desktop-save-mode 1)
+;;
+;;  (setq desktop-path '("~/.emacs.d/"))
+;;  (setq desktop-dirname "~/.emacs.d/")
+;;  (setq desktop-base-file-name "emacs-desktop")
+
+  ;;(setq desktop-buffers-not-to-save
+       ;;(concat "\\("
+               ;;"^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
+               ;;"\\.diary\\|\\.newsrc-dribble\\|\\.bbdb"
+        ;;"\\)$"))
+  ;;(add-to-list 'desktop-modes-not-to-save 'dired-mode)
+  ;;(add-to-list 'desktop-modes-not-to-save 'Info-mode)
+  ;;(add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
+  ;;(add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
+  ;;(add-to-list 'desktop-modes-not-to-save 'magit-auto-revert-mode)
+  ;)
 
 ;; ----------------------------------------------------------------------------
 ;; PERSPECTIVES
@@ -255,7 +313,13 @@
   :config
   (define-key evil-normal-state-map "s" 'avy-goto-char-timer)
   (setq avy-timeout-seconds 0.2)
+  (setq avy-all-windows nil)
+  (setq avy-keys '(?f ?d ?s ?a ?g ?k ?l ?\; ?h ?r ?e ?w ?q ?t ?u ?i ?o ?p ?y ?v
+  ?c ?x ?z ?n ?m ?b ?, ?. ?/ ?j))
   )
+
+
+
 
 ;; ----------------------------------------------------------------------------
 ;; Undoing and redoing
@@ -310,6 +374,7 @@
   (ivy-mode 1)
   :config
   (setq ivy-count-format "%d/%d - ")
+  (setq ivy-height 15)
   (evil-leader/set-key "bb" 'ivy-switch-buffer)
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
@@ -321,19 +386,20 @@
          "\\|\\(?:\\`.+?[#~]\\'\\)"))
 
   ;;function to collect most recent 7 files, relies on recentf
-  (defun recent-seven-files ()
-    (cl-loop for item in recentf-list
-             for i from 1 to 7
-             collect item))
+  ;(defun recent-seven-files ()
+  ;  (cl-loop for item in recentf-list
+  ;           for i from 1 to 7
+  ;           collect item))
 
-  (ivy-set-sources
-   'counsel-find-file
-   '((recent-seven-files)
-     (original-source)))
+  ;(ivy-set-sources
+  ; 'counsel-find-file
+  ; '((recent-seven-files)
+  ;   (original-source)))
 
   (define-prefix-command 'ivy-keys)
   (evil-leader/set-key "i" 'ivy-keys)
   (define-key ivy-keys "i" 'counsel-imenu)
+  (define-key ivy-keys "g" 'counsel-grep)
 
   ;alternate cycle keys, more vimy
   (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
@@ -385,6 +451,27 @@
   )
 
 ;; ----------------------------------------------------------------------------
+;; Hydra
+;; ----------------------------------------------------------------------------
+
+(use-package hydra)
+
+(defhydra hydra-window-size (evil-normal-state-map "SPC w")
+  "change window size"
+;;  "
+;;^Mark^             ^Unmark^           ^Actions^          ^Search
+;;^^^^^^^^-----------------------------------------------------------------
+;;_m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch
+;;_s_: save          _U_: unmark up     _b_: bury          _I_: isearch
+;;_d_: delete        ^ ^                _g_: refresh       _O_: multi-occur
+;;_D_: delete up     ^ ^                _T_: files only: % -28`Buffer-menu-files-only
+;;_~_: modified
+;;"
+
+  ("w" evil-window-increase-width)
+  ("n" evil-window-decrease-width))
+
+;; ----------------------------------------------------------------------------
 ;; File Tree (Neotree)
 ;; ----------------------------------------------------------------------------
 
@@ -399,6 +486,28 @@
   (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
   (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
   (setq neo-window-width 36)
+  )
+
+;; ----------------------------------------------------------------------------
+;; Magit
+;; ----------------------------------------------------------------------------
+
+(use-package magit
+  :config 
+  (define-prefix-command 'magit-keys)
+  (evil-leader/set-key "m" 'magit-keys)
+  (define-key magit-keys "s" 'magit-status)
+  (define-key magit-keys "b" 'magit-blame-toggle)
+  (define-key magit-keys "B" 'magit-blame-quit)
+
+  (defun magit-blame-toggle()
+    "WORKAROUND https://github.com/magit/magit/issues/1987"
+    (interactive)
+    (let* ((active (--filter (and (boundp it) (symbol-value it)) minor-mode-list)))
+      (if (member 'magit-blame-mode active)
+          (magit-blame-quit)
+        (magit-blame nil buffer-file-name))))
+    
   )
 
 ;; ############################################################################
@@ -460,6 +569,7 @@
   (define-prefix-command 'python-mode-keys)
   (evil-define-key 'normal python-mode-map (kbd ",") 'python-mode-keys)
   (define-key python-mode-keys "v" 'pyvenv-and-fly)
+  (define-key python-mode-keys "d" 'dumb-jump-go)
 
   ;(require 'auto-virtualenv)
   ;(add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
@@ -538,7 +648,13 @@
 ;; ----------------------------------------------------------------------------
 
 
-
+(use-package markdown-mode
+  ;:ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 
 
 ;; ----------------------------------------------------------------------------
@@ -655,7 +771,8 @@
 
   (define-prefix-command 'projectile-keys)
   (evil-leader/set-key "p" 'projectile-keys)
-  (define-key projectile-keys "f" 'counsel-projectile)
+  (define-key projectile-keys "f" 'counsel-projectile-find-file)
+  (define-key projectile-keys "b" 'counsel-projectile-switch-to-buffer)
   (define-key projectile-keys "p" 'counsel-projectile-switch-project)
   (define-key projectile-keys "a" 'counsel-projectile-ag)
   )
@@ -678,8 +795,14 @@
     (add-hook 'org-mode-hook 'org-indent-mode)
     (add-hook 'org-mode-hook 'olivetti-mode)
 
-    ;; apply CLOSED property on done
-    (setq org-log-done 'time)
+    ;; automatically save org buffers when agenda open
+    ;;;(add-hook 'org-agenda-mode-hook
+    ;;;      (lambda ()
+    ;;;        (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
+    ;;;        (auto-save-mode)))
+    ;;;
+    ;;;;; apply CLOSED property on done
+    ;;;(setq org-log-done 'time)
 
     (define-prefix-command 'org-keys)
     (evil-leader/set-key "o" 'org-keys)
@@ -687,7 +810,10 @@
     (define-key org-keys "a" 'org-agenda)
     (define-key org-keys "l" 'org-agenda-list)
     (define-key org-keys "t" (lambda () (interactive) (org-capture nil "t")))
+    (define-key org-keys "w" (lambda () (interactive) (org-capture nil "w")))
+    (define-key org-keys "W" 'ftzm/org-agenda-list-work)
     (define-key org-keys "T" 'org-todo-list)
+    (define-key org-keys "m" 'create-meeting-file)
 
     ;;;; org-capture setting
     ;; Start capture mode in evil insert state
@@ -702,16 +828,34 @@
 
     (add-hook 'org-capture-mode-hook 'evil-insert-state)
 
+    (defun create-dated-file (path)
+      (let ((name (read-string "Name: ")))
+	(expand-file-name (format "%s-%s.org"
+				  (format-time-string "%Y-%m-%d")
+				  name) path)))
+
+    (defun create-meeting-file ()
+      (interactive)
+      (find-file (replace-regexp-in-string " " "-" (create-dated-file "~/org/meetings")))
+      )
+    
     (setq org-capture-templates
 	  (quote (("t" "todo" entry (file+headline "~/org/refile.org" "Tasks")
 		   "* TODO %?\n  SCHEDULED: %t")
 		  ("n" "note" entry (file+headline "~/org/refile.org" "Notes")
 		   "* %?")
-		  ;;"* TODO %?\n%U\n%a\n")
+		  ("w" "work todo" entry (file+headline "~/org/work.org" "Tasks")
+		   "* TODO %?\n  SCHEDULED: %t")
 		  )))
-    (setq org-default-notes-file "~/org/refile.org")
+
+    ;(setq org-default-notes-file "~/org/refile.org")
     (evil-leader/set-key "oc" 'org-capture)
 
+
+    (defun ftzm/org-agenda-list-work ()
+      (interactive)
+      (let ((org-agenda-tag-filter-preset '("work")))
+	(org-agenda-list)))
 
 
     ;; Exclude DONE state tasks from refile targets
@@ -920,6 +1064,12 @@
 ;; ############################################################################
 (global-set-key (kbd "<escape>")      'keyboard-escape-quit)
 
+(defun switch-to-previous-buffer ()
+  (interactive)
+  (switch-to-buffer (other-buffer)))
+
+ (evil-leader/set-key "TAB" 'switch-to-previous-buffer)
+
 
 ;; ############################################################################
 ;; Configure gui that may rely on plugins being intialized
@@ -932,7 +1082,7 @@
 (set-fringe-mode 0)
 
 ;;try out loading here
-  (spaceline-compile)
+(spaceline-compile)
 
 
 ;; ----------------------------------------------------------------------------
@@ -1088,10 +1238,10 @@
     ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "10e231624707d46f7b2059cc9280c332f7c7a530ebc17dba7e506df34c5332c4" "227edf860687e6dfd079dc5c629cbfb5c37d0b42a3441f5c50873ba11ec8dfd2" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(org-agenda-files
    (quote
-    ("~/org/work.org" "~/dev/hnefatafl/hnefatafl.org" "~/org/refile.org" "~/org/tasks.org")))
+    ("~/org/work.org" "~/org/refile.org" "~/org/tasks.org")))
  '(package-selected-packages
    (quote
-    (markdown-mode company-jedi auto-virtualenv company-lua flymake-lua avy ivy-rich intero olivetti counsel-projectile projectile counsel flycheck-mypy lua-mode magit-popup evil-magit magit ag all-the-icons neotree which-key darktooth-theme smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
+    (evil-snipe evil-quickscope hydra sudo-edit default-text-scale dumb-jump markdown-mode company-jedi auto-virtualenv company-lua flymake-lua avy ivy-rich intero olivetti counsel-projectile projectile counsel flycheck-mypy lua-mode magit-popup evil-magit magit ag all-the-icons neotree which-key darktooth-theme smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
  '(safe-local-variable-values (quote ((eval progn (pp-buffer) (indent-buffer))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

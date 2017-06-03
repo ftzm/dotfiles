@@ -4,17 +4,17 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored-marker"
  (filename . "~/org/tasks.org")
- (front-context-string . "** TODO rebind j")
- (rear-context-string . "2017-04-05 mið>\n")
- (position . 2779))
+ (front-context-string . "** TODO suspend ")
+ (rear-context-string . "017-04-11 Tue>\n\n")
+ (position . 3327))
 ("org-refile-last-stored"
- (filename . "~/org/tasks.org")
- (front-context-string . "** TODO rebind j")
- (rear-context-string . "2017-04-05 mið>\n")
- (position . 2779))
+ (filename . "~/org/work.org")
+ (front-context-string . "** TODO proper r")
+ (rear-context-string . "2017-05-25 Thu>\n")
+ (position . 2613))
 ("org-capture-last-stored"
  (filename . "~/org/refile.org")
- (front-context-string . "** TODO montreal")
- (rear-context-string . "2017-03-30 fim>\n")
- (position . 338))
+ (front-context-string . "** TODO ping jak")
+ (rear-context-string . "2017-05-31 Wed>\n")
+ (position . 1770))
 )

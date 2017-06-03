@@ -91,6 +91,7 @@ alias k=kubectl
 alias d=docker
 alias st='urxvt -fn "xft:Fira Code:Medium:size=11"'
 alias python=python3
+alias fuck='sudo $(fc -ln -1)'
 
 #PATH THINGS!
 export PATH="$PATH:/home/matt/.local/bin"
@@ -111,9 +112,6 @@ export FZF_DEFAULT_OPTS='
 
 #aws completion
 #source ~/.local/bin/aws_zsh_completer.sh
-
-#better escape
-setxkbmap -option caps:swapescape
 
 #git passes in cli
 unset SSH_ASKPASS

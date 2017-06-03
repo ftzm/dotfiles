@@ -13,6 +13,9 @@
 ;Set font
 (add-to-list 'default-frame-alist '(font . "Fira Code-16" ))
 
+(set-fontset-font t 'japanese-jisx0208
+                  (font-spec :family "IPAGothic" :size 24))
+
 (blink-cursor-mode 0)
 (setq visible-cursor nil) ;; no blink in term
 
@@ -20,6 +23,10 @@
 (setq initial-scratch-message ";; Welcome")
 
 (savehist-mode 1)
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(setq vc-follow-symlinks t)
 
 ;; ############################################################################
 ;; Setup the getting of packages from melpa, etc.
@@ -49,6 +56,16 @@
 ;; ############################################################################
 ;; General UI
 ;; ############################################################################
+
+
+;; ----------------------------------------------------------------------------
+;; Default Text Scale
+;; ----------------------------------------------------------------------------
+
+(use-package default-text-scale
+  :config
+  (setq default-text-scale-amount 60)
+  )
 
 ;; ----------------------------------------------------------------------------
 ;; Spaceline
@@ -91,6 +108,10 @@
   (evil-leader/set-key "SPC" 'counsel-M-x)
   (define-prefix-command 'app-keys)
   (evil-leader/set-key "a" 'app-keys)
+  (define-prefix-command 'theme-keys)
+  (evil-leader/set-key "t" 'theme-keys)
+  (define-key theme-keys "b" 'default-text-scale-increase)
+  (define-key theme-keys "s" 'default-text-scale-decrease)
   )
 
 (use-package evil
@@ -165,6 +186,11 @@
   (add-hook 'org-mode-hook
 	    (lambda ()
 	      (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)))
+  )
+
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1)
   )
 
 ;; keeps a list of recently visisted files
@@ -308,7 +334,13 @@
   :config
   (define-key evil-normal-state-map "s" 'avy-goto-char-timer)
   (setq avy-timeout-seconds 0.2)
+  (setq avy-all-windows nil)
+  (setq avy-keys '(?f ?d ?s ?a ?g ?k ?l ?\; ?h ?r ?e ?w ?q ?t ?u ?i ?o ?p ?y ?v
+  ?c ?x ?z ?n ?m ?b ?, ?. ?/ ?j))
   )
+
+
+
 
 ;; ----------------------------------------------------------------------------
 ;; Undoing and redoing
@@ -394,7 +426,7 @@
   (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line)
 
-  ;; below works but slow 
+  ;; below works but slow
   (defconst modi/ag-arguments
   '("--nogroup" ; mandatory argument for ag.el as per https://github.com/Wilfred/ag.el/issues/41
       ;"--skip-vcs-ignores" ; Ignore files/dirs ONLY from `.agignore'
@@ -403,7 +435,7 @@
       "--follow") ; follow symlinks
   "Default ag arguments used in the functions in `ag', `counsel' and `projectile'
       packages.")
-  
+
   ;; Use `ag' all the time if available
   (defun modi/advice-projectile-use-ag ()
     "Always use `ag' for getting a list of all files in the project."
@@ -416,7 +448,7 @@
   (when (executable-find "ag")
     (advice-add 'projectile-get-ext-command :override
         #'modi/advice-projectile-use-ag))
-  
+
   (with-eval-after-load 'org-agenda
     (define-key org-agenda-mode-map (kbd "C-c C-q") #'counsel-org-tag-agenda))
 
@@ -440,6 +472,27 @@
   )
 
 ;; ----------------------------------------------------------------------------
+;; Hydra
+;; ----------------------------------------------------------------------------
+
+(use-package hydra)
+
+(defhydra hydra-window-size (evil-normal-state-map "SPC w")
+  "change window size"
+;;  "
+;;^Mark^             ^Unmark^           ^Actions^          ^Search
+;;^^^^^^^^-----------------------------------------------------------------
+;;_m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch
+;;_s_: save          _U_: unmark up     _b_: bury          _I_: isearch
+;;_d_: delete        ^ ^                _g_: refresh       _O_: multi-occur
+;;_D_: delete up     ^ ^                _T_: files only: % -28`Buffer-menu-files-only
+;;_~_: modified
+;;"
+
+  ("w" evil-window-increase-width)
+  ("n" evil-window-decrease-width))
+
+;; ----------------------------------------------------------------------------
 ;; File Tree (Neotree)
 ;; ----------------------------------------------------------------------------
 
@@ -461,7 +514,7 @@
 ;; ----------------------------------------------------------------------------
 
 (use-package magit
-  :config 
+  :config
   (define-prefix-command 'magit-keys)
   (evil-leader/set-key "m" 'magit-keys)
   (define-key magit-keys "s" 'magit-status)
@@ -475,7 +528,7 @@
       (if (member 'magit-blame-mode active)
           (magit-blame-quit)
         (magit-blame nil buffer-file-name))))
-    
+
   )
 
 ;; ############################################################################
@@ -507,7 +560,7 @@
   :diminish "\\"
   :config
   (add-hook 'haskell-mode-hook 'intero-mode)
-  (with-eval-after-load 'flycheck 
+  (with-eval-after-load 'flycheck
     (flycheck-add-next-checker 'intero '(warning . haskell-hlint)))
   )
 
@@ -519,7 +572,7 @@
   :diminish "A"
   :config
   (add-hook 'python-mode-hook 'anaconda-mode)
-  
+
   (add-hook 'python-mode-hook (lambda ()
   			      (flycheck-mode 1)
   			      (setq flycheck-checker 'python-pylint
@@ -533,7 +586,7 @@
     (flycheck-mode 0)
     (flycheck-mode 1)
     )
-  
+
   (define-prefix-command 'python-mode-keys)
   (evil-define-key 'normal python-mode-map (kbd ",") 'python-mode-keys)
   (define-key python-mode-keys "v" 'pyvenv-and-fly)
@@ -764,13 +817,13 @@
     (add-hook 'org-mode-hook 'olivetti-mode)
 
     ;; automatically save org buffers when agenda open
-    (add-hook 'org-agenda-mode-hook
-          (lambda ()
-            (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
-            (auto-save-mode)))
-    
-    ;; apply CLOSED property on done
-    (setq org-log-done 'time)
+    ;;;(add-hook 'org-agenda-mode-hook
+    ;;;      (lambda ()
+    ;;;        (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
+    ;;;        (auto-save-mode)))
+    ;;;
+    ;;;;; apply CLOSED property on done
+    ;;;(setq org-log-done 'time)
 
     (define-prefix-command 'org-keys)
     (evil-leader/set-key "o" 'org-keys)
@@ -781,6 +834,7 @@
     (define-key org-keys "w" (lambda () (interactive) (org-capture nil "w")))
     (define-key org-keys "W" 'ftzm/org-agenda-list-work)
     (define-key org-keys "T" 'org-todo-list)
+    (define-key org-keys "m" 'create-meeting-file)
 
     ;;;; org-capture setting
     ;; Start capture mode in evil insert state
@@ -795,6 +849,17 @@
 
     (add-hook 'org-capture-mode-hook 'evil-insert-state)
 
+    (defun create-dated-file (path)
+      (let ((name (read-string "Name: ")))
+	(expand-file-name (format "%s-%s.org"
+				  (format-time-string "%Y-%m-%d")
+				  name) path)))
+
+    (defun create-meeting-file ()
+      (interactive)
+      (find-file (replace-regexp-in-string " " "-" (create-dated-file "~/org/meetings")))
+      )
+
     (setq org-capture-templates
 	  (quote (("t" "todo" entry (file+headline "~/org/refile.org" "Tasks")
 		   "* TODO %?\n  SCHEDULED: %t")
@@ -802,8 +867,8 @@
 		   "* %?")
 		  ("w" "work todo" entry (file+headline "~/org/work.org" "Tasks")
 		   "* TODO %?\n  SCHEDULED: %t")
-		  ;;"* TODO %?\n%U\n%a\n")
 		  )))
+
     ;(setq org-default-notes-file "~/org/refile.org")
     (evil-leader/set-key "oc" 'org-capture)
 
@@ -997,7 +1062,7 @@
      (setq org-map-continue-from (outline-previous-heading))
      (org-save-all-org-buffers))))
     ))
-  
+
   (defun org-archive-done-tasks ()
     (interactive)
     (org-map-entries 'archive-if-old "/DONE" 'agenda))
@@ -1179,7 +1244,7 @@
 ;          #'add-fira-code-symbol-keywords)
 
 ;; ############################################################################
-;; Beware: here be custom-set-variables. Best don't touch.
+;; Beware: here be dra--, err, custom-set-variables. Steer clear.
 ;; ############################################################################
 
 (custom-set-variables
@@ -1197,14 +1262,13 @@
     ("~/org/work.org" "~/org/refile.org" "~/org/tasks.org")))
  '(package-selected-packages
    (quote
-    (default-text-scale dumb-jump markdown-mode company-jedi auto-virtualenv company-lua flymake-lua avy ivy-rich intero olivetti counsel-projectile projectile counsel flycheck-mypy lua-mode magit-popup evil-magit magit ag all-the-icons neotree which-key darktooth-theme smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
+    (evil-surround evil-snipe evil-quickscope hydra sudo-edit default-text-scale dumb-jump markdown-mode company-jedi auto-virtualenv company-lua flymake-lua avy ivy-rich intero olivetti counsel-projectile projectile counsel flycheck-mypy lua-mode magit-popup evil-magit magit ag all-the-icons neotree which-key darktooth-theme smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
  '(safe-local-variable-values (quote ((eval progn (pp-buffer) (indent-buffer))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-; '(default ((t (:inherit nil :stipple nil :background "#282828" :foreground "#ebdbb2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 154 :width normal :foundry "CTDB" :family "Fira Code"))))
  '(ivy-current-match ((t (:foreground "#8ec07c" :underline nil :weight normal))))
  '(neo-banner-face ((t (:inherit default))))
  '(neo-button-face ((t (:inherit font-lock-comment-face :underline nil))))
