@@ -174,30 +174,23 @@
 
 (use-package general
   :config
-  ;(setq general-default-keymaps 'evil-normal-state-map)
-
-  ;(general-define-key :prefix "SPC" "w" 'window-keys)
-  ;(general-define-key :prefix "SPC" "b" 'buffer-keys)
-  ;("f" 'file-keys)
-  ;(general-define-key "SPC" 'counsel-M-x)
+  (setq general-default-keymaps 'evil-normal-state-map)
+  (general-define-key :prefix "SPC" "w" 'window-keys)
+  (general-define-key :prefix "SPC" "b" 'buffer-keys)
+  (general-define-key :prefix "SPC" "f" 'file-keys)
+  (general-define-key :prefix "SPC" "SPC" 'counsel-M-x)
+  (general-define-key :prefix "SPC" "a" 'apps-keys)
+  (general-define-key :prefix "SPC" "t" 'theme-keys)
+  (general-define-key :prefix "SPC" "TAB" 'switch-to-previous-buffer)
   (define-prefix-command 'apps-keys)
-  ;(general-define-key "a" 'apps-keys)
   (define-prefix-command 'theme-keys)
-  ;(define-key theme-keys "b" 'default-text-scale-increase)
-  ;(define-key theme-keys "s" 'default-text-scale-decrease)
-  ;(general-define-key "t" 'theme)
-  ;(general-define-key "TAB" 'switch-to-previous-buffer)
+  (define-key theme-keys "b" 'default-text-scale-increase)
+  (define-key theme-keys "s" 'default-text-scale-decrease)
 
   (general-evil-setup)
-  (general-nmap "c" ;; to map c here, general must be initiated after evil
+  (general-nmap "c" ;; this must be defined after evil to bind c
               (general-key-dispatch 'evil-change
-                "ow" 'toggle-word-wrap
                 "c" (general-simulate-keys ('evil-change "e"))
-                "tb" 'find-file
-                "c" 'evil-change-whole-line
-                ;; could be used for other operators where there
-                ;; isn't an existing command for the linewise version:
-                ;; "c" (general-simulate-keys ('evil-change "c"))
                 ))
   (general-vmap "c" 'evil-change)
   )
@@ -225,6 +218,21 @@
   (which-key-mode)
   :config
   (setq which-key-idle-delay 0.3)
+  (which-key-add-key-based-replacements
+    "SPC SPC" "command"
+    "SPC TAB" "prev buffer"
+    "SPC a" "app"
+    "SPC b" "buffer"
+    "SPC e" "error"
+    "SPC f" "file"
+    "SPC i" "ivy"
+    "SPC g" "git"
+    "SPC o" "org"
+    "SPC p" "projectile"
+    "SPC s" "space"
+    "SPC t" "theme"
+    "SPC w" "window"
+    )
   )
 
 
@@ -252,7 +260,7 @@
   :init
   (eyebrowse-mode 1)
   :general
-  ;("s" 'eyebrowse)
+  (general-define-key :prefix "SPC" "s" 'eyebrowse-keys)
   :config
   (define-prefix-command 'eyebrowse-keys)
   (define-key eyebrowse-keys "s" 'eyebrowse-switch-to-window-config)
@@ -414,7 +422,7 @@
   :init
   (ivy-mode 1)
   :general
-  ;("i" 'ivy)
+  (general-define-key :prefix "SPC" "i" 'ivy-keys)
   :config
   (setq ivy-count-format "%d/%d - ")
   (setq ivy-height 15)
@@ -495,22 +503,22 @@
 ;; Hydra
 ;; ----------------------------------------------------------------------------
 
-;(use-package hydra)
-;
-;(defhydra hydra-window-size (evil-normal-state-map "SPC w")
-;  "change window size"
-;;;  "
-;;;^Mark^             ^Unmark^           ^Actions^          ^Search
-;;;^^^^^^^^-----------------------------------------------------------------
-;;;_m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch
-;;;_s_: save          _U_: unmark up     _b_: bury          _I_: isearch
-;;;_d_: delete        ^ ^                _g_: refresh       _O_: multi-occur
-;;;_D_: delete up     ^ ^                _T_: files only: % -28`Buffer-menu-files-only
-;;;_~_: modified
-;;;"
-;
-;  ("w" evil-window-increase-width)
-;  ("n" evil-window-decrease-width))
+(use-package hydra)
+
+(defhydra hydra-window-size (evil-normal-state-map "SPC w")
+  "change window size"
+;;  "
+;;^Mark^             ^Unmark^           ^Actions^          ^Search
+;;^^^^^^^^-----------------------------------------------------------------
+;;_m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch
+;;_s_: save          _U_: unmark up     _b_: bury          _I_: isearch
+;;_d_: delete        ^ ^                _g_: refresh       _O_: multi-occur
+;;_D_: delete up     ^ ^                _T_: files only: % -28`Buffer-menu-files-only
+;;_~_: modified
+;;"
+
+  ("w" evil-window-increase-width)
+  ("n" evil-window-decrease-width))
 
 ;; ----------------------------------------------------------------------------
 ;; File Tree (Neotree)
@@ -535,7 +543,7 @@
 
 (use-package magit
   :general
-  ;("m" 'magit)
+  (general-define-key :prefix "SPC" "g" 'magit-keys)
   :config
   (define-prefix-command 'magit-keys)
   (define-key magit-keys "s" 'magit-status)
@@ -790,7 +798,7 @@
 (use-package flycheck
   :diminish "S"
   :general
-  ;("e" 'flycheck)
+  (general-define-key :prefix "SPC" "e" 'flycheck-keys)
   :config
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
   (setq flycheck-display-errors-delay 0.1)
@@ -808,7 +816,7 @@
 (use-package projectile
   :diminish projectile-mode
   :general
-  ;("p" 'projectile)
+  (general-define-key :prefix "SPC" "p" 'projectile-keys)
   :init
   (projectile-mode)
   :config
@@ -833,7 +841,7 @@
 (use-package org
   :mode (("\\.org$" . org-mode))
   :general
-  ;("o" 'org)
+  (general-define-key :prefix "SPC" "o" 'org-keys)
   :config
   (progn
     (setq org-directory "~/org")
