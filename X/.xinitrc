@@ -5,6 +5,7 @@
 #fcitx
 
 # General Environmental Setup
+autocutsel &
 xset +fp /usr/share/fonts/local
 xset fp rehash
 xset +fp ~/.fonts
@@ -14,3 +15,4 @@ hsetroot -solid "#282828"
 xsetroot -cursor_name left_ptr
 setxkbmap -option caps:swapescape
 exec xmonad
+# exec startxfce4

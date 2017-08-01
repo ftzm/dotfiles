@@ -1,4 +1,4 @@
-;; ############################################################################
+;; ###########################################################################a
 ;; Change Emacs internal settings
 ;; ############################################################################
 
@@ -80,7 +80,8 @@
   	(setq powerline-default-separator 'slant)
   	)
     (progn
-      (setq powerline-default-separator nil)
+      ;(setq powerline-default-separator nil)
+      (setq powerline-default-separator 'slant)
       )
     )
   (spaceline-spacemacs-theme)
@@ -98,21 +99,6 @@
 ;; ----------------------------------------------------------------------------
 ;; Evildoing
 ;; ----------------------------------------------------------------------------
-
-(use-package evil-leader
-  :init
-  (setq evil-leader/no-prefix-mode-rx '("org-.*-mode" "magit-.*-mode"))
-  (global-evil-leader-mode)
-  :config
-  (evil-leader/set-leader "<SPC>")
-  (evil-leader/set-key "SPC" 'counsel-M-x)
-  (define-prefix-command 'app-keys)
-  (evil-leader/set-key "a" 'app-keys)
-  (define-prefix-command 'theme-keys)
-  (evil-leader/set-key "t" 'theme-keys)
-  (define-key theme-keys "b" 'default-text-scale-increase)
-  (define-key theme-keys "s" 'default-text-scale-decrease)
-  )
 
 (use-package evil
   :init
@@ -150,7 +136,6 @@
   (define-key evil-normal-state-map (kbd "] SPC") 'add-line-below)
 
   (define-prefix-command 'window-keys)
-  (evil-leader/set-key "w" 'window-keys)
   (define-key window-keys "v" 'split-window-right)
   (define-key window-keys "s" 'split-window-below)
   (define-key window-keys "h" 'evil-window-left)
@@ -166,14 +151,13 @@
   (define-key window-keys "d" 'delete-window)
 
   (define-prefix-command 'buffer-keys)
-  (evil-leader/set-key "b" 'buffer-keys)
   (define-key buffer-keys "d" 'evil-delete-buffer)
   (define-key buffer-keys "e" 'eval-buffer)
   (define-key buffer-keys "k" 'evil-prev-buffer)
   (define-key buffer-keys "j" 'evil-next-buffer)
+  (define-key buffer-keys "b" 'ivy-switch-buffer)
 
   (define-prefix-command 'file-keys)
-  (evil-leader/set-key "f" 'file-keys)
   (define-key file-keys "s" 'save-buffer)
   (define-key file-keys "f" 'counsel-find-file)
   (define-key file-keys "w" 'write-file)
@@ -186,6 +170,36 @@
   (add-hook 'org-mode-hook
 	    (lambda ()
 	      (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)))
+  )
+
+(use-package general
+  :config
+  ;(setq general-default-keymaps 'evil-normal-state-map)
+
+  ;(general-define-key :prefix "SPC" "w" 'window-keys)
+  ;(general-define-key :prefix "SPC" "b" 'buffer-keys)
+  ;("f" 'file-keys)
+  ;(general-define-key "SPC" 'counsel-M-x)
+  (define-prefix-command 'apps-keys)
+  ;(general-define-key "a" 'apps-keys)
+  (define-prefix-command 'theme-keys)
+  ;(define-key theme-keys "b" 'default-text-scale-increase)
+  ;(define-key theme-keys "s" 'default-text-scale-decrease)
+  ;(general-define-key "t" 'theme)
+  ;(general-define-key "TAB" 'switch-to-previous-buffer)
+
+  (general-evil-setup)
+  (general-nmap "c" ;; to map c here, general must be initiated after evil
+              (general-key-dispatch 'evil-change
+                "ow" 'toggle-word-wrap
+                "c" (general-simulate-keys ('evil-change "e"))
+                "tb" 'find-file
+                "c" 'evil-change-whole-line
+                ;; could be used for other operators where there
+                ;; isn't an existing command for the linewise version:
+                ;; "c" (general-simulate-keys ('evil-change "c"))
+                ))
+  (general-vmap "c" 'evil-change)
   )
 
 (use-package evil-surround
@@ -218,7 +232,7 @@
 ;; Dired keys
 ;; ----------------------------------------------------------------------------
 
-(define-key app-keys "d" 'dired)
+(define-key apps-keys "d" 'dired)
 (eval-after-load 'dired
   '(progn
      (evil-define-key 'normal dired-mode-map
@@ -237,9 +251,10 @@
 (use-package eyebrowse
   :init
   (eyebrowse-mode 1)
+  :general
+  ;("s" 'eyebrowse)
   :config
   (define-prefix-command 'eyebrowse-keys)
-  (evil-leader/set-key "s" 'eyebrowse-keys)
   (define-key eyebrowse-keys "s" 'eyebrowse-switch-to-window-config)
   (define-key eyebrowse-keys "l" 'eyebrowse-last-window-config)
   (define-key eyebrowse-keys "k" 'eyebrowse-prev-window-config)
@@ -260,6 +275,11 @@
   (define-key evil-normal-state-map (kbd "M-0") 'eyebrowse-switch-to-window-config-0)
   )
 
+
+(defun ftzm-eyebrowse-buffers ()
+  (interactive)
+  (print (mapcar (lambda (x) (nth 0 x)) (eyebrowse--get 'window-configs)))
+  )
 
 ;; ----------------------------------------------------------------------------
 ;; Desktop Save
@@ -393,10 +413,11 @@
   :diminish ivy-mode
   :init
   (ivy-mode 1)
+  :general
+  ;("i" 'ivy)
   :config
   (setq ivy-count-format "%d/%d - ")
   (setq ivy-height 15)
-  (evil-leader/set-key "bb" 'ivy-switch-buffer)
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
   (setq counsel-find-file-ignore-regexp
@@ -418,7 +439,6 @@
   ;   (original-source)))
 
   (define-prefix-command 'ivy-keys)
-  (evil-leader/set-key "i" 'ivy-keys)
   (define-key ivy-keys "i" 'counsel-imenu)
   (define-key ivy-keys "g" 'counsel-grep)
 
@@ -475,22 +495,22 @@
 ;; Hydra
 ;; ----------------------------------------------------------------------------
 
-(use-package hydra)
-
-(defhydra hydra-window-size (evil-normal-state-map "SPC w")
-  "change window size"
-;;  "
-;;^Mark^             ^Unmark^           ^Actions^          ^Search
-;;^^^^^^^^-----------------------------------------------------------------
-;;_m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch
-;;_s_: save          _U_: unmark up     _b_: bury          _I_: isearch
-;;_d_: delete        ^ ^                _g_: refresh       _O_: multi-occur
-;;_D_: delete up     ^ ^                _T_: files only: % -28`Buffer-menu-files-only
-;;_~_: modified
-;;"
-
-  ("w" evil-window-increase-width)
-  ("n" evil-window-decrease-width))
+;(use-package hydra)
+;
+;(defhydra hydra-window-size (evil-normal-state-map "SPC w")
+;  "change window size"
+;;;  "
+;;;^Mark^             ^Unmark^           ^Actions^          ^Search
+;;;^^^^^^^^-----------------------------------------------------------------
+;;;_m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch
+;;;_s_: save          _U_: unmark up     _b_: bury          _I_: isearch
+;;;_d_: delete        ^ ^                _g_: refresh       _O_: multi-occur
+;;;_D_: delete up     ^ ^                _T_: files only: % -28`Buffer-menu-files-only
+;;;_~_: modified
+;;;"
+;
+;  ("w" evil-window-increase-width)
+;  ("n" evil-window-decrease-width))
 
 ;; ----------------------------------------------------------------------------
 ;; File Tree (Neotree)
@@ -514,9 +534,10 @@
 ;; ----------------------------------------------------------------------------
 
 (use-package magit
+  :general
+  ;("m" 'magit)
   :config
   (define-prefix-command 'magit-keys)
-  (evil-leader/set-key "m" 'magit-keys)
   (define-key magit-keys "s" 'magit-status)
   (define-key magit-keys "b" 'magit-blame-toggle)
   (define-key magit-keys "B" 'magit-blame-quit)
@@ -768,12 +789,13 @@
 
 (use-package flycheck
   :diminish "S"
+  :general
+  ;("e" 'flycheck)
   :config
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
   (setq flycheck-display-errors-delay 0.1)
 
   (define-prefix-command 'flycheck-keys)
-  (evil-leader/set-key "e" 'flycheck-keys)
   (define-key flycheck-keys "p" 'flycheck-previous-error)
   (define-key flycheck-keys "n" 'flycheck-next-error)
 
@@ -785,13 +807,14 @@
 
 (use-package projectile
   :diminish projectile-mode
+  :general
+  ;("p" 'projectile)
   :init
   (projectile-mode)
   :config
   (setq projectile-completion-system 'ivy) ;;requires ivy
 
   (define-prefix-command 'projectile-keys)
-  (evil-leader/set-key "p" 'projectile-keys)
   (define-key projectile-keys "f" 'counsel-projectile-find-file)
   (define-key projectile-keys "b" 'counsel-projectile-switch-to-buffer)
   (define-key projectile-keys "p" 'counsel-projectile-switch-project)
@@ -809,7 +832,8 @@
 
 (use-package org
   :mode (("\\.org$" . org-mode))
-  ;;:ensure org-plus-contrib
+  :general
+  ;("o" 'org)
   :config
   (progn
     (setq org-directory "~/org")
@@ -826,7 +850,6 @@
     ;;;(setq org-log-done 'time)
 
     (define-prefix-command 'org-keys)
-    (evil-leader/set-key "o" 'org-keys)
     (define-key org-keys "c" 'org-capture)
     (define-key org-keys "a" 'org-agenda)
     (define-key org-keys "l" 'org-agenda-list)
@@ -840,11 +863,11 @@
     ;; Start capture mode in evil insert state
 
     ;; Map for my custom ',' prefix in capture mode
-    (define-prefix-command 'capture-mode-map)
+    (define-prefix-command 'capture-mode-map-keys)
     (evil-define-key 'normal org-capture-mode-map "," 'capture-mode-map)
-    (define-key capture-mode-map "k" 'org-capture-kill)
-    (define-key capture-mode-map "r" 'org-capture-refile)
-    (define-key capture-mode-map "c" 'org-capture-finalize)
+    (define-key capture-mode-map-keys "k" 'org-capture-kill)
+    (define-key capture-mode-map-keys "r" 'org-capture-refile)
+    (define-key capture-mode-map-keys "c" 'org-capture-finalize)
 
 
     (add-hook 'org-capture-mode-hook 'evil-insert-state)
@@ -868,9 +891,6 @@
 		  ("w" "work todo" entry (file+headline "~/org/work.org" "Tasks")
 		   "* TODO %?\n  SCHEDULED: %t")
 		  )))
-
-    ;(setq org-default-notes-file "~/org/refile.org")
-    (evil-leader/set-key "oc" 'org-capture)
 
 
     (defun ftzm/org-agenda-list-work ()
@@ -934,15 +954,15 @@
     (define-key org-mode-keys "r" 'org-refile)
 
     ;; Map for my custom ',' prefix.
-    (define-prefix-command 'agenda-mode-map)
-    (define-key agenda-mode-map "w" 'org-agenda-week-view)
-    (define-key agenda-mode-map "D" 'org-agenda-day-view)
-    (define-key agenda-mode-map "d" 'org-agenda-deadline)
-    (define-key agenda-mode-map "r" 'org-agenda-refile)
-    (define-key agenda-mode-map "s" 'org-agenda-schedule)
-    (define-key agenda-mode-map "p" 'org-agenda-priority)
-    (define-key agenda-mode-map "f" 'org-agenda-filter-by-tag)
-    (define-key agenda-mode-map "cs" 'agenda-remove-schedule)
+    (define-prefix-command 'agenda-mode-map-keys)
+    (define-key agenda-mode-map-keys "w" 'org-agenda-week-view)
+    (define-key agenda-mode-map-keys "D" 'org-agenda-day-view)
+    (define-key agenda-mode-map-keys "d" 'org-agenda-deadline)
+    (define-key agenda-mode-map-keys "r" 'org-agenda-refile)
+    (define-key agenda-mode-map-keys "s" 'org-agenda-schedule)
+    (define-key agenda-mode-map-keys "p" 'org-agenda-priority)
+    (define-key agenda-mode-map-keys "f" 'org-agenda-filter-by-tag)
+    (define-key agenda-mode-map-keys "cs" 'agenda-remove-schedule)
 
     (evil-define-key 'normal org-agenda-mode-map
       (kbd "<DEL>") 'org-agenda-show-scroll-down
@@ -1038,7 +1058,7 @@
       "]" 'org-agenda-manipulate-query-subtract
 
       ;; prefix for my custom map
-      "," 'agenda-mode-map
+      "," 'agenda-mode-map-keys
 
 
       ))
@@ -1073,12 +1093,12 @@
 
 ;;(use-package org-habit) ;; I can never get this to work
 
-(use-package evil-org
-  :diminish evil-org-mode
-  ;; Personal edits avoiding keybind collision
-  :load-path "plugins/evil-org-mode/"
-  :config
-  )
+;;(use-package evil-org
+;;  :diminish evil-org-mode
+;;  ;; Personal edits avoiding keybind collision
+;;  :load-path "plugins/evil-org-mode/"
+;;  :config
+;;  )
 
 ;; ############################################################################
 ;; Global Key Binds
@@ -1089,7 +1109,6 @@
   (interactive)
   (switch-to-buffer (other-buffer)))
 
- (evil-leader/set-key "TAB" 'switch-to-previous-buffer)
 
 
 ;; ############################################################################
@@ -1256,13 +1275,13 @@
    ["#2e3436" "#a40000" "#4e9a06" "#c4a000" "#204a87" "#5c3566" "#729fcf" "#eeeeec"])
  '(custom-safe-themes
    (quote
-    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "10e231624707d46f7b2059cc9280c332f7c7a530ebc17dba7e506df34c5332c4" "227edf860687e6dfd079dc5c629cbfb5c37d0b42a3441f5c50873ba11ec8dfd2" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+    ("2d16a5d1921feb826a6a9b344837c1ab3910f9636022fa6dc1577948694b7d84" "8d3c5e9ba9dcd05020ccebb3cc615e40e7623b267b69314bdb70fe473dd9c7a8" "f23a961abba42fc5d75bf94c46b5688c52683c02b3a81313dd0738b4d48afd1d" "24685b60b28b071596be6ba715f92ed5e51856fb87114cbdd67775301acf090d" "5673c365c8679addfb44f3d91d6b880c3266766b605c99f2d9b00745202e75f6" "f66edc956ad84fd071604c402c8582549d8d3823ef21b578e93771768ef8adff" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "10e231624707d46f7b2059cc9280c332f7c7a530ebc17dba7e506df34c5332c4" "227edf860687e6dfd079dc5c629cbfb5c37d0b42a3441f5c50873ba11ec8dfd2" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(org-agenda-files
    (quote
-    ("~/org/work.org" "~/org/refile.org" "~/org/tasks.org")))
+    ("~/org/work.org" "~/org/refile.org" "~/org/main.org")))
  '(package-selected-packages
    (quote
-    (evil-surround evil-snipe evil-quickscope hydra sudo-edit default-text-scale dumb-jump markdown-mode company-jedi auto-virtualenv company-lua flymake-lua avy ivy-rich intero olivetti counsel-projectile projectile counsel flycheck-mypy lua-mode magit-popup evil-magit magit ag all-the-icons neotree which-key darktooth-theme smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
+    (general evil-goggles evil-surround evil-snipe evil-quickscope hydra sudo-edit default-text-scale dumb-jump markdown-mode company-jedi auto-virtualenv company-lua flymake-lua avy ivy-rich intero olivetti counsel-projectile projectile counsel flycheck-mypy lua-mode magit-popup evil-magit magit ag all-the-icons neotree which-key darktooth-theme smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
  '(safe-local-variable-values (quote ((eval progn (pp-buffer) (indent-buffer))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

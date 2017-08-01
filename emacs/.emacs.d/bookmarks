@@ -9,12 +9,12 @@
  (position . 3327))
 ("org-refile-last-stored"
  (filename . "~/org/work.org")
- (front-context-string . "** TODO proper r")
- (rear-context-string . "2017-05-25 Thu>\n")
- (position . 2613))
+ (front-context-string . "* TODO muzzle fe")
+ (rear-context-string . "netes\n** python\n")
+ (position . 12414))
 ("org-capture-last-stored"
  (filename . "~/org/refile.org")
- (front-context-string . "** TODO ping jak")
- (rear-context-string . "2017-05-31 Wed>\n")
- (position . 1770))
+ (front-context-string . "** TODO tidy con")
+ (rear-context-string . "O call jp again\n")
+ (position . 211))
 )

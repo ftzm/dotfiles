@@ -26,6 +26,8 @@
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
+(setq vc-follow-symlinks t)
+
 ;; ############################################################################
 ;; Setup the getting of packages from melpa, etc.
 ;; ############################################################################
@@ -55,6 +57,16 @@
 ;; General UI
 ;; ############################################################################
 
+
+;; ----------------------------------------------------------------------------
+;; Default Text Scale
+;; ----------------------------------------------------------------------------
+
+(use-package default-text-scale
+  :config
+  (setq default-text-scale-amount 60)
+  )
+
 ;; ----------------------------------------------------------------------------
 ;; Spaceline
 ;; ----------------------------------------------------------------------------
@@ -68,7 +80,8 @@
   	(setq powerline-default-separator 'slant)
   	)
     (progn
-      (setq powerline-default-separator nil)
+      ;(setq powerline-default-separator nil)
+      (setq powerline-default-separator 'slant)
       )
     )
   (spaceline-spacemacs-theme)
@@ -96,6 +109,13 @@
   (evil-leader/set-key "SPC" 'counsel-M-x)
   (define-prefix-command 'app-keys)
   (evil-leader/set-key "a" 'app-keys)
+  (define-prefix-command 'theme-keys)
+  (evil-leader/set-key "t" 'theme-keys)
+  (define-key theme-keys "b" 'default-text-scale-increase)
+  (define-key theme-keys "s" 'default-text-scale-decrease)
+  )
+
+(use-package general
   )
 
 (use-package evil
@@ -172,6 +192,11 @@
 	      (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)))
   )
 
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1)
+  )
+
 ;; keeps a list of recently visisted files
 (use-package recentf
   :init
@@ -239,6 +264,11 @@
   (define-key evil-normal-state-map (kbd "M-0") 'eyebrowse-switch-to-window-config-0)
   )
 
+
+(defun ftzm-eyebrowse-buffers ()
+  (interactive)
+  (print (mapcar (lambda (x) (nth 0 x)) (eyebrowse--get 'window-configs)))
+  )
 
 ;; ----------------------------------------------------------------------------
 ;; Desktop Save
@@ -405,7 +435,7 @@
   (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line)
 
-  ;; below works but slow 
+  ;; below works but slow
   (defconst modi/ag-arguments
   '("--nogroup" ; mandatory argument for ag.el as per https://github.com/Wilfred/ag.el/issues/41
       ;"--skip-vcs-ignores" ; Ignore files/dirs ONLY from `.agignore'
@@ -414,7 +444,7 @@
       "--follow") ; follow symlinks
   "Default ag arguments used in the functions in `ag', `counsel' and `projectile'
       packages.")
-  
+
   ;; Use `ag' all the time if available
   (defun modi/advice-projectile-use-ag ()
     "Always use `ag' for getting a list of all files in the project."
@@ -427,7 +457,7 @@
   (when (executable-find "ag")
     (advice-add 'projectile-get-ext-command :override
         #'modi/advice-projectile-use-ag))
-  
+
   (with-eval-after-load 'org-agenda
     (define-key org-agenda-mode-map (kbd "C-c C-q") #'counsel-org-tag-agenda))
 
@@ -493,7 +523,7 @@
 ;; ----------------------------------------------------------------------------
 
 (use-package magit
-  :config 
+  :config
   (define-prefix-command 'magit-keys)
   (evil-leader/set-key "m" 'magit-keys)
   (define-key magit-keys "s" 'magit-status)
@@ -507,7 +537,7 @@
       (if (member 'magit-blame-mode active)
           (magit-blame-quit)
         (magit-blame nil buffer-file-name))))
-    
+
   )
 
 ;; ############################################################################
@@ -539,7 +569,7 @@
   :diminish "\\"
   :config
   (add-hook 'haskell-mode-hook 'intero-mode)
-  (with-eval-after-load 'flycheck 
+  (with-eval-after-load 'flycheck
     (flycheck-add-next-checker 'intero '(warning . haskell-hlint)))
   )
 
@@ -551,7 +581,7 @@
   :diminish "A"
   :config
   (add-hook 'python-mode-hook 'anaconda-mode)
-  
+
   (add-hook 'python-mode-hook (lambda ()
   			      (flycheck-mode 1)
   			      (setq flycheck-checker 'python-pylint
@@ -565,7 +595,7 @@
     (flycheck-mode 0)
     (flycheck-mode 1)
     )
-  
+
   (define-prefix-command 'python-mode-keys)
   (evil-define-key 'normal python-mode-map (kbd ",") 'python-mode-keys)
   (define-key python-mode-keys "v" 'pyvenv-and-fly)
@@ -838,7 +868,7 @@
       (interactive)
       (find-file (replace-regexp-in-string " " "-" (create-dated-file "~/org/meetings")))
       )
-    
+
     (setq org-capture-templates
 	  (quote (("t" "todo" entry (file+headline "~/org/refile.org" "Tasks")
 		   "* TODO %?\n  SCHEDULED: %t")
@@ -1041,7 +1071,7 @@
      (setq org-map-continue-from (outline-previous-heading))
      (org-save-all-org-buffers))))
     ))
-  
+
   (defun org-archive-done-tasks ()
     (interactive)
     (org-map-entries 'archive-if-old "/DONE" 'agenda))
@@ -1052,12 +1082,12 @@
 
 ;;(use-package org-habit) ;; I can never get this to work
 
-(use-package evil-org
-  :diminish evil-org-mode
-  ;; Personal edits avoiding keybind collision
-  :load-path "plugins/evil-org-mode/"
-  :config
-  )
+;;(use-package evil-org
+;;  :diminish evil-org-mode
+;;  ;; Personal edits avoiding keybind collision
+;;  :load-path "plugins/evil-org-mode/"
+;;  :config
+;;  )
 
 ;; ############################################################################
 ;; Global Key Binds
@@ -1223,7 +1253,7 @@
 ;          #'add-fira-code-symbol-keywords)
 
 ;; ############################################################################
-;; Beware: here be custom-set-variables. Best don't touch.
+;; Beware: here be dra--, err, custom-set-variables. Steer clear.
 ;; ############################################################################
 
 (custom-set-variables
@@ -1235,13 +1265,13 @@
    ["#2e3436" "#a40000" "#4e9a06" "#c4a000" "#204a87" "#5c3566" "#729fcf" "#eeeeec"])
  '(custom-safe-themes
    (quote
-    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "10e231624707d46f7b2059cc9280c332f7c7a530ebc17dba7e506df34c5332c4" "227edf860687e6dfd079dc5c629cbfb5c37d0b42a3441f5c50873ba11ec8dfd2" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+    ("2d16a5d1921feb826a6a9b344837c1ab3910f9636022fa6dc1577948694b7d84" "8d3c5e9ba9dcd05020ccebb3cc615e40e7623b267b69314bdb70fe473dd9c7a8" "f23a961abba42fc5d75bf94c46b5688c52683c02b3a81313dd0738b4d48afd1d" "24685b60b28b071596be6ba715f92ed5e51856fb87114cbdd67775301acf090d" "5673c365c8679addfb44f3d91d6b880c3266766b605c99f2d9b00745202e75f6" "f66edc956ad84fd071604c402c8582549d8d3823ef21b578e93771768ef8adff" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "10e231624707d46f7b2059cc9280c332f7c7a530ebc17dba7e506df34c5332c4" "227edf860687e6dfd079dc5c629cbfb5c37d0b42a3441f5c50873ba11ec8dfd2" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(org-agenda-files
    (quote
-    ("~/org/work.org" "~/org/refile.org" "~/org/tasks.org")))
+    ("~/org/work.org" "~/org/refile.org" "~/org/main.org")))
  '(package-selected-packages
    (quote
-    (evil-snipe evil-quickscope hydra sudo-edit default-text-scale dumb-jump markdown-mode company-jedi auto-virtualenv company-lua flymake-lua avy ivy-rich intero olivetti counsel-projectile projectile counsel flycheck-mypy lua-mode magit-popup evil-magit magit ag all-the-icons neotree which-key darktooth-theme smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
+    (general evil-goggles evil-surround evil-snipe evil-quickscope hydra sudo-edit default-text-scale dumb-jump markdown-mode company-jedi auto-virtualenv company-lua flymake-lua avy ivy-rich intero olivetti counsel-projectile projectile counsel flycheck-mypy lua-mode magit-popup evil-magit magit ag all-the-icons neotree which-key darktooth-theme smart-mode-line elmacro elpy yaml-mode flymake-yaml workgroups2 company-anaconda dockerfile-mode spacemacs-theme persp-mode eyebrowse highlight-parentheses rainbow-delimiters company-ghc haskell-mode helm gruvbox-theme evil-visual-mark-mode evil-leader smex)))
  '(safe-local-variable-values (quote ((eval progn (pp-buffer) (indent-buffer))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

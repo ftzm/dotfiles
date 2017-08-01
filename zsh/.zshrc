@@ -65,17 +65,26 @@ source $ZSH/oh-my-zsh.sh
 export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='nvim'
-fi
+#if [[ -n $SSH_CONNECTION ]]; then
+#  export EDITOR='vim'
+#else
+#  export EDITOR='nvim'
+#fi
+
+export EDITOR='emacs_start.sh'
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
 # ssh
 export SSH_KEY_PATH="~/.ssh/rsa_id"
+
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    ssh-agent > ~/.ssh-agent-thing
+fi
+if [[ "$SSH_AGENT_PID" == "" ]]; then
+    eval "$(<~/.ssh-agent-thing)"
+fi
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -96,9 +105,13 @@ alias fuck='sudo $(fc -ln -1)'
 #PATH THINGS!
 export PATH="$PATH:/home/matt/.local/bin"
 export PATH="$PATH:/home/matt/bin"
-#
+
+# TEMPO
 #put tempo things on path
 export PATH=/home/matt/dev/tempo/dolly/tempoc/bin:$PATH # Tempo CLI
+alias x="cd ~/dev/tempo/dolly"
+alias tap="tempoc admin production"
+alias tad="tempoc admin development"
 
 #fzf?
 export HISTCONTROL=ignoreboth:erasedups
@@ -119,3 +132,12 @@ unset SSH_ASKPASS
 #highlighting
 #source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source ~/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# GO
+export GOPATH=/home/matt/dev/go
+export PATH=$PATH:$GOPATH/bin
+
+#emacs
+alias emacs=$EDITOR
+alias e=$EDITOR
+alias vim=e

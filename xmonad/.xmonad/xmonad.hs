@@ -12,7 +12,9 @@ import XMonad.Layout.NoBorders
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.FloatNext
 import XMonad.Hooks.ManageDocks
-
+import XMonad.Actions.CopyWindow
+import Data.Maybe
+import Data.List
 
 bg      = "#002B36"
 fg      = "#93A1A1"
@@ -180,7 +182,7 @@ myKeys conf@XConfig {XMonad.modMask = modMask} =
     , ((mm, xK_Up),        spawn "panel_volume +") -- %! Launch dmenu
     , ((mm, xK_F3),        spawn "amixer set Master toggle") -- %! Launch dmenu
     , ((mm, xK_F5),        spawn "xbacklight -dec 10") -- %! Launch dmenu
-    , ((mm, xK_F10),       spawn "escrotum -s") -- %! Launch dmenu
+    , ((mm, xK_F10),       spawn "scrot -s") -- %! Launch dmenu
     , ((mm, xK_F6),        spawn "xbacklight -inc 10") -- %! Launch dmenu
     , ((mm .|. m1m, xK_b), spawn "kbds") -- %! Launch dmenu
     , ((mm .|. m1m, xK_h), spawn "systemctl hibernate") -- %! Launch dmenu
@@ -206,14 +208,37 @@ myKeys conf@XConfig {XMonad.modMask = modMask} =
     -- mod-alt-['u','i','o','p','['] %! move client to workspace N
     [((m .|. mm, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf)
-                        [xK_u,xK_i,xK_o,xK_p,xK_bracketleft]
+                        [xK_u,xK_i,xK_o,xK_p,xK_bracketleft,xK_8,xK_9,xK_0,xK_minus]
         , (f, m) <- [(W.greedyView, 0), (W.shift, m1m)]]
     ++
     -- mod-{w,e,r} %! Switch to physical/Xinerama screens 1, 2, or 3
     -- mod-shift-{w,e,r} %! Move client to screen 1, 2, or 3
-    [((m .|. m1m, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-        , (f, m) <- [(W.view, 0), (W.shift, sm)]]
+    -- [((m .|. m1m, key), screenWorkspace sc >>= flip whenJust (windows . f))
+    --     | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+    --     , (f, m) <- [(W.view, 0), (W.shift, sm)]]
+
+
+    [((sm .|. m1m, k), windows $ copyWorkspace i)
+        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]]
+
+-- below: way of combining the above into one
+
+-- mod-[1..9] @@ Switch to workspace N
+-- mod-shift-[1..9] @@ Move client to workspace N
+-- mod-control-shift-[1..9] @@ Copy client to workspace N
+-- [((m .|. modm, k), windows $ f i)
+--     | (i, k) <- zip (workspaces x) [xK_1 ..]
+--     , (f, m) <- [(W.view, 0), (W.shift, shiftMask), (copy, shiftMask .|. controlMask)]]
+
+-- | Copy all windows in the specified workspace to the current workspace
+copyWorkspace :: (Eq s, Eq i, Eq a) => i -> W.StackSet i l a s sd -> W.StackSet i l a s sd
+copyWorkspace i ss = maybe ss moveall targetWindows
+  where
+    targetWindows = do
+      s <- W.stack =<< find ((==i) . W.tag) (W.workspaces ss)
+      return $ W.up s ++ W.down s ++ [W.focus s]
+    moveall = foldl (\acc x -> copyWindow x (W.currentTag ss) acc) ss
+
 
 myManageHook = composeAll
                  [ className =? "URxvt" --> doF W.swapDown
