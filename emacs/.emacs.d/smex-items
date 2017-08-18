@@ -1,13 +1,13 @@
 
 ;; ----- smex-history -----
 (
- eval-buffer
- save-buffer
- ivy-switch-buffer
- list-buffers
- buffer-menu
- undo-tree-visualize
- package-install
+ yaml-mode
+ copy-file
+ revert-buffer
+ org-save-all-org-buffers
+ balance-windows
+ spaceline-compile
+ org-toggle-checkbox
 )
 
 ;; ----- smex-data -----
@@ -46,18 +46,18 @@
  (org-agenda-file-to-front . 7)
  (org-schedule . 7)
  (org-agenda-schedule . 1)
- (org-insert-heading-after-current . 2)
+ (org-insert-heading-after-current . 3)
  (package-delete . 6)
  (org-agenda-filter-by-tag . 3)
  (org-agenda-show-tags . 2)
- (counsel-org-tag-agenda . 3)
+ (counsel-org-tag-agenda . 4)
  (org-sort . 3)
  (org-delete-property . 1)
  (org-agenda-undo . 7)
  (org-archive-subtree . 3)
  (org-agenda-archive . 4)
  (org-agenda-priority . 2)
- (subword-mode . 1)
+ (subword-mode . 2)
  (org-habit-toggle-habits . 8)
  (org-timeline . 1)
  (org-time-stamp . 1)
@@ -86,7 +86,7 @@
  (spaceline-toggle-persp-name . 2)
  (spaceline-toggle-persp-name-on . 2)
  (customize-themes . 4)
- (spaceline-compile . 54)
+ (spaceline-compile . 55)
  (vc-mode-line . 1)
  (calendar . 2)
  (persp-kill . 6)
@@ -109,7 +109,7 @@
  (wg-switch-to-previous-workgroup . 6)
  (spaceline-toggle-workspace-number . 2)
  (persp-remove-buffer . 1)
- (yaml-mode . 2)
+ (yaml-mode . 3)
  (evil-end-of-visual-line . 2)
  (check-parens . 2)
  (anaconda-mode . 8)
@@ -181,12 +181,12 @@
  (projectile-ag . 9)
  (recover-file . 38)
  (counsel-projectile-ag . 20)
- (balance-windows . 30)
+ (balance-windows . 32)
  (spaceline-toggle-projectile-root-on . 5)
  (spaceline-toggle-projectile-root . 2)
  (spaceline-toggle-battery . 2)
  (spaceline-toggle-major-mode . 6)
- (org-save-all-org-buffers . 21)
+ (org-save-all-org-buffers . 23)
  (counsel-projectile-find-file . 7)
  (spaceline-toggle-process-on . 3)
  (package-refresh-contents . 6)
@@ -195,7 +195,7 @@
  (list-packages . 1)
  (org-capture-string . 1)
  (counsel-find-symbol . 3)
- (find-function . 1)
+ (find-function . 8)
  (counsel-describe-function . 1)
  (ivy-toggle-case-fold . 4)
  (counsel-semantic . 1)
@@ -207,7 +207,7 @@
  (pyvenv-and-fly . 7)
  (shrink-window . 1)
  (evil-window-decrease-width . 77)
- (fill-paragraph . 1)
+ (fill-paragraph . 4)
  (company-other-backend . 1)
  (downcase-word . 1)
  (evil-upcase . 3)
@@ -234,7 +234,7 @@
  (gdb . 1)
  (evil-window-rotate-downwards . 7)
  (projectile-grep . 2)
- (org-agenda-set-tags . 1)
+ (org-agenda-set-tags . 3)
  (org-agenda-filter-by-tag-refine . 1)
  (ftzm/org-agenda-list-work . 2)
  (dired-goto-subdir . 1)
@@ -264,13 +264,13 @@
  (default-text-scale-increase . 28)
  (default-text-scale-increment . 10)
  (default-text-scale-decrease . 93)
- (org-toggle-checkbox . 4)
+ (org-toggle-checkbox . 10)
  (evil-forward-sentence-begin . 1)
  (fringe-mode . 1)
  (toggle-word-wrap . 2)
  (count-words . 2)
  (find-file . 3)
- (create-meeting-file . 3)
+ (create-meeting-file . 4)
  (org-deadline . 2)
  (set-input-method . 6)
  (sudo-edit . 2)
@@ -312,8 +312,8 @@
  (org-show-block-all . 1)
  (package-reinstall . 1)
  (org-reload . 1)
- (org-search-view . 1)
- (org-insert-subheading . 1)
+ (org-search-view . 9)
+ (org-insert-subheading . 5)
  (find-library . 3)
  (kmacro-edit-macro . 2)
  (evil-ce . 1)
@@ -321,4 +321,19 @@
  (undo-tree-visualize . 1)
  (list-buffers . 1)
  (ivy-switch-buffer . 1)
+ (browse-url . 1)
+ (indent-pp-sexp . 1)
+ (org-get-tags-at . 1)
+ (widen . 1)
+ (org-set-tags . 6)
+ (ftzm/capture-note . 7)
+ (org-set-tags-command . 2)
+ (counsel-org-tag . 8)
+ (helm-org-parent-headings . 1)
+ (ftzm/search-notes . 25)
+ (counsel-org-agenda-headlines . 1)
+ (org-agenda-manipulate-query-add . 1)
+ (org-do-demote . 1)
+ (revert-buffer . 5)
+ (copy-file . 1)
 )

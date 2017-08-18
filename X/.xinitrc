@@ -13,6 +13,6 @@ xset fp rehash
 xrdb -merge .Xresources
 hsetroot -solid "#282828"
 xsetroot -cursor_name left_ptr
-setxkbmap -option caps:swapescape
-exec xmonad
-# exec startxfce4
+# setxkbmap -option caps:swapescape
+# exec xmonad
+exec startxfce4

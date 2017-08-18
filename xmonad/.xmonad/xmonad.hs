@@ -123,7 +123,7 @@ myKeys conf@XConfig {XMonad.modMask = modMask} =
     [ ((mm, xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
     , ((mm, xK_space),  spawn "my_dmenu.sh")          -- %! Launch dmenu
     , ((mm, xK_f),      spawn "rofiles")              -- %! Launch dmenu
-    , ((mm, xK_c),      kill)                         -- %! Close the focused window
+    , ((mm .|. sm, xK_q),      kill)                         -- %! Close the focused window
 
     , ((mm, xK_Tab ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms
     , ((mm .|. sm, xK_space ), setLayout $ XMonad.layoutHook conf) -- %!  Reset the layouts on the current workspace to default
@@ -189,7 +189,7 @@ myKeys conf@XConfig {XMonad.modMask = modMask} =
     , ((mm, xK_F7),        spawn "playerctl play-pause") -- %! Launch dmenu
     , ((mm .|. m1m, xK_t), spawn "toggle_mouse.sh") -- %! Launch dmenu
     , ((mm .|. m1m, xK_r), spawn "konsole -e ranger") -- %! Launch dmenu
-    , ((mm .|. m1m, xK_c), spawn "clip_key") -- %! Launch dmenu
+    , ((mm .|. sm, xK_z), spawn "clip_key") -- %! Launch dmenu
     , ((mm .|. m1m, xK_s), spawn "slock") -- %! Launch dmenu
 
     --experimental
@@ -207,8 +207,7 @@ myKeys conf@XConfig {XMonad.modMask = modMask} =
     -- mod-['u','i','o','p','['] %! Switch to workspace N
     -- mod-alt-['u','i','o','p','['] %! move client to workspace N
     [((m .|. mm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf)
-                        [xK_u,xK_i,xK_o,xK_p,xK_bracketleft,xK_8,xK_9,xK_0,xK_minus]
+        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
         , (f, m) <- [(W.greedyView, 0), (W.shift, m1m)]]
     ++
     -- mod-{w,e,r} %! Switch to physical/Xinerama screens 1, 2, or 3

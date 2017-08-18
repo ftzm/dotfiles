@@ -49,6 +49,20 @@
 (require 'bind-key)
 
 ;; ############################################################################
+;; Menu Initialization
+;; ############################################################################
+
+(define-prefix-command 'leader-menu)
+(define-key leader-menu (kbd "SPC") 'counsel-M-x)
+(define-key leader-menu (kbd "TAB") 'switch-to-previous-buffer)
+(define-prefix-command 'apps-keys)
+(define-prefix-command 'theme-keys)
+(define-key theme-keys "b" 'default-text-scale-increase)
+(define-key theme-keys "s" 'default-text-scale-decrease)
+(define-key leader-menu "a" 'apps-keys)
+(define-key leader-menu "t" 'theme-keys)
+
+;; ############################################################################
 ;; Configuration of Packages
 ;; ############################################################################
 
@@ -136,6 +150,7 @@
   (define-key evil-normal-state-map (kbd "] SPC") 'add-line-below)
 
   (define-prefix-command 'window-keys)
+  (define-key leader-menu "w" 'window-keys)
   (define-key window-keys "v" 'split-window-right)
   (define-key window-keys "s" 'split-window-below)
   (define-key window-keys "h" 'evil-window-left)
@@ -151,6 +166,7 @@
   (define-key window-keys "d" 'delete-window)
 
   (define-prefix-command 'buffer-keys)
+  (define-key leader-menu "b" 'buffer-keys)
   (define-key buffer-keys "d" 'evil-delete-buffer)
   (define-key buffer-keys "e" 'eval-buffer)
   (define-key buffer-keys "k" 'evil-prev-buffer)
@@ -158,6 +174,7 @@
   (define-key buffer-keys "b" 'ivy-switch-buffer)
 
   (define-prefix-command 'file-keys)
+  (define-key leader-menu "f" 'file-keys)
   (define-key file-keys "s" 'save-buffer)
   (define-key file-keys "f" 'counsel-find-file)
   (define-key file-keys "w" 'write-file)
@@ -174,18 +191,12 @@
 
 (use-package general
   :config
-  (setq general-default-keymaps 'evil-normal-state-map)
-  (general-define-key :prefix "SPC" "w" 'window-keys)
-  (general-define-key :prefix "SPC" "b" 'buffer-keys)
-  (general-define-key :prefix "SPC" "f" 'file-keys)
-  (general-define-key :prefix "SPC" "SPC" 'counsel-M-x)
-  (general-define-key :prefix "SPC" "a" 'apps-keys)
-  (general-define-key :prefix "SPC" "t" 'theme-keys)
-  (general-define-key :prefix "SPC" "TAB" 'switch-to-previous-buffer)
-  (define-prefix-command 'apps-keys)
-  (define-prefix-command 'theme-keys)
-  (define-key theme-keys "b" 'default-text-scale-increase)
-  (define-key theme-keys "s" 'default-text-scale-decrease)
+  (general-define-key
+   :keymaps '(dired-mode-map
+	      magit-mode-map
+	      evil-normal-state-map)
+   "SPC"
+   'leader-menu)
 
   (general-evil-setup)
   (general-nmap "c" ;; this must be defined after evil to bind c
@@ -248,7 +259,7 @@
        "gg" 'evil-goto-first-line
        "K" 'dired-kill-subdir
        "S" 'dired-sort-toggle-or-edit
-       "s" 'avy-goto-char-timer
+       "s" 'avy-goto-char-2
        ")" 'dired-next-subdir
        "(" 'dired-prev-subdir)))
 
@@ -259,10 +270,9 @@
 (use-package eyebrowse
   :init
   (eyebrowse-mode 1)
-  :general
-  (general-define-key :prefix "SPC" "s" 'eyebrowse-keys)
   :config
   (define-prefix-command 'eyebrowse-keys)
+  (define-key leader-menu "s" 'eyebrowse-keys)
   (define-key eyebrowse-keys "s" 'eyebrowse-switch-to-window-config)
   (define-key eyebrowse-keys "l" 'eyebrowse-last-window-config)
   (define-key eyebrowse-keys "k" 'eyebrowse-prev-window-config)
@@ -360,7 +370,8 @@
 
 (use-package avy
   :config
-  (define-key evil-normal-state-map "s" 'avy-goto-char-timer)
+  ;(define-key evil-normal-state-map "s" 'avy-goto-char-timer)
+  (define-key evil-normal-state-map "s" 'avy-goto-char-2)
   (setq avy-timeout-seconds 0.2)
   (setq avy-all-windows nil)
   (setq avy-keys '(?f ?d ?s ?a ?g ?k ?l ?\; ?h ?r ?e ?w ?q ?t ?u ?i ?o ?p ?y ?v
@@ -421,8 +432,6 @@
   :diminish ivy-mode
   :init
   (ivy-mode 1)
-  :general
-  (general-define-key :prefix "SPC" "i" 'ivy-keys)
   :config
   (setq ivy-count-format "%d/%d - ")
   (setq ivy-height 15)
@@ -447,6 +456,7 @@
   ;   (original-source)))
 
   (define-prefix-command 'ivy-keys)
+  (define-key leader-menu "i" 'ivy-keys)
   (define-key ivy-keys "i" 'counsel-imenu)
   (define-key ivy-keys "g" 'counsel-grep)
 
@@ -542,10 +552,9 @@
 ;; ----------------------------------------------------------------------------
 
 (use-package magit
-  :general
-  (general-define-key :prefix "SPC" "g" 'magit-keys)
   :config
   (define-prefix-command 'magit-keys)
+  (define-key leader-menu "g" 'magit-keys)
   (define-key magit-keys "s" 'magit-status)
   (define-key magit-keys "b" 'magit-blame-toggle)
   (define-key magit-keys "B" 'magit-blame-quit)
@@ -797,13 +806,12 @@
 
 (use-package flycheck
   :diminish "S"
-  :general
-  (general-define-key :prefix "SPC" "e" 'flycheck-keys)
   :config
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
   (setq flycheck-display-errors-delay 0.1)
 
   (define-prefix-command 'flycheck-keys)
+  (define-key leader-menu "e" 'flycheck-keys)
   (define-key flycheck-keys "p" 'flycheck-previous-error)
   (define-key flycheck-keys "n" 'flycheck-next-error)
 
@@ -815,14 +823,13 @@
 
 (use-package projectile
   :diminish projectile-mode
-  :general
-  (general-define-key :prefix "SPC" "p" 'projectile-keys)
   :init
   (projectile-mode)
   :config
   (setq projectile-completion-system 'ivy) ;;requires ivy
 
   (define-prefix-command 'projectile-keys)
+  (define-key leader-menu "p" 'projectile-keys)
   (define-key projectile-keys "f" 'counsel-projectile-find-file)
   (define-key projectile-keys "b" 'counsel-projectile-switch-to-buffer)
   (define-key projectile-keys "p" 'counsel-projectile-switch-project)
@@ -840,8 +847,6 @@
 
 (use-package org
   :mode (("\\.org$" . org-mode))
-  :general
-  (general-define-key :prefix "SPC" "o" 'org-keys)
   :config
   (progn
     (setq org-directory "~/org")
@@ -857,27 +862,8 @@
     ;;;;; apply CLOSED property on done
     ;;;(setq org-log-done 'time)
 
-    (define-prefix-command 'org-keys)
-    (define-key org-keys "c" 'org-capture)
-    (define-key org-keys "a" 'org-agenda)
-    (define-key org-keys "l" 'org-agenda-list)
-    (define-key org-keys "t" (lambda () (interactive) (org-capture nil "t")))
-    (define-key org-keys "w" (lambda () (interactive) (org-capture nil "w")))
-    (define-key org-keys "W" 'ftzm/org-agenda-list-work)
-    (define-key org-keys "T" 'org-todo-list)
-    (define-key org-keys "m" 'create-meeting-file)
 
-    ;;;; org-capture setting
-    ;; Start capture mode in evil insert state
-
-    ;; Map for my custom ',' prefix in capture mode
-    (define-prefix-command 'capture-mode-map-keys)
-    (evil-define-key 'normal org-capture-mode-map "," 'capture-mode-map)
-    (define-key capture-mode-map-keys "k" 'org-capture-kill)
-    (define-key capture-mode-map-keys "r" 'org-capture-refile)
-    (define-key capture-mode-map-keys "c" 'org-capture-finalize)
-
-
+    ;; start capture in insert mode
     (add-hook 'org-capture-mode-hook 'evil-insert-state)
 
     (defun create-dated-file (path)
@@ -891,15 +877,49 @@
       (find-file (replace-regexp-in-string " " "-" (create-dated-file "~/org/meetings")))
       )
 
+    ;; get tag completion from target file during capture with org-set-tag-function
+    (add-hook 'org-capture-mode-hook
+          (lambda ()
+            (save-restriction
+              (widen)
+              (setq-local org-tag-alist (org-get-buffer-tags)))))
+
+    (defun ftzm/capture-note ()
+      (interactive)
+      (let ((title (read-string "Title: ")))
+	(org-capture nil "n")))
+
+    (defun ftzm/capture-work-note ()
+      (interactive)
+      (let ((title (read-string "Title: "))
+	    (tag "work:"))
+	(org-capture nil "n")))
+
+    (defun ftzm/var-defaulted (variable def-val)
+      "Args: quoted var, quoted expression that returns string
+      that returns string. Uses the value of the var if it has
+      been defined, otherwise evals the expression and returns
+      that."
+      (if (boundp variable) (eval variable) (eval def-val)))
+
+
     (setq org-capture-templates
 	  (quote (("t" "todo" entry (file+headline "~/org/refile.org" "Tasks")
 		   "* TODO %?\n  SCHEDULED: %t")
-		  ("n" "note" entry (file+headline "~/org/refile.org" "Notes")
-		   "* %?")
+		  ("n" "note" entry (file+datetree "~/org/notes.org")
+		   "* %(ftzm/var-defaulted 'title '(read-string \"Title\"))\
+                      :note:%(ftzm/var-defaulted 'tag '\"\") \n%?")
 		  ("w" "work todo" entry (file+headline "~/org/work.org" "Tasks")
 		   "* TODO %?\n  SCHEDULED: %t")
 		  )))
 
+
+    (defun ftzm/search-notes ()
+      (interactive)
+      (let ((org-agenda-files '( "~/org/notes.org"))
+	    (searchstring (read-string "Search: ")))
+	(org-search-view nil (concat "" searchstring))))
+	;(org-agenda-manipulate-query-gdd))
 
     (defun ftzm/org-agenda-list-work ()
       (interactive)
@@ -960,6 +980,7 @@
     (evil-define-key 'normal org-mode-map (kbd ",") 'org-mode-keys)
     (define-key org-mode-keys "s" 'org-schedule)
     (define-key org-mode-keys "r" 'org-refile)
+    (define-key org-mode-keys "t" 'counsel-org-tag)
 
     ;; Map for my custom ',' prefix.
     (define-prefix-command 'agenda-mode-map-keys)
@@ -1069,7 +1090,35 @@
       "," 'agenda-mode-map-keys
 
 
-      ))
+      )
+
+    (define-prefix-command 'org-keys)
+    (define-key leader-menu "o" 'org-keys)
+    (define-key org-keys "c" 'org-capture)
+    (define-key org-keys "a" 'org-agenda)
+    (define-key org-keys "l" 'org-agenda-list)
+    (define-key org-keys "t" (lambda () (interactive) (org-capture nil "t")))
+    (define-key org-keys "wt" (lambda () (interactive) (org-capture nil "w")))
+    (define-key org-keys "wn" 'ftzm/capture-work-note)
+    (define-key org-keys "W" 'ftzm/org-agenda-list-work)
+    (define-key org-keys "T" 'org-todo-list)
+    (define-key org-keys "m" 'create-meeting-file)
+    (define-key org-keys "sn" 'ftzm/search-notes)
+    (define-key org-keys "n" 'ftzm/capture-note)
+
+    ;;;; org-capture setting
+    ;; Start capture mode in evil insert state
+
+    ;; Map for my custom ',' prefix in capture mode
+    (define-prefix-command 'capture-mode-map-keys)
+    (evil-define-key 'normal org-capture-mode-map "," 'capture-mode-map-keys)
+    (define-key capture-mode-map-keys "k" 'org-capture-kill)
+    (define-key capture-mode-map-keys "r" 'org-capture-refile)
+    (define-key capture-mode-map-keys "c" 'org-capture-finalize)
+    (define-key capture-mode-map-keys "t" 'counsel-org-tag)
+
+
+    )
 
 ;; ----------------------------------------------------------------------------
 ;; Custom Archive Function
